@@ -30,5 +30,6 @@ export const ro = {
   "APPLY": "Aplică",
   "CATALOG": "Catalog",
   "ADD_TO_CART_TO_SEE": "Adaugă în coș pentru a vedea produse",
-  "COMMAND": "Comandă"
+  "COMMAND": "Comandă",
+  "BACK_HOME": "Înapoi Acasă"
 }

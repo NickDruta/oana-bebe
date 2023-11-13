@@ -30,5 +30,6 @@ export const ru = {
   "APPLY": "Применять",
   "CATALOG": "Каталог",
   "ADD_TO_CART_TO_SEE": "Добавьте в корзину, чтобы просмотреть товары",
-  "COMMAND": "Команда"
+  "COMMAND": "Команда",
+  "BACK_HOME": "Домой"
 }

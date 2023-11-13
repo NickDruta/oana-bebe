@@ -8,6 +8,7 @@ import { Contacts } from "pages/Contacts";
 import { Catalog } from "pages/Catalog";
 import { ManagementHome } from "pages/ManagementHome";
 import { AdminWrapper } from "pages/AdminWrapper";
+import { NotFound } from "pages/NotFound";
 
 export const useRoutes = () => {
   const publicRoutes = [
@@ -59,7 +60,7 @@ export const useRoutes = () => {
   return (
     <>
       <Routes>
-        <Route path="*" element={<p> Not found </p>} />
+        <Route path="*" element={<NotFound />} />
         {publicRoutes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element} />
         ))}

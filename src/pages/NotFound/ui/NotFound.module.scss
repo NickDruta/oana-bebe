@@ -1,0 +1,11 @@
+.contentWrapper {
+  width: 100%;
+  height: calc(100vh - 319px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    color: #000;
+  }
+}
