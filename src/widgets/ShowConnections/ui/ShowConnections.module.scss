@@ -1,0 +1,9 @@
+.showConnectionsWrapper {
+  display: flex;
+  justify-content: space-between;
+  
+  @media screen and (max-width: 800px) {
+    flex-direction: column-reverse;
+    gap: 48px;
+  }
+}

@@ -1,0 +1,55 @@
+.managementCategoriesWrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff2fb71;
+  padding: 100px;
+}
+
+.contentWrapper {
+  border: 2px solid #ffbbeb;
+  border-radius: 15px;
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.headerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-family: "Inter-Bold";
+  font-size: 18px;
+  letter-spacing: 1.8px;
+}
+
+.addButton {
+  border: 2px solid #ffbbeb;
+  border-radius: 15px;
+  padding: 8px 12px;
+  background: #ffbbeb;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.5s;
+  font-family: "Inter-Bold";
+  letter-spacing: 1.8px;
+
+  &:hover {
+    border: 2px solid #ffbbeb;
+    background-color: #fff;
+    color: #000;
+  }
+}
+
+.categoriesWrapper {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  overflow-y: auto;
+}

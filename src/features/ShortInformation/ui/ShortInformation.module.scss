@@ -1,0 +1,40 @@
+.shortInformationWrapper {
+  display: flex;
+  align-content: center;
+  justify-content: space-around;
+  gap: 48px;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+}
+
+.infoWrapper {
+  max-width: 595px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.infoTitle {
+  font-family: "Inter-Bold";
+  font-size: 20px;
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+
+.infoDescription {
+  font-family: "Inter-Medium";
+  font-size: 16px;
+  letter-spacing: 1.8px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}

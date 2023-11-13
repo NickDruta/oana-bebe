@@ -1,0 +1,35 @@
+.modalWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: "Inter-Bold";
+  font-size: 18px;
+  letter-spacing: 1.8px;
+}
+
+.buttonsWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.colorsWrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.color {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.activeColor {
+  border: 2px solid #ffbbeb;
+}

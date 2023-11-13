@@ -1,0 +1,18 @@
+.homeWrapper {
+  margin: 48px 0;
+  padding: 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-height: calc(100vh - 419px);
+
+  @media screen and (min-width: 1316px) {
+    max-width: 1260px;
+    margin: 48px auto;
+    padding: 0;
+  }
+
+  @media screen and (max-width: 800px) {
+    padding: 0 13px;
+  }
+}

@@ -1,0 +1,166 @@
+.modalWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: "Inter-Bold";
+  font-size: 18px;
+  letter-spacing: 1.8px;
+}
+
+.imageWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dataWrapper {
+  display: flex;
+  gap: 24px;
+}
+
+input[type="file"] {
+  outline: 0;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.label {
+  width: 400px;
+  height: 400px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  display: block;
+  padding: 1.2em;
+  transition: border 300ms ease;
+  cursor: pointer;
+  text-align: center;
+
+  svg {
+    display: block;
+    height: 100px;
+    width: auto;
+    margin-left: 135px;
+    margin-top: 100px;
+    padding-bottom: 16px;
+  }
+
+  svg {
+    stroke: #000;
+  }
+
+  .title {
+    color: #000;
+    transition: 200ms color;
+  }
+
+  &:hover {
+    border: 1px solid #ffbbeb;
+
+    .title {
+      color: #ffbbeb;
+    }
+
+    svg {
+      stroke: #ffbbeb;
+    }
+  }
+}
+
+.previewImage {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+}
+
+.detailsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.colorWrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    width: 26px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+
+    &::-webkit-color-swatch {
+      border-radius: 50%;
+    }
+
+    &::-moz-color-swatch {
+      border-radius: 50%;
+    }
+  }
+}
+
+.saveButton {
+  font-size: 14px;
+  width: fit-content;
+  border: 1px solid #000;
+  border-radius: 15px;
+  background-color: #fff;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.color {
+  border: 1px solid #000;
+  border-radius: 50%;
+  width: 23px;
+  height: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    stroke: #000;
+  }
+}
+
+.activeColor {
+  border: 3px solid #ffbbeb;
+}
+
+.input {
+  display: flex;
+  padding: 8px 16px;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 10px;
+  border: 1px solid #000;
+  transition: all 0.5s;
+  outline: none;
+
+  &::placeholder {
+    transition: all 0.5s;
+  }
+
+  &:focus {
+    border: 1px solid #cc3292;
+    color: #cc3292;
+
+    &::placeholder {
+      color: #cc3292;
+    }
+  }
+}

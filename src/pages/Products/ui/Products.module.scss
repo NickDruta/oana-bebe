@@ -1,0 +1,81 @@
+.productsWrapper {
+  margin: 48px 0;
+  padding: 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-height: calc(100vh - 419px);
+
+  @media screen and (min-width: 1316px) {
+    max-width: 1260px;
+    margin: 48px auto;
+    padding: 0;
+  }
+}
+
+.categoriesWrapper {
+  display: flex;
+  justify-content: space-between;
+
+  @media screen and (max-width: 800px) {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+.contentWrapper {
+  display: flex;
+  gap: 48px;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+}
+
+.filtersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background-color: #e8e8e8;
+  border-radius: 10px;
+}
+
+.title {
+  font-family: "Inter-SemiBold";
+  letter-spacing: 1.8px;
+}
+
+.companiesWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.company {
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.priceInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  p {
+    font-family: "Inter-Medium";
+    font-size: 14px;
+    letter-spacing: 0.8px;
+  }
+}
+
+.productsDataWrapper {
+  display: flex;
+  gap: 36px;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 800px) {
+    justify-content: center;
+  }
+}

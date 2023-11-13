@@ -1,0 +1,16 @@
+export { ReactComponent as Logo } from './icons/logo.svg';
+export { ReactComponent as LocationIcon } from './icons/location.svg';
+export { ReactComponent as PhoneIcon } from './icons/phone.svg';
+export { ReactComponent as SliderLeftIcon } from './icons/sliderLeft.svg';
+export { ReactComponent as SliderRightIcon } from './icons/sliderRight.svg';
+export { ReactComponent as SliderItemIcon } from './icons/sliderItem.svg';
+export { ReactComponent as CartIcon } from './icons/cart.svg';
+export { ReactComponent as EyeIcon } from './icons/eye.svg';
+export { ReactComponent as InstagramIcon } from './icons/instagram.svg';
+export { ReactComponent as FacebookIcon } from './icons/facebook.svg';
+export { ReactComponent as MapMarkerIcon } from './icons/mapMarker.svg';
+export { ReactComponent as AddIcon } from './icons/add.svg';
+export { ReactComponent as DeleteIcon } from './icons/delete.svg';
+export { ReactComponent as DiscountIcon } from './icons/discount.svg';
+export { ReactComponent as SuccessIcon } from './icons/success.svg';
+export { ReactComponent as BurgerMenuIcon } from './icons/burgerMenu.svg';

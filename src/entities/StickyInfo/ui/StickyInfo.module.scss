@@ -1,0 +1,47 @@
+.stikyInfoWrapper {
+  background-color: #000;
+  padding: 13px 26px;
+}
+
+.contentWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1260px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.itemWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  svg {
+    width: auto;
+    height: 24px;
+  }
+
+  p {
+    color: #fff;
+    font-family: "Inter-Bold";
+    letter-spacing: 0.8px;
+  }
+
+  a {
+    text-decoration: none;
+    font-family: "Inter-Bold";
+    letter-spacing: 0.8px;
+    color: #fff;
+  }
+}
+
+.switcher {
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+}

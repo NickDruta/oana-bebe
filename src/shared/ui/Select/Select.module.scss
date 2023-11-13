@@ -1,0 +1,46 @@
+.selectWrapper {
+  width: 100%;
+  position: relative;
+  user-select: none;
+}
+
+.value {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.placeholder {
+  color: #7e7e7e;
+}
+
+.optionsWrapper {
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(calc(-100% - 8px));
+  width: 100%;
+  padding: 8px 16px;
+  box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  -webkit-box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  -moz-box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.option {
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 4px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

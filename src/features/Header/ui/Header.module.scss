@@ -1,0 +1,52 @@
+.headerWrapper {
+  margin-top: 24px;
+  padding: 0 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media screen and (min-width: 1316px) {
+    max-width: 1260px;
+    margin: 24px auto 0;
+    padding: 0;
+  }
+
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+}
+
+.itemsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  a {
+    font-family: "Inter-Bold";
+    font-size: 18px;
+    letter-spacing: 0.36px;
+    color: black;
+    text-decoration: none;
+  }
+}
+
+.activeLink {
+  color: #cc3292 !important;
+}
+
+.catalogWrapper {
+  position: relative;
+}
+
+.catalogCount {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: #cc3292;
+  color: #fff;
+  font-family: "Inter-SemiBold";
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}

@@ -1,0 +1,30 @@
+.managementSideBarWrapper {
+  background-color: #fff;
+  border-right: 2px solid #FFBBEB;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  margin: 24px;
+}
+
+.linksWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.link {
+  font-family: "Inter-SemiBold";
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  &:not(.active):hover {
+    background-color: #FFBBEB;
+  }
+}
+
+.active {
+  background-color: #FFBBEB;
+}
