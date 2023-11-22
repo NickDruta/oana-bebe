@@ -47,7 +47,7 @@ const Catalog = () => {
       <div className={cls.catalogWrapper}>
         {cart ? <p className={cls.title}>{t("content:CATALOG")}</p> : <></>}
         <div className={cls.dataWrapper}>
-          {parsedCart.length ? (
+          {parsedCart && parsedCart.length ? (
             parsedCart.map((item: any, index: number) => (
               <div className={cls.item} key={index}>
                 <Link to={`/produse/${item.productId}`} target="_blank">
@@ -89,7 +89,7 @@ const Catalog = () => {
             <p className={cls.title}>{t("content:ADD_TO_CART_TO_SEE")}</p>
           )}
         </div>
-        {parsedCart.length ? (
+        {parsedCart && parsedCart.length ? (
           <Button
             type="primary"
             text={t('content:COMMAND')}

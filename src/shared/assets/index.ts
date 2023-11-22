@@ -14,3 +14,5 @@ export { ReactComponent as DeleteIcon } from './icons/delete.svg';
 export { ReactComponent as DiscountIcon } from './icons/discount.svg';
 export { ReactComponent as SuccessIcon } from './icons/success.svg';
 export { ReactComponent as BurgerMenuIcon } from './icons/burgerMenu.svg';
+export { ReactComponent as ViberIcon } from './icons/viber.svg';
+export { ReactComponent as MessengerIcon } from './icons/messenger.svg';

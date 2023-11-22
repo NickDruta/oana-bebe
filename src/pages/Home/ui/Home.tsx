@@ -13,6 +13,7 @@ import { StickyInfo } from "entities/StickyInfo";
 import { Header } from "features/Header";
 import { MobileHeader } from "features/MobileHeader";
 import { Footer } from "features/Footer";
+import { MessengerIcon, ViberIcon } from "shared/assets";
 import { LoadingSpinner } from "shared/ui";
 import cls from "./Home.module.scss";
 
@@ -31,6 +32,16 @@ const Home = () => {
       <Header />
       <MobileHeader />
       <div className={cls.homeWrapper}>
+        <div className={cls.viber}>
+          <a href="viber://chat?number=37369372401" target="_blank">
+            <ViberIcon />
+          </a>
+        </div>
+        <div className={cls.messenger}>
+          <a href="http://m.me/oanabebe.md" target="_blank">
+            <MessengerIcon />
+          </a>
+        </div>
         {isSliderLoading ||
         isNewProductsLoading ||
         isDiscountProductsLoading ? (

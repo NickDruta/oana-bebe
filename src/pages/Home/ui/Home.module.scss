@@ -16,3 +16,43 @@
     padding: 0 13px;
   }
 }
+
+.viber {
+  position: absolute;
+  bottom: 48px;
+  left: 24px;
+  width: 64px;
+  height: 64px;
+  border-radius: 100%;
+  background-color: #fff;
+  z-index: 9999;
+  box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  -webkit-box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  -moz-box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  cursor: pointer;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.messenger {
+  position: absolute;
+  bottom: 48px;
+  right: 24px;
+  width: 64px;
+  height: 59px;
+  border-radius: 100%;
+  background-color: #fff;
+  z-index: 9999;
+  box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  -webkit-box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  -moz-box-shadow: 8px 10px 15px 1px rgba(161, 161, 161, 0.75);
+  cursor: pointer;
+
+  svg {
+    width: 100%;
+    height: calc(100% + 5px);
+  }
+}

@@ -5,6 +5,10 @@
   font-family: "Inter-Regular";
 }
 
+body {
+  position: relative;
+}
+
 @font-face {
   font-family: "Inter-Black";
   src: url('shared/assets/fonts/Inter-Black.ttf');

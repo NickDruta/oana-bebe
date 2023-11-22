@@ -22,16 +22,16 @@
   gap: 24px;
 
   a {
-    font-family: "Inter-Bold";
+    font-family: "Inter-SemiBold";
     font-size: 18px;
     letter-spacing: 0.36px;
-    color: black;
+    color: #8f8f8f;
     text-decoration: none;
   }
 }
 
 .activeLink {
-  color: #cc3292 !important;
+  color: #000 !important;
 }
 
 .catalogWrapper {
