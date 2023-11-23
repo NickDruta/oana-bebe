@@ -49,7 +49,7 @@ const Home = () => {
         ) : (
           <>
             {sliderImages && sliderImages.images ? (
-              <Swiper images={sliderImages.images.slice(0, 1) ?? [""]} />
+              <Swiper images={sliderImages.images.slice(0, 10).reverse() ?? [""]} />
             ) : (
               <></>
             )}
