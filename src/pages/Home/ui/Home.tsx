@@ -33,7 +33,7 @@ const Home = () => {
       <MobileHeader />
       <div className={cls.homeWrapper}>
         <div className={cls.viber}>
-          <a href="viber://chat?number=37360223422" target="_blank">
+          <a href="viber://chat?number=+37360223422" target="_blank">
             <ViberIcon />
           </a>
         </div>
