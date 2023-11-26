@@ -32,7 +32,8 @@ const CategoryViewAdmin = ({ category, isAdd }: CategoryViewAdminProps) => {
       createSubcategory({
         type_id: category.categoryType.categoryTypeId,
         name: subCategoryText,
-      }).then();
+        ruName: '',
+      }).then(() => window.location.reload());
     }
   };
 
