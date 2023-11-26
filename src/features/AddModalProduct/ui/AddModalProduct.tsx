@@ -6,6 +6,7 @@ import { companies } from "shared/config";
 import { Modal, Input, Select, TextArea } from "shared/ui";
 import cls from "./AddModalProduct.module.scss";
 import clsx from "clsx";
+import { translateText } from "shared/lib/translateText/translateText";
 
 interface AddModalProductProps {
   handleClose: () => void;
@@ -56,7 +57,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
     setPrices(newPrices);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name || !description || !prices || !company || !categoryName) return;
 
     const selectedId = categories?.map((item) =>
@@ -68,11 +69,20 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
     );
 
     if (selectedId) {
+      const ruNameResponse = await translateText(name);
+      const ruName = ruNameResponse.data.translations[0].translatedText;
+
+      const ruDescriptionResponse = await translateText(description);
+      const ruDescription = ruDescriptionResponse.data.translations[0].translatedText;
+
+
       createProduct({
-        productName: name,
+        product_name: name,
+        product_name_ru: ruName,
         description: description,
-        productCompany: company,
-        categoryId: selectedId[0]?.subCategoryId ?? "",
+        description_ru: ruDescription,
+        company_product: company,
+        category: selectedId[0]?.subCategoryId ?? "",
         images: colors.map((color, index) => {
           return {
             image: images[index],

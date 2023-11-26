@@ -11,11 +11,13 @@ import { Header } from "features/Header";
 import { MobileHeader } from "features/MobileHeader";
 import { StickyInfo } from "entities/StickyInfo";
 import { Footer } from "features/Footer";
+import { i18n } from "shared/providers";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { data: product, isLoading } = useGetProductDetailsQuery(id);
   const {} = useUpdateViewsQuery(id);
+  const isRu = i18n.language === "ru";
 
   const [itemsNumber, setItemsNumber] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -69,7 +71,9 @@ const ProductDetails = () => {
               </div>
               <div className={cls.infoWrapper}>
                 <div className={cls.subWrapper}>
-                  <p className={cls.productName}>{product?.productName}</p>
+                  <p className={cls.productName}>
+                    {isRu ? product?.productNameRu : product?.productName}
+                  </p>
                   <div className={cls.priceWrapper}>
                     <p
                       className={clsx(
@@ -80,11 +84,13 @@ const ProductDetails = () => {
                       {product?.images[selectedIndex].price} MDL
                     </p>
                     {product?.images[selectedIndex].discount && (
-                      <p className={cls.price}>{product?.images[selectedIndex].discount} MDL</p>
+                      <p className={cls.price}>
+                        {product?.images[selectedIndex].discount} MDL
+                      </p>
                     )}
                   </div>
                 </div>
-                <p className={cls.description}>{product?.description}</p>
+                <p className={cls.description}>{isRu ? product?.descriptionRu : product?.description}</p>
                 <div className={cls.colorsWrapper}>
                   {product?.images.map((item, index) => (
                     <div

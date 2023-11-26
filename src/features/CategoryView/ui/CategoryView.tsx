@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { CategoryAndSubcategory } from "entities/CategoryData";
 import { useClickAwayListener } from "shared/hooks";
 import cls from "./CategoryView.module.scss";
+import { i18n } from "shared/providers";
 
 interface CategoryViewProps {
   category: CategoryAndSubcategory;
@@ -15,6 +16,7 @@ const CategoryView = ({
   isActive,
   handleCategoryChange,
 }: CategoryViewProps) => {
+  const isRu = i18n.language === "ru";
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClickAway = () => {
@@ -31,7 +33,11 @@ const CategoryView = ({
         )}
         onClick={() => setIsOpen(true)}
       >
-        <p>{category.categoryType.categoryTypeName}</p>
+        <p>
+          {isRu
+            ? category.categoryType.categoryTypeNameRu
+            : category.categoryType.categoryTypeName}
+        </p>
         <p>&#8595;</p>
       </div>
       {isOpen ? (
@@ -47,7 +53,9 @@ const CategoryView = ({
                 );
               }}
             >
-              {subcategory.subCategoryName}
+              {isRu
+                ? subcategory.subCategoryNameRu
+                : subcategory.subCategoryName}
             </p>
           ))}
         </div>

@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import {
   CategoryAndSubcategory,
@@ -6,7 +5,9 @@ import {
   useCreateSubcategoryMutation,
   useDeleteCategoryMutation,
 } from "entities/CategoryData";
+import { useState } from "react";
 import { AddIcon, DeleteIcon } from "shared/assets";
+import { translateText } from "shared/lib/translateText/translateText";
 import cls from "./CategoryViewAdmin.module.scss";
 
 interface CategoryViewAdminProps {
@@ -24,15 +25,23 @@ const CategoryViewAdmin = ({ category, isAdd }: CategoryViewAdminProps) => {
   const [createSubcategory] = useCreateSubcategoryMutation();
   const [deleteCategory] = useDeleteCategoryMutation();
 
-  const handleCreateCategory = () => {
+  const handleCreateCategory = async () => {
     if (categoryText) {
-      createCategory(categoryText).then(() => window.location.reload());
+      const ruResponse = await translateText(categoryText);
+      const ruText = ruResponse.data.translations[0].translatedText;
+
+      createCategory({ roText: categoryText, ruText: ruText }).then(() =>
+        window.location.reload()
+      );
     }
     if (subCategoryText && category) {
+      const ruResponse = await translateText(subCategoryText);
+      const ruText = ruResponse.data.translations[0].translatedText;
+      
       createSubcategory({
         type_id: category.categoryType.categoryTypeId,
         name: subCategoryText,
-        ruName: '',
+        nameRu: ruText,
       }).then(() => window.location.reload());
     }
   };

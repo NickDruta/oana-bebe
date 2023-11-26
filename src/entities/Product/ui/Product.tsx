@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductInterface } from "entities/ProductsData";
 import { DeleteIcon, DiscountIcon, EyeIcon } from "shared/assets";
 import cls from "./Product.module.scss";
+import { i18n } from "shared/providers";
 
 interface ProductProps {
   product: ProductInterface;
@@ -21,6 +22,7 @@ const Product = ({
   onClickDiscount,
 }: ProductProps) => {
   const navigate = useNavigate();
+  const isRu = i18n.language === 'ru';
 
   return (
     <div
@@ -60,7 +62,7 @@ const Product = ({
         }`}
         alt=""
       />
-      <p className={cls.productName}>{product.productName}</p>
+      <p className={cls.productName}>{isRu ? product.productNameRu : product.productName}</p>
       <div className={cls.priceWrapper}>
         <p
           className={clsx(

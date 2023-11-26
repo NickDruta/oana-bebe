@@ -1,9 +1,11 @@
 export interface ProductInterface {
   productId: number;
   productName: string;
+  productNameRu: string;
   companyName: string;
   price: number;
   description: string;
+  descriptionRu: string;
   isDiscount: boolean;
   discountPrice: number;
   isNew: boolean;

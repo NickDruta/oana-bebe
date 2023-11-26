@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { CategoryAndSubcategory, CategoryDataApi } from "entities/CategoryData";
+import { translateText } from "shared/lib/translateText/translateText";
 
 export const categoryDataApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
@@ -27,9 +28,9 @@ export const categoryDataApiSlice = createApi({
             : ["Category"],
       }),
     }),
-    createCategory: builder.mutation<void, string>({
-      query: (data) => ({
-        url: `${CategoryDataApi.CREATE_CATEGORY}?name=${data}&ruName=''`,
+    createCategory: builder.mutation<void, any>({
+      query: ({roText, ruText}) => ({
+        url: `${CategoryDataApi.CREATE_CATEGORY}?name=${roText}&ruName=${ruText}`,
         method: "POST",
         refetchOnFocus: true,
         refetchOnReconnect: true,
