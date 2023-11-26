@@ -29,7 +29,7 @@ export const categoryDataApiSlice = createApi({
     }),
     createCategory: builder.mutation<void, string>({
       query: (data) => ({
-        url: `${CategoryDataApi.CREATE_CATEGORY}?name=${data}`,
+        url: `${CategoryDataApi.CREATE_CATEGORY}?name=${data}&ruName=''`,
         method: "POST",
         refetchOnFocus: true,
         refetchOnReconnect: true,
