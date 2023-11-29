@@ -25,5 +25,9 @@ COPY react.conf /etc/nginx/conf.d/default.conf
 # Copy the built React app to Nginx's web server directory
 COPY --from=build /app/build /usr/share/nginx/html
 
+# Copy SSL keys
+COPY /etc/letsencrypt/live/oanabebe.md/fullchain.pem /usr/share/nginx/html
+COPY /etc/letsencrypt/live/oanabebe.md/privkey.pem /usr/share/nginx/html
+
 # Start Nginx when the container runs
 CMD ["nginx", "-g", "daemon off;"]
