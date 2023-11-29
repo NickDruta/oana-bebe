@@ -28,6 +28,7 @@ const LoginForm = ({ goToMainPage }: LoginFormProps) => {
     fetch(`${process.env.REACT_APP_API_URL}login`, {
       method: "POST",
       body: formdata,
+      redirect: "follow"
     }).then((response) => {
       if (response.url.includes("handler/success")) {
         sessionStorage.setItem(
