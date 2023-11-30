@@ -59,7 +59,15 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   };
 
   const handleSave = async () => {
-    if (!name || !description || !prices || !company || !categoryName) return;
+    if (
+      !name ||
+      !description ||
+      !prices ||
+      !company ||
+      !categoryName ||
+      isLoading
+    )
+      return;
     setIsLoading(true);
 
     const selectedId = categories?.map((item) =>
