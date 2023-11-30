@@ -10,12 +10,13 @@ import { AddModalProduct } from "features/AddModalProduct";
 import { AddIcon } from "shared/assets";
 import cls from "./ManagementProducts.module.scss";
 import { DiscountModal } from "features/DiscountModal";
+import { LoadingSpinner } from "shared/ui";
 
 const ManagementProducts = () => {
   const navigate = useNavigate();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
-  const { data: productsData } = useGetProductsQuery();
+  const { data: productsData, isLoading } = useGetProductsQuery();
   const [deleteProduct] = useDeleteProductMutation();
 
   const [discountProduct, setDiscountProduct] =
@@ -50,31 +51,37 @@ const ManagementProducts = () => {
   return (
     <div className={cls.managementProductsWrapper}>
       <div className={cls.contentWrapper}>
-        <p className={cls.title}>Produse</p>
-        <div className={cls.productsWrapper}>
-          {productsData &&
-            productsData.products.map(
-              (item: ProductInterface, index: number) => (
-                <Product
-                  product={item}
-                  key={index}
-                  className={cls.product}
-                  isAdmin
-                  onClickDelete={(value) => handleDelete(value)}
-                  onClickDiscount={(value) => handleDiscount(value)}
-                />
-              )
-            )}
-          <div
-            className={cls.createProduct}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsAddModalOpen(true);
-            }}
-          >
-            <AddIcon style={{ width: 36, height: 36, stroke: "#ffbbeb" }} />
-          </div>
-        </div>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <p className={cls.title}>Produse</p>
+            <div className={cls.productsWrapper}>
+              {productsData &&
+                productsData.products.map(
+                  (item: ProductInterface, index: number) => (
+                    <Product
+                      product={item}
+                      key={index}
+                      className={cls.product}
+                      isAdmin
+                      onClickDelete={(value) => handleDelete(value)}
+                      onClickDiscount={(value) => handleDiscount(value)}
+                    />
+                  )
+                )}
+              <div
+                className={cls.createProduct}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAddModalOpen(true);
+                }}
+              >
+                <AddIcon style={{ width: 36, height: 36, stroke: "#ffbbeb" }} />
+              </div>
+            </div>
+          </>
+        )}
       </div>
       {isAddModalOpen ? <AddModalProduct handleClose={handleClose} /> : <></>}
       {isDiscountModalOpen && discountProduct ? (
