@@ -14,7 +14,7 @@ export const productsDataApiSlice = createApi({
       query: () => ({
         url: ProductsDataApi.GET_PRODUCTS,
         method: "GET",
-        params: { pageSize: 400 },
+        params: { pageSize: 400, pageNumber: 0 },
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
@@ -23,7 +23,7 @@ export const productsDataApiSlice = createApi({
       query: () => ({
         url: ProductsDataApi.GET_NEW_PRODUCTS,
         method: "GET",
-        params: { pageSize: 4 },
+        params: { pageSize: 4, pageNumber: 0 },
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
@@ -32,7 +32,7 @@ export const productsDataApiSlice = createApi({
       query: () => ({
         url: ProductsDataApi.GET_DISCOUNT_PRODUCTS,
         method: "GET",
-        params: { pageSize: 4 },
+        params: { pageSize: 4, pageNumber: 0 },
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
@@ -52,7 +52,7 @@ export const productsDataApiSlice = createApi({
         method: "GET",
         refetchOnFocus: true,
         refetchOnReconnect: true,
-        params: { pageSize: 400, categoryId: data },
+        params: { pageSize: 400, categoryId: data, pageNumber: 0 },
       }),
     }),
     getProductsByFilter: builder.mutation<ProductsPageable, any>({

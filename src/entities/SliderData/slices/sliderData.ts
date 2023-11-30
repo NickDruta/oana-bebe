@@ -10,7 +10,7 @@ export const sliderDataApiSlice = createApi({
       query: () => ({
         url: SliderDataApi.GET_SLIDER,
         method: 'GET',
-        params: { pageSize: 20 },
+        params: { pageSize: 20, pageNumber: 0 },
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
