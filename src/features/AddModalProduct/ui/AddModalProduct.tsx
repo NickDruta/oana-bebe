@@ -24,6 +24,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   const [company, setCompany] = useState<string>("");
   const [categoryName, setCategoryName] = useState<string>("");
   const [colors, setColors] = useState<string[]>(["#000000"]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const allSubcategories = categories
     ?.map((item) =>
@@ -59,6 +60,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
 
   const handleSave = async () => {
     if (!name || !description || !prices || !company || !categoryName) return;
+    setIsLoading(true);
 
     const selectedId = categories?.map((item) =>
       item.subCategoryResponse.find(
@@ -73,8 +75,8 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       const ruName = ruNameResponse.data.translations[0].translatedText;
 
       const ruDescriptionResponse = await translateText(description);
-      const ruDescription = ruDescriptionResponse.data.translations[0].translatedText;
-
+      const ruDescription =
+        ruDescriptionResponse.data.translations[0].translatedText;
 
       createProduct({
         product_name: name,
@@ -197,7 +199,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
               </div>
             </div>
             <div className={cls.saveButton} onClick={handleSave}>
-              Adauga
+              {isLoading ? "Se incarca" : "Adauga"}
             </div>
           </div>
         </div>
