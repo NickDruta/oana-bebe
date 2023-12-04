@@ -6,10 +6,13 @@ export const companies = [
   "Mutsy",
   "Tutis",
   "CARRELLO",
-  "CAvoe",
-  "4 baby",
+  "Cavoe",
+  "4Baby",
   "Avionaut",
   "EasyGo",
   "Beloff",
-  "SanBaby"
+  "SanBaby",
+  "Cottonmoose",
+  "Maylily",
+  "Twins"
 ];
