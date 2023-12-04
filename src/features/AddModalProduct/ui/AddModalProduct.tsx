@@ -25,6 +25,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   const [categoryName, setCategoryName] = useState<string>("");
   const [colors, setColors] = useState<string[]>(["#000000"]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const allSubcategories = categories
     ?.map((item) =>
@@ -59,6 +60,22 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   };
 
   const handleSave = async () => {
+    if (!name) {
+      setError("Numele lipseste");
+    }
+    if (!description) {
+      setError("Descrierea lipseste");
+    }
+    if (prices.length < colors.length) {
+      setError("In careva culoare pretul lipseste");
+    }
+    if (!company) {
+      setError("Compania lipseste");
+    }
+    if (!categoryName) {
+      setError("Categoria lipseste");
+    }
+
     if (
       !name ||
       !description ||
@@ -206,6 +223,8 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
                 <AddIcon />
               </div>
             </div>
+
+            {error ? <div className={cls.error}>{error}</div> : ""}
             <div className={cls.saveButton} onClick={handleSave}>
               {isLoading ? "Se incarca" : "Adauga"}
             </div>

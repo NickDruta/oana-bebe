@@ -1,10 +1,15 @@
 export const companies = [
-  "Mutsy",
   "Anex",
+  "Cybex",
+  "Muuvo",
+  "Easywalker",
+  "Mutsy",
   "Tutis",
-  "EasyGO",
-  "Verdi",
-  "Peg-Pérego",
-  "Nuna",
-  "Joie",
+  "CARRELLO",
+  "CAvoe",
+  "4 baby",
+  "Avionaut",
+  "EasyGo",
+  "Beloff",
+  "SanBaby"
 ];
