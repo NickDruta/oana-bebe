@@ -126,8 +126,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
           };
         }),
       }).then(() => {
-        // window.location.reload();
-        console.log("!")
+        window.location.reload();
       });
     }
   };
