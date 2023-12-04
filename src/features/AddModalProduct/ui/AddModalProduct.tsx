@@ -27,6 +27,14 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleAddModalClose = () => {
+    if (name || description || prices || company || categoryName) {
+      if (window.confirm("Sigur doresti sa inchizi?")) {
+        handleClose();
+      }
+    }
+  };
+
   const allSubcategories = categories
     ?.map((item) =>
       item.subCategoryResponse.map(
@@ -81,28 +89,32 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       !description ||
       !prices ||
       !company ||
-      !categoryName 
-      // isLoading
+      !categoryName ||
+      isLoading
     )
       return;
     setIsLoading(true);
 
     let selectedId;
 
-    const matchingCategory = categories?.find(categoryItem =>
-      categoryItem.subCategoryResponse.some(subcategory =>
-        `${categoryItem.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` === categoryName
+    const matchingCategory = categories?.find((categoryItem) =>
+      categoryItem.subCategoryResponse.some(
+        (subcategory) =>
+          `${categoryItem.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` ===
+          categoryName
       )
     );
-    
+
     if (matchingCategory) {
-      const matchingSubCategory = matchingCategory.subCategoryResponse.find(subcategory =>
-        `${matchingCategory.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` === categoryName
+      const matchingSubCategory = matchingCategory.subCategoryResponse.find(
+        (subcategory) =>
+          `${matchingCategory.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` ===
+          categoryName
       );
-    
+
       selectedId = matchingSubCategory?.subCategoryId;
     }
-  
+
     if (selectedId) {
       const ruNameResponse = await translateText(name);
       const ruName = ruNameResponse.data.translations[0].translatedText;
@@ -132,7 +144,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   };
 
   return (
-    <Modal handleClickAway={handleClose}>
+    <Modal handleClickAway={handleAddModalClose}>
       <div className={cls.modalWrapper}>
         <p className={cls.title}>Adauga produs</p>
         <div className={cls.dataWrapper}>
