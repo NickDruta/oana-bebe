@@ -81,20 +81,28 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       !description ||
       !prices ||
       !company ||
-      !categoryName ||
-      isLoading
+      !categoryName 
+      // isLoading
     )
       return;
     setIsLoading(true);
 
-    const selectedId = categories?.map((item) =>
-      item.subCategoryResponse.find(
-        (subcategory) =>
-          `${item.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` ===
-          categoryName
+    let selectedId;
+
+    const matchingCategory = categories?.find(categoryItem =>
+      categoryItem.subCategoryResponse.some(subcategory =>
+        `${categoryItem.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` === categoryName
       )
     );
-
+    
+    if (matchingCategory) {
+      const matchingSubCategory = matchingCategory.subCategoryResponse.find(subcategory =>
+        `${matchingCategory.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` === categoryName
+      );
+    
+      selectedId = matchingSubCategory?.subCategoryId;
+    }
+  
     if (selectedId) {
       const ruNameResponse = await translateText(name);
       const ruName = ruNameResponse.data.translations[0].translatedText;
@@ -109,7 +117,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
         description: description,
         description_ru: ruDescription,
         company_product: company,
-        category: selectedId[0]?.subCategoryId ?? "",
+        category: selectedId ?? "",
         images: colors.map((color, index) => {
           return {
             image: images[index],
@@ -118,7 +126,8 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
           };
         }),
       }).then(() => {
-        window.location.reload();
+        // window.location.reload();
+        console.log("!")
       });
     }
   };
