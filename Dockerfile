@@ -22,9 +22,9 @@ FROM nginx:alpine
 # Copy the custom Nginx config
 COPY react.conf /etc/nginx/conf.d/default.conf
 
-# # Copy SSL certificates
-# COPY /etc/letsencrypt/live/oanabebe.md/../../archive/oanabebe.md/fullchain.pem /etc/letsencrypt/live/oanabebe.md/fullchain.pem
-# COPY /etc/letsencrypt/live/oanabebe.md/../../archive/oanabebe.md/privkey.pem /etc/letsencrypt/live/oanabebe.md/privkey.pem
+# Copy SSL certificates
+COPY /etc/letsencrypt/live/oanabebe.md/../../archive/oanabebe.md/fullchain2.pem /etc/letsencrypt/live/oanabebe.md/fullchain.pem
+COPY /etc/letsencrypt/live/oanabebe.md/../../archive/oanabebe.md/privkey2.pem /etc/letsencrypt/live/oanabebe.md/privkey.pem
 
 # Copy the built React app to Nginx's web server directory
 COPY --from=build /app/build /usr/share/nginx/html
