@@ -55,3 +55,9 @@
     object-fit: cover;
   }
 }
+
+.paginationWrapper {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}

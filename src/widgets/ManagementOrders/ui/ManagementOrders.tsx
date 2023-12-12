@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDeleteOrderMutation, useGetOrdersQuery } from "entities/OrdersData";
-import { LoadingSpinner } from "shared/ui";
+import { Button, LoadingSpinner } from "shared/ui";
 import cls from "./ManagementOrders.module.scss";
 import { SuccessIcon } from "shared/assets";
+import { initPaginationData } from "shared/config";
 
 const ManagementOrders = () => {
   const navigate = useNavigate();
-  const { data: ordersData, isLoading } = useGetOrdersQuery();
+  const [pagination, setPagination] = useState(initPaginationData);
+  const { data: ordersData, isLoading } = useGetOrdersQuery(pagination);
   const [completeOrder] = useDeleteOrderMutation();
 
   const handleComplete = (value: number) => {
@@ -17,6 +19,18 @@ const ManagementOrders = () => {
   useEffect(() => {
     if (!sessionStorage.getItem("admin")) navigate("/management");
   }, []);
+  
+  useEffect(() => {
+    if (ordersData) {
+      setPagination({
+        pageNumber: pagination.pageNumber,
+        pageSize: pagination.pageSize,
+        totalElements: ordersData.totalElements,
+        totalPages: ordersData.totalPages,
+      });
+    }
+  }, [ordersData]);
+  
 
   return (
     <div className={cls.managementOrdersWrapper}>
@@ -52,6 +66,33 @@ const ManagementOrders = () => {
                 </div>
               ))}
           </div>
+        )}
+        {pagination.totalPages > 1 ? (
+          <div className={cls.paginationWrapper}>
+            {Array.from(
+              { length: pagination.totalPages },
+              (_, index) => index + 1
+            ).map((item) => (
+              <Button
+                key={item}
+                type={
+                  item === pagination.pageNumber + 1 ? "primary" : "secondary"
+                }
+                text={String(item)}
+                className={cls.paginationItem}
+                onClick={() => {
+                  setPagination({
+                    pageNumber: item - 1,
+                    pageSize: pagination.pageSize,
+                    totalElements: pagination.totalElements,
+                    totalPages: pagination.totalPages,
+                  });
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <></>
         )}
       </div>
     </div>

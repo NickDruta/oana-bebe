@@ -16,11 +16,14 @@ import { CategoryView } from "features/CategoryView";
 import { companies } from "shared/config";
 import { Button, Input, LoadingSpinner } from "shared/ui";
 import cls from "./Products.module.scss";
+import { initPaginationData } from "shared/config";
 
 const Products = () => {
   const { t } = useTranslation();
+  const [pagination, setPagination] = useState(initPaginationData);
+  const [hasInitiated, setHasInitiated] = useState(false);
   const { data: categories, isLoading } = useGetCategoriesQuery();
-  const { data: productsData } = useGetProductsQuery();
+  const { data: productsData } = useGetProductsQuery(pagination);
   const [getProductsByCategory] = useGetProductsByCategoryMutation();
   const [getProductsByFilters] = useGetProductsByFilterMutation();
 
@@ -50,8 +53,14 @@ const Products = () => {
 
     if (!categoryId) return;
 
-    const response = await getProductsByCategory(categoryId);
+    const response = await getProductsByCategory({ categoryId, pagination });
     if ("data" in response) {
+      setPagination({
+        pageSize: pagination.pageSize,
+        pageNumber: pagination.pageNumber,
+        totalElements: response.data.totalElements,
+        totalPages: response.data.totalPages,
+      });
       setProducts(response.data.products);
     } else if ("error" in response) {
       console.error("Error fetching products by category:", response.error);
@@ -67,9 +76,16 @@ const Products = () => {
       companyName: companiesSelected.length ? companiesSelected : null,
       minPrice: minPrice ? minPrice : null,
       maxPrice: maxPrice ? maxPrice : null,
-      pageSize: 20,
+      pageSize: pagination.pageSize,
+      pageNumber: pagination.pageNumber,
     });
     if ("data" in response) {
+      setPagination({
+        pageSize: pagination.pageSize,
+        pageNumber: pagination.pageNumber,
+        totalElements: response.data.totalElements,
+        totalPages: response.data.totalPages,
+      });
       setProducts(response.data.products);
       setCategoryId(null);
       setCategoryActive("");
@@ -79,7 +95,17 @@ const Products = () => {
   };
 
   useEffect(() => {
-    productsData && setProducts(productsData.products);
+    if (productsData && !hasInitiated) {
+      console.log(productsData.totalPages);
+      setProducts(productsData.products);
+      setPagination({
+        pageSize: pagination.pageSize,
+        pageNumber: pagination.pageNumber,
+        totalElements: productsData.totalElements,
+        totalPages: productsData.totalPages,
+      });
+      setHasInitiated(true);
+    }
   }, [productsData]);
 
   useEffect(() => {
@@ -118,9 +144,9 @@ const Products = () => {
             </div>
             <div className={cls.contentWrapper}>
               <div className={cls.filtersWrapper}>
-                <p className={cls.title}>{t('content:FILTERS')}</p>
+                <p className={cls.title}>{t("content:FILTERS")}</p>
                 <Input
-                  placeholder={t('content:SEARCH_PRODUCT')}
+                  placeholder={t("content:SEARCH_PRODUCT")}
                   value={searchValue}
                   handleChange={(value) => setSearchValue(value)}
                 />
@@ -141,24 +167,24 @@ const Products = () => {
                   ))}
                 </div>
                 <div className={cls.priceInputWrapper}>
-                  <p>{t('content:FROM')}</p>
+                  <p>{t("content:FROM")}</p>
                   <Input
-                    placeholder={t('content:PRICE')}
+                    placeholder={t("content:PRICE")}
                     value={minPrice}
                     handleChange={(value) => setMinPrice(value)}
                   />
                 </div>
                 <div className={cls.priceInputWrapper}>
-                  <p>{t('content:TO')}</p>
+                  <p>{t("content:TO")}</p>
                   <Input
-                    placeholder={t('content:PRICE')}
+                    placeholder={t("content:PRICE")}
                     value={maxPrice}
                     handleChange={(value) => setMaxPrice(value)}
                   />
                 </div>
                 <Button
                   type="primary"
-                  text={t('content:APPLY')}
+                  text={t("content:APPLY")}
                   onClick={() => getDataByFilters()}
                 />
               </div>
@@ -173,6 +199,34 @@ const Products = () => {
               </div>
             </div>
           </>
+        )}
+        {pagination.totalPages > 1 ? (
+          <div className={cls.paginationWrapper}>
+            {Array.from(
+              { length: pagination.totalPages },
+              (_, index) => index + 1
+            ).map((item) => (
+              <Button
+                key={item}
+                type={
+                  item === pagination.pageNumber + 1 ? "primary" : "secondary"
+                }
+                text={String(item)}
+                className={cls.paginationItem}
+                onClick={() => {
+                  setHasInitiated(false);
+                  setPagination({
+                    pageNumber: item - 1,
+                    pageSize: pagination.pageSize,
+                    totalElements: pagination.totalElements,
+                    totalPages: pagination.totalPages,
+                  });
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <></>
         )}
       </div>
       <Footer />

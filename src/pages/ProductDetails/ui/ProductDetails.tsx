@@ -21,6 +21,7 @@ const ProductDetails = () => {
 
   const [itemsNumber, setItemsNumber] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleAddCart = () => {
     const cart = localStorage.getItem("cart");
@@ -40,12 +41,38 @@ const ProductDetails = () => {
         productId: id,
         productName: product?.productName,
         quantity: itemsNumber,
-        colors: [Object.keys(product?.images ?? {})[selectedIndex]],
+        colors: [product?.images[selectedIndex].colorName],
       });
     }
 
     localStorage.setItem("cart", JSON.stringify(newCart));
     window.dispatchEvent(new Event("cart"));
+  };
+
+  const parseSpecifications = (specificationsString: string) => {
+    if (specificationsString === "{}") return <></>;
+
+    const specsObject: Record<string, string> = {};
+
+    const specsArray = specificationsString.replace(/[{}]/g, "").split(", ");
+    specsArray.forEach((spec) => {
+      const [key, value] = spec.split("=");
+      if (key && value) {
+        specsObject[key.trim()] = value.trim();
+      }
+    });
+
+    return (
+      <div className={cls.specificationsWrapper}>
+        <h2 className={cls.specificationsTitle}>Specificatii</h2>
+        {Object.entries(specsObject).map(([key, value], index) => (
+          <div key={index} className={cls.specificationItem}>
+            <span className={cls.specificationKey}>{key}</span>
+            <span className={cls.specificationValue}>{value}</span>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -59,15 +86,30 @@ const ProductDetails = () => {
           <MobileHeader />
           <div className={cls.productDetailsWrapper}>
             <div className={cls.contentWrapper}>
-              <div className={cls.imageWrapper}>
-                <img
-                  src={`data:image/png;base64,${
-                    product
-                      ? Object.values(product.images)[selectedIndex].image
-                      : ""
-                  }`}
-                  alt=""
-                />
+              <div>
+                <div className={cls.imageWrapper}>
+                  <img
+                    src={`data:image/png;base64,${
+                      product
+                        ? Object.values(product.images)[selectedIndex].image[
+                            selectedImageIndex
+                          ]
+                        : ""
+                    }`}
+                    alt=""
+                  />
+                </div>
+                <div className={cls.imagesPreview}>
+                  {product &&
+                    product.images[selectedIndex].image.map((item, index) => (
+                      <img
+                        src={`data:image/png;base64,${item}`}
+                        alt=""
+                        className={cls.previewSmallImage}
+                        onClick={() => setSelectedImageIndex(index)}
+                      />
+                    ))}
+                </div>
               </div>
               <div className={cls.infoWrapper}>
                 <div className={cls.subWrapper}>
@@ -90,7 +132,15 @@ const ProductDetails = () => {
                     )}
                   </div>
                 </div>
-                <p className={cls.description}>{isRu ? product?.descriptionRu : product?.description}</p>
+                <p className={cls.description}>
+                  {isRu ? product?.descriptionRu : product?.description}
+                </p>
+                <p className={cls.description}>
+                  {product &&
+                    parseSpecifications(
+                      isRu ? product.specifications : product.specifications
+                    )}
+                </p>
                 <div className={cls.colorsWrapper}>
                   {product?.images.map((item, index) => (
                     <div

@@ -12,6 +12,7 @@ export interface ProductInterface {
   createdDate: Date;
   viewsCount: number;
   category: CategoryInterface;
+  specifications: string;
   imageShortDetails? : {
     imageDate: string;
     imageDiscountPrice: string;
@@ -38,7 +39,7 @@ export interface CategoryTypeInterface {
 export interface ImageInterface {
   imageId: number;
   colorName: string;
-  image: string;
+  image: string[];
   price: string;
   discount: string | null;
 }

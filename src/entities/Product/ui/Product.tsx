@@ -57,7 +57,7 @@ const Product = ({
         className={cls.previewImage}
         src={`data:image/png;base64,${
           product.images
-            ? product.images[0].image
+            ? product.images[0].image[0]
             : product.imageShortDetails?.imageDate
         }`}
         alt=""

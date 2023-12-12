@@ -77,3 +77,9 @@
   border: 1px solid #ccc;
   border-radius: 50%;
 }
+
+.paginationWrapper {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}

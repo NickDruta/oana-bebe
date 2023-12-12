@@ -4,22 +4,26 @@ import {
   ProductsDataApi,
   ProductsPageable,
 } from "entities/ProductsData";
+import { PaginationRecord } from "shared/config";
 
 export const productsDataApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
   reducerPath: "productsApi",
   keepUnusedDataFor: 3600,
   endpoints: (builder) => ({
-    getProducts: builder.query<ProductsPageable, void>({
-      query: () => ({
+    getProducts: builder.query<ProductsPageable, PaginationRecord>({
+      query: (pagination) => ({
         url: ProductsDataApi.GET_PRODUCTS,
         method: "GET",
-        params: { pageSize: 400, pageNumber: 0 },
+        params: {
+          pageSize: pagination.pageSize,
+          pageNumber: pagination.pageNumber,
+        },
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
     }),
-    getNewProducts: builder.query<any, void>({
+    getNewProducts: builder.query<ProductsPageable, void>({
       query: () => ({
         url: ProductsDataApi.GET_NEW_PRODUCTS,
         method: "GET",
@@ -28,7 +32,7 @@ export const productsDataApiSlice = createApi({
         refetchOnReconnect: true,
       }),
     }),
-    getDiscountProducts: builder.query<any, void>({
+    getDiscountProducts: builder.query<ProductsPageable, void>({
       query: () => ({
         url: ProductsDataApi.GET_DISCOUNT_PRODUCTS,
         method: "GET",
@@ -46,13 +50,20 @@ export const productsDataApiSlice = createApi({
         params: { productId: data },
       }),
     }),
-    getProductsByCategory: builder.mutation<ProductsPageable, any>({
-      query: (data) => ({
+    getProductsByCategory: builder.mutation<
+      ProductsPageable,
+      { categoryId: number; pagination: PaginationRecord }
+    >({
+      query: ({ categoryId, pagination }) => ({
         url: ProductsDataApi.GET_PRODUCTS_BY_CATEGORY,
         method: "GET",
         refetchOnFocus: true,
         refetchOnReconnect: true,
-        params: { pageSize: 400, categoryId: data, pageNumber: 0 },
+        params: {
+          pageSize: pagination.pageSize,
+          categoryId: categoryId,
+          pageNumber: pagination.pageNumber,
+        },
       }),
     }),
     getProductsByFilter: builder.mutation<ProductsPageable, any>({

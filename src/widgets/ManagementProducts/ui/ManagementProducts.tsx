@@ -7,16 +7,19 @@ import {
 } from "entities/ProductsData";
 import { Product } from "entities/Product";
 import { AddModalProduct } from "features/AddModalProduct";
+import { DiscountModal } from "features/DiscountModal";
+import { PaginationRecord, initPaginationData } from "shared/config";
+import { Button, LoadingSpinner } from "shared/ui";
 import { AddIcon } from "shared/assets";
 import cls from "./ManagementProducts.module.scss";
-import { DiscountModal } from "features/DiscountModal";
-import { LoadingSpinner } from "shared/ui";
 
 const ManagementProducts = () => {
   const navigate = useNavigate();
+  const [pagination, setPagination] = useState(initPaginationData);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
-  const { data: productsData, isLoading } = useGetProductsQuery();
+  const { data: productsData, isLoading } = useGetProductsQuery(pagination);
   const [deleteProduct] = useDeleteProductMutation();
 
   const [discountProduct, setDiscountProduct] =
@@ -47,6 +50,17 @@ const ManagementProducts = () => {
   useEffect(() => {
     if (!sessionStorage.getItem("admin")) navigate("/management");
   }, []);
+
+  useEffect(() => {
+    if (productsData) {
+      setPagination({
+        pageNumber: pagination.pageNumber,
+        pageSize: pagination.pageSize,
+        totalElements: productsData.totalElements,
+        totalPages: productsData.totalPages,
+      });
+    }
+  }, [productsData]);
 
   return (
     <div className={cls.managementProductsWrapper}>
@@ -80,6 +94,35 @@ const ManagementProducts = () => {
                 <AddIcon style={{ width: 36, height: 36, stroke: "#ffbbeb" }} />
               </div>
             </div>
+            {pagination.totalPages > 1 ? (
+              <div className={cls.paginationWrapper}>
+                {Array.from(
+                  { length: pagination.totalPages },
+                  (_, index) => index + 1
+                ).map((item) => (
+                  <Button
+                    key={item}
+                    type={
+                      item === pagination.pageNumber + 1
+                        ? "primary"
+                        : "secondary"
+                    }
+                    text={String(item)}
+                    className={cls.paginationItem}
+                    onClick={() => {
+                      setPagination({
+                        pageNumber: item - 1,
+                        pageSize: pagination.pageSize,
+                        totalElements: pagination.totalElements,
+                        totalPages: pagination.totalPages,
+                      });
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <></>
+            )}
           </>
         )}
       </div>

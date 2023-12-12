@@ -16,19 +16,38 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   const { data: categories } = useGetCategoriesQuery();
   const [createProduct] = useCreateProductMutation();
 
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [images, setImages] = useState<string[]>([]);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [colorsR, setColorsR] = useState<
+    { image: string[]; price: string; colorName: string }[]
+  >([
+    {
+      colorName: "#000000",
+      image: [""],
+      price: "",
+    },
+  ]);
+
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [prices, setPrices] = useState<string[]>([""]);
   const [company, setCompany] = useState<string>("");
   const [categoryName, setCategoryName] = useState<string>("");
-  const [colors, setColors] = useState<string[]>(["#000000"]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [newSpecName, setNewSpecName] = useState("");
+  const [newSpecValue, setNewSpecValue] = useState("");
+  const [specifications, setSpecifications] = useState<Record<string, string>>(
+    {}
+  );
 
   const handleAddModalClose = () => {
-    if (name || description || prices || company || categoryName) {
+    if (
+      name ||
+      description ||
+      colorsR.filter((item) => item.price).length ||
+      company ||
+      categoryName
+    ) {
       if (window.confirm("Sigur doresti sa inchizi?")) {
         handleClose();
       }
@@ -51,10 +70,12 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       reader.onload = (event) => {
         const base64Image = event.target?.result as string;
         const fullImage = base64Image.split(",")[1];
-        setImages((prevImages) => {
-          const updatedImages = [...prevImages];
-          updatedImages[selectedImage] = fullImage;
-          return updatedImages;
+        setColorsR((prevColorsR) => {
+          const updatedColorsR = [...prevColorsR];
+          updatedColorsR[selectedColorIndex].image[selectedImageIndex] =
+            fullImage;
+
+          return updatedColorsR;
         });
       };
       reader.readAsDataURL(file);
@@ -62,19 +83,31 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   };
 
   const handlePriceChange = (value: string) => {
-    let newPrices = [...prices];
-    newPrices[selectedImage] = value;
-    setPrices(newPrices);
+    setColorsR((prevColorsR) => {
+      const updatedColorsR = [...prevColorsR];
+      updatedColorsR[selectedColorIndex].price = value;
+
+      return updatedColorsR;
+    });
+  };
+
+  const handleAddSpecification = () => {
+    if (newSpecName && newSpecValue) {
+      setSpecifications({ ...specifications, [newSpecName]: newSpecValue });
+      setNewSpecName("");
+      setNewSpecValue("");
+    }
   };
 
   const handleSave = async () => {
+    console.log("!");
     if (!name) {
       setError("Numele lipseste");
     }
     if (!description) {
       setError("Descrierea lipseste");
     }
-    if (prices.length < colors.length) {
+    if (colorsR.filter((item) => !item.price).length) {
       setError("In careva culoare pretul lipseste");
     }
     if (!company) {
@@ -84,12 +117,17 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       setError("Categoria lipseste");
     }
 
+    if (!specifications) {
+      setError("Specificatiile lipsesc");
+    }
+
     if (
       !name ||
       !description ||
-      !prices ||
+      colorsR.filter((item) => !item.price).length ||
       !company ||
       !categoryName ||
+      !specifications ||
       isLoading
     )
       return;
@@ -130,13 +168,8 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
         description_ru: ruDescription,
         company_product: company,
         category: selectedId ?? "",
-        images: colors.map((color, index) => {
-          return {
-            image: images[index],
-            price: prices[index],
-            colorName: color,
-          };
-        }),
+        specification: specifications,
+        images: colorsR,
       }).then(() => {
         window.location.reload();
       });
@@ -149,19 +182,22 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
         <p className={cls.title}>Adauga produs</p>
         <div className={cls.dataWrapper}>
           <div className={cls.imageWrapper}>
-            {images.length && images[selectedImage] ? (
+            {colorsR[selectedColorIndex].image[selectedImageIndex] ? (
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  setImages((prevImages) => {
-                    const updatedImages = [...prevImages];
-                    updatedImages[selectedImage] = "";
-                    return updatedImages;
+                  setColorsR((prevColorsR) => {
+                    const updatedColorsR = [...prevColorsR];
+                    updatedColorsR[selectedColorIndex].image[
+                      selectedImageIndex
+                    ] = "";
+
+                    return updatedColorsR;
                   });
                 }}
               >
                 <img
-                  src={`data:image/png;base64,${images[selectedImage]}`}
+                  src={`data:image/png;base64,${colorsR[selectedColorIndex].image[selectedImageIndex]}`}
                   alt=""
                   className={cls.previewImage}
                 />
@@ -173,16 +209,51 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
                 <input type="file" onChange={handleImageChange} />
               </label>
             )}
+
+            <div className={cls.imagesPreview}>
+              {colorsR[selectedColorIndex].image.map((item, imageIndex) =>
+                item ? (
+                  <img
+                    src={`data:image/png;base64,${item}`}
+                    alt=""
+                    className={cls.previewSmallImage}
+                    onClick={() => setSelectedImageIndex(imageIndex)}
+                  />
+                ) : (
+                  <div
+                    className={cls.noImagePreview}
+                    onClick={() => setSelectedImageIndex(imageIndex)}
+                  ></div>
+                )
+              )}
+              <div
+                className={cls.noImagePreview}
+                onClick={() => {
+                  setColorsR((prevColorsR) => {
+                    let updatedColorsR = [...prevColorsR];
+                    updatedColorsR[selectedColorIndex].image = [
+                      ...updatedColorsR[selectedColorIndex].image,
+                      "",
+                    ];
+
+                    return updatedColorsR;
+                  });
+                }}
+              >
+                +
+              </div>
+            </div>
+
             <div className={cls.colorWrapper}>
-              {colors.map((color, index) => (
+              {colorsR.map(({ colorName }, index) => (
                 <div
                   key={index}
                   className={clsx(
                     cls.color,
-                    index === selectedImage && cls.activeColor
+                    index === selectedColorIndex && cls.activeColor
                   )}
-                  style={{ background: color }}
-                  onClick={() => setSelectedImage(index)}
+                  style={{ background: colorName }}
+                  onClick={() => setSelectedColorIndex(index)}
                 />
               ))}
             </div>
@@ -201,7 +272,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
             <input
               className={cls.input}
               placeholder="Pret"
-              value={prices[selectedImage]}
+              value={colorsR[selectedColorIndex].price}
               onChange={(e) => handlePriceChange(e.target.value)}
             />
             <Select
@@ -216,18 +287,23 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
               handleChange={(value) => setCategoryName(value)}
               placeholder="Categorie"
             />
+
             <div className={cls.colorWrapper}>
-              {colors.map((color, index) => (
+              {colorsR.map(({ colorName }, index) => (
                 <input
                   key={index}
                   type="color"
-                  value={color}
+                  value={colorName}
                   onChange={(e) => {
                     const value = e.target.value;
-                    setColors((prevColors) => {
-                      const updatedColors = [...prevColors];
-                      updatedColors[index] = value;
-                      return updatedColors;
+                    setColorsR((prevColorsR) => {
+                      const updatedColorsR = [...prevColorsR];
+                      updatedColorsR[index] = {
+                        colorName: value,
+                        image: updatedColorsR[index].image,
+                        price: updatedColorsR[index].price,
+                      };
+                      return updatedColorsR;
                     });
                   }}
                 />
@@ -235,9 +311,16 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
               <div
                 className={cls.color}
                 onClick={() => {
-                  setColors([...colors, "#000000"]);
-                  setImages([...images, ""]);
-                  setPrices([...prices, ""]);
+                  setColorsR((prevColorsR) => {
+                    const updatedColorsR = [...prevColorsR];
+                    updatedColorsR.push({
+                      colorName: "#000000",
+                      image: [""],
+                      price: "",
+                    });
+
+                    return updatedColorsR;
+                  });
                 }}
               >
                 <AddIcon />
@@ -247,6 +330,34 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
             {error ? <div className={cls.error}>{error}</div> : ""}
             <div className={cls.saveButton} onClick={handleSave}>
               {isLoading ? "Se incarca" : "Adauga"}
+            </div>
+          </div>
+
+          <div className={cls.detailsWrapper}>
+            <div className={cls.specificationsWrapper}>
+              <div className={cls.specificationItem}>
+                <Input
+                  placeholder="Specificati"
+                  value={newSpecName}
+                  handleChange={setNewSpecName}
+                />
+                <Input
+                  placeholder="Valoare"
+                  value={newSpecValue}
+                  handleChange={setNewSpecValue}
+                />
+              </div>
+              <div className={cls.saveButton} onClick={handleAddSpecification}>
+                Adauga Specificatie
+              </div>
+
+              {Object.entries(specifications).map(([key, value], index) => (
+                <div key={index} className={cls.specificationItem}>
+                  <span>
+                    {key}: {value}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

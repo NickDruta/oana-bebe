@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { OrdersDataApi } from "entities/OrdersData";
+import { PaginationRecord } from "shared/config";
 
 export const ordersDataApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
@@ -7,11 +8,14 @@ export const ordersDataApiSlice = createApi({
   keepUnusedDataFor: 3600,
   tagTypes: ["Orders"],
   endpoints: (builder) => ({
-    getOrders: builder.query<any, void>({
-      query: () => ({
+    getOrders: builder.query<any, PaginationRecord>({
+      query: (pagination) => ({
         url: OrdersDataApi.GET_ORDERS,
         method: "GET",
-        params: { pageSize: 20 },
+        params: {
+          pageSize: pagination.pageSize,
+          pageNumber: pagination.pageNumber,
+        },
         refetchOnFocus: true,
         refetchOnReconnect: true,
         refetchOnMountOrArgChange: true,
