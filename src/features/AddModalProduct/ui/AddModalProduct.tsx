@@ -39,6 +39,9 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   const [specifications, setSpecifications] = useState<Record<string, string>>(
     {}
   );
+  const [specificationsRu, setSpecificationsRu] = useState<
+    Record<string, string>
+  >({});
 
   const handleAddModalClose = () => {
     if (
@@ -91,9 +94,15 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
     });
   };
 
-  const handleAddSpecification = () => {
+  const handleAddSpecification = async () => {
     if (newSpecName && newSpecValue) {
+      const ruKeyTranslated = await translateText(newSpecName);
+      const ruKeyText = ruKeyTranslated.data.translations[0].translatedText;
+      const ruValueTranslated = await translateText(newSpecValue);
+      const ruValueText = ruValueTranslated.data.translations[0].translatedText;
+      
       setSpecifications({ ...specifications, [newSpecName]: newSpecValue });
+      setSpecificationsRu({ ...specifications, [ruKeyText]: ruValueText });
       setNewSpecName("");
       setNewSpecValue("");
     }
@@ -169,6 +178,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
         company_product: company,
         category: selectedId ?? "",
         specification: specifications,
+        specificationRu: specificationsRu,
         images: colorsR,
       }).then(() => {
         window.location.reload();
