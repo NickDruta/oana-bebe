@@ -42,7 +42,7 @@
 
 .product {
   width: calc(278px / 2 * 1.5);
-  height: 283.5px;
+  min-height: fit-content;
   border: 1px solid #ffbbeb;
 
   &:hover {

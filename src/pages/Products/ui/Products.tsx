@@ -23,7 +23,7 @@ const Products = () => {
   const [pagination, setPagination] = useState(initPaginationData);
   const [hasInitiated, setHasInitiated] = useState(false);
   const { data: categories, isLoading } = useGetCategoriesQuery();
-  const { data: productsData } = useGetProductsQuery(pagination);
+  const { data: productsData, isLoading: isProductsLoading } = useGetProductsQuery(pagination);
   const [getProductsByCategory] = useGetProductsByCategoryMutation();
   const [getProductsByFilters] = useGetProductsByFilterMutation();
 
@@ -118,7 +118,7 @@ const Products = () => {
       <Header />
       <MobileHeader />
       <div className={cls.productsWrapper}>
-        {isLoading ? (
+        {isLoading || isProductsLoading ? (
           <LoadingSpinner />
         ) : (
           <>

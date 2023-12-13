@@ -109,7 +109,6 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   };
 
   const handleSave = async () => {
-    console.log("!");
     if (!name) {
       setError("Numele lipseste");
     }
