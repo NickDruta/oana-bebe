@@ -66,24 +66,32 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
     )
     .flat();
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64Image = event.target?.result as string;
-        const fullImage = base64Image.split(",")[1];
-        setColorsR((prevColorsR) => {
-          const updatedColorsR = [...prevColorsR];
-          updatedColorsR[selectedColorIndex].image[selectedImageIndex] =
-            fullImage;
-
-          return updatedColorsR;
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0);
+            const jpegDataUrl = canvas.toDataURL('image/jpeg');
+            const base64Image = jpegDataUrl.split(",")[1];
+            
+            setColorsR((prevColorsR) => {
+              const updatedColorsR = [...prevColorsR];
+              updatedColorsR[selectedColorIndex].image[selectedImageIndex] = base64Image;
+              return updatedColorsR;
+            });
+          };
+          img.src = event.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+    };    
 
   const handlePriceChange = (value: string) => {
     setColorsR((prevColorsR) => {
@@ -100,7 +108,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       const ruKeyText = ruKeyTranslated.data.translations[0].translatedText;
       const ruValueTranslated = await translateText(newSpecValue);
       const ruValueText = ruValueTranslated.data.translations[0].translatedText;
-      
+
       setSpecifications({ ...specifications, [newSpecName]: newSpecValue });
       setSpecificationsRu({ ...specifications, [ruKeyText]: ruValueText });
       setNewSpecName("");
@@ -168,6 +176,18 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       const ruDescriptionResponse = await translateText(description);
       const ruDescription =
         ruDescriptionResponse.data.translations[0].translatedText;
+
+      console.log({
+        product_name: name,
+        product_name_ru: ruName,
+        description: description,
+        description_ru: ruDescription,
+        company_product: company,
+        category: selectedId ?? "",
+        specification: specifications,
+        specificationRu: specificationsRu,
+        images: colorsR,
+      });
 
       createProduct({
         product_name: name,
@@ -262,7 +282,10 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
                     index === selectedColorIndex && cls.activeColor
                   )}
                   style={{ background: colorName }}
-                  onClick={() => setSelectedColorIndex(index)}
+                  onClick={() => {
+                    setSelectedImageIndex(0);
+                    setSelectedColorIndex(index);
+                  }}
                 />
               ))}
             </div>
