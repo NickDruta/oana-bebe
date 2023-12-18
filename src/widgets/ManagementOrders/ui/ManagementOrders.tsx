@@ -69,7 +69,7 @@ const ManagementOrders = () => {
         {pagination.totalPages > 1 ? (
           <div className={cls.paginationWrapper}>
             {Array.from(
-              { length: pagination.totalPages > 3 ? 3 : pagination.totalPages },
+              { length: pagination.totalPages },
               (_, index) => index + 1
             ).map((item) => (
               <Button
@@ -89,30 +89,6 @@ const ManagementOrders = () => {
                 }}
               />
             ))}
-            {pagination.totalPages > 3 ? (
-              <>
-                <p style={{ height: 28, marginTop: "auto" }}>...</p>
-                <Button
-                  type={
-                    pagination.totalPages === pagination.pageNumber + 1
-                      ? "primary"
-                      : "secondary"
-                  }
-                  text={String(pagination.totalPages)}
-                  className={cls.paginationItem}
-                  onClick={() => {
-                    setPagination({
-                      pageNumber: pagination.totalPages - 1,
-                      pageSize: pagination.pageSize,
-                      totalElements: pagination.totalElements,
-                      totalPages: pagination.totalPages,
-                    });
-                  }}
-                />
-              </>
-            ) : (
-              <></>
-            )}
           </div>
         ) : (
           <></>
