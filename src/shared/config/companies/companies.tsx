@@ -14,5 +14,9 @@ export const companies = [
   "SanBaby",
   "Cottonmoose",
   "Maylily",
-  "Twins"
+  "Twins",
+  "Sonto",
+  "Children’s dream",
+  "Colibro",
+  "Peg Perego",
 ];
