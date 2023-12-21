@@ -19,5 +19,8 @@ export const companies = [
   "Children’s dream",
   "Colibro",
   "Peg Perego",
-  "Euro-Cart"
+  "Euro-Cart",
+  "Miracolo",
+  "Dubik",
+  "Maltex"
 ];
