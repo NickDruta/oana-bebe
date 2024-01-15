@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { useGetCategoriesQuery } from "entities/CategoryData";
 import {
   ProductInterface,
@@ -22,6 +23,7 @@ type Request = "default" | "filter" | "category";
 
 const Products = () => {
   const { t } = useTranslation();
+  const location = useLocation();
 
   const [isVisible, setIsVisible] = useState(false);
   const ref = useCallback((node: any) => {
@@ -145,7 +147,7 @@ const Products = () => {
   const fetchProductByFilter = async (pageNumber: number) => {
     if (!searchValue && !companiesSelected.length && !minPrice && !maxPrice) {
       if (typeOfRequest === "filter") {
-        console.log('!')
+        console.log("!");
         changeTypeOfRequest("default");
       }
     }
@@ -192,7 +194,12 @@ const Products = () => {
   };
 
   useEffect(() => {
-    loadNextProducts();
+    if (location.search.split("?")[1].split("=")[0] === "companies") {
+      setCompaniesSelected([location.search.split("?")[1].split("=")[1]]);
+      changeTypeOfRequest("filter");
+    } else {
+      loadNextProducts();
+    }
   }, []);
 
   useEffect(() => {
@@ -291,7 +298,9 @@ const Products = () => {
                     <div ref={ref}>
                       <ProductLoading />
                     </div>
-                  ) : <></>}
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ) : (
                 <p className={cls.title}>Nu exista asa produse</p>
