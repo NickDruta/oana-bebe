@@ -196,6 +196,7 @@ const Products = () => {
   useEffect(() => {
     if (location.search.split("?")[1].split("=")[0] === "companies") {
       setCompaniesSelected([location.search.split("?")[1].split("=")[1]]);
+      setProductLoading(false);
       changeTypeOfRequest("filter");
     } else {
       loadNextProducts();
@@ -203,6 +204,7 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
+    console.log(!productsFinished, !productLoading, isVisible)
     if (isVisible && !productLoading && !productsFinished) {
       loadNextProducts();
       setIsVisible(false);
