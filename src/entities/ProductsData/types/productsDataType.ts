@@ -13,15 +13,16 @@ export interface ProductInterface {
   viewsCount: number;
   category: CategoryInterface;
   specifications: string;
-  imageShortDetails? : {
+  specificationsRu: string;
+  imageShortDetails?: {
     imageDate: string;
     imageDiscountPrice: string;
     price: string;
   };
   haveDiscount?: boolean;
+  categoryName?: string;
   images: ImageInterface[];
 }
-
 
 export interface CategoryInterface {
   categoryId: number;
@@ -48,4 +49,10 @@ export interface ProductsPageable {
   products: ProductInterface[];
   totalElements: number;
   totalPages: number;
+}
+
+export interface ImageShortInferface {
+  image: string[];
+  price: string;
+  colorName: string;
 }

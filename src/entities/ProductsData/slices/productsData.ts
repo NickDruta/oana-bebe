@@ -23,6 +23,18 @@ export const productsDataApiSlice = createApi({
         refetchOnReconnect: true,
       }),
     }),
+    getProductsTrigger: builder.mutation<ProductsPageable, PaginationRecord>({
+      query: (pagination) => ({
+        url: ProductsDataApi.GET_PRODUCTS,
+        method: "GET",
+        params: {
+          pageSize: pagination.pageSize,
+          pageNumber: pagination.pageNumber,
+        },
+        refetchOnFocus: true,
+        refetchOnReconnect: true,
+      }),
+    }),
     getNewProducts: builder.query<ProductsPageable, void>({
       query: () => ({
         url: ProductsDataApi.GET_NEW_PRODUCTS,
@@ -130,6 +142,7 @@ export const productsDataApiSlice = createApi({
 
 export const {
   useGetProductsQuery,
+  useGetProductsTriggerMutation,
   useGetNewProductsQuery,
   useGetDiscountProductsQuery,
   useGetProductDetailsQuery,

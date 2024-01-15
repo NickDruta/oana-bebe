@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useGetCategoriesQuery } from "entities/CategoryData";
-import { useCreateProductMutation } from "entities/ProductsData";
+import {
+  ImageShortInferface,
+  ProductInterface,
+  useCreateProductMutation,
+  useDeleteProductMutation,
+  useGetProductDetailsQuery,
+} from "entities/ProductsData";
 import { AddIcon } from "shared/assets";
 import { companies } from "shared/config";
 import { Modal, Input, Select, TextArea } from "shared/ui";
@@ -9,39 +15,87 @@ import clsx from "clsx";
 import { translateText } from "shared/lib/translateText/translateText";
 
 interface AddModalProductProps {
+  productSelected: ProductInterface | null;
   handleClose: () => void;
 }
 
-const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
+const AddModalProduct = ({
+  productSelected,
+  handleClose,
+}: AddModalProductProps) => {
   const { data: categories } = useGetCategoriesQuery();
+  const { data: productData, isLoading: isProductLoading } = useGetProductDetailsQuery(
+    productSelected?.productId, 
+    {
+      skip: !productSelected
+    }
+  );
   const [createProduct] = useCreateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
 
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [colorsR, setColorsR] = useState<
-    { image: string[]; price: string; colorName: string }[]
-  >([
-    {
-      colorName: "#000000",
-      image: [""],
-      price: "",
-    },
-  ]);
+  const [colorsR, setColorsR] = useState<ImageShortInferface[]>(
+    productSelected
+      ? (productSelected.images as ImageShortInferface[])
+      : [
+          {
+            colorName: "#000000",
+            image: [""],
+            price: "",
+          },
+        ]
+  );
 
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
-  const [categoryName, setCategoryName] = useState<string>("");
+  const [name, setName] = useState<string>(productSelected?.productName ?? "");
+  const [description, setDescription] = useState<string>(
+    productSelected?.description ?? ""
+  );
+  const [company, setCompany] = useState<string>(
+    productSelected?.companyName ?? ""
+  );
+  const [categoryName, setCategoryName] = useState<string>(
+    productSelected?.categoryName ?? ""
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [newSpecName, setNewSpecName] = useState("");
   const [newSpecValue, setNewSpecValue] = useState("");
+
+  const parseSpecifications = (specificationsString: string) => {
+    if (specificationsString === "{}") return <></>;
+
+    const specsObject: Record<string, string> = {};
+
+    const specsArray = specificationsString.replace(/[{}]/g, "").split(", ");
+    specsArray.forEach((spec) => {
+      const [key, value] = spec.split("=");
+      if (key && value) {
+        specsObject[key.trim()] = value.trim();
+      }
+    });
+
+    return specsObject;
+  };
+
   const [specifications, setSpecifications] = useState<Record<string, string>>(
-    {}
+    productData && productData.specifications
+      ? (parseSpecifications(productData?.specifications) as Record<
+          string,
+          string
+        >)
+      : {}
   );
   const [specificationsRu, setSpecificationsRu] = useState<
     Record<string, string>
-  >({});
+  >(
+    productData && productData.specificationsRu
+      ? (parseSpecifications(productData.specificationsRu) as Record<
+          string,
+          string
+        >)
+      : {}
+  );
 
   const handleAddModalClose = () => {
     if (
@@ -54,6 +108,8 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       if (window.confirm("Sigur doresti sa inchizi?")) {
         handleClose();
       }
+    } else {
+      handleClose();
     }
   };
 
@@ -66,40 +122,57 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
     )
     .flat();
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx?.drawImage(img, 0, 0);
-            const jpegDataUrl = canvas.toDataURL('image/jpeg');
-            const base64Image = jpegDataUrl.split(",")[1];
-            
-            setColorsR((prevColorsR) => {
-              const updatedColorsR = [...prevColorsR];
-              updatedColorsR[selectedColorIndex].image[selectedImageIndex] = base64Image;
-              return updatedColorsR;
-            });
-          };
-          img.src = event.target?.result as string;
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0);
+          const jpegDataUrl = canvas.toDataURL("image/jpeg");
+          const base64Image = jpegDataUrl.split(",")[1];
+
+          setColorsR((prevColorsR) => {
+            const updatedColorsR = [...prevColorsR];
+            updatedColorsR[selectedColorIndex].image[selectedImageIndex] =
+              base64Image;
+            return updatedColorsR;
+          });
         };
-        reader.readAsDataURL(file);
-      }
-    };    
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handlePriceChange = (value: string) => {
     setColorsR((prevColorsR) => {
+      // Create a new array with all previous objects
       const updatedColorsR = [...prevColorsR];
-      updatedColorsR[selectedColorIndex].price = value;
-
+      
+      // Replace the object at the selected index with a new object
+      // that has the updated price property
+      updatedColorsR[selectedColorIndex] = {
+        ...updatedColorsR[selectedColorIndex],
+        price: value,
+      };
+  
       return updatedColorsR;
     });
+  };
+
+  const handleColorClear = (index: number) => {
+    if (colorsR.length === 1) return;
+    if (window.confirm("Sigur vrei sa stergi imaginile si pretul culorii?")) {
+      let newColorsR = [...colorsR];
+      newColorsR.splice(index, 1);
+      setColorsR(newColorsR);
+    }
   };
 
   const handleAddSpecification = async () => {
@@ -177,17 +250,9 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
       const ruDescription =
         ruDescriptionResponse.data.translations[0].translatedText;
 
-      console.log({
-        product_name: name,
-        product_name_ru: ruName,
-        description: description,
-        description_ru: ruDescription,
-        company_product: company,
-        category: selectedId ?? "",
-        specification: specifications,
-        specificationRu: specificationsRu,
-        images: colorsR,
-      });
+      if (productSelected) {
+        deleteProduct(productSelected.productId);
+      }
 
       createProduct({
         product_name: name,
@@ -208,7 +273,9 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   return (
     <Modal handleClickAway={handleAddModalClose}>
       <div className={cls.modalWrapper}>
-        <p className={cls.title}>Adauga produs</p>
+        <p className={cls.title}>
+          {productSelected ? "Editeaza produs" : "Adauga produs"}
+        </p>
         <div className={cls.dataWrapper}>
           <div className={cls.imageWrapper}>
             {colorsR[selectedColorIndex].image[selectedImageIndex] ? (
@@ -275,18 +342,26 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
 
             <div className={cls.colorWrapper}>
               {colorsR.map(({ colorName }, index) => (
-                <div
-                  key={index}
-                  className={clsx(
-                    cls.color,
-                    index === selectedColorIndex && cls.activeColor
-                  )}
-                  style={{ background: colorName }}
-                  onClick={() => {
-                    setSelectedImageIndex(0);
-                    setSelectedColorIndex(index);
-                  }}
-                />
+                <div className={cls.colorRelative}>
+                  <div
+                    className={cls.colorClear}
+                    onClick={() => handleColorClear(index)}
+                  >
+                    x
+                  </div>
+                  <div
+                    key={index}
+                    className={clsx(
+                      cls.color,
+                      index === selectedColorIndex && cls.activeColor
+                    )}
+                    style={{ background: colorName }}
+                    onClick={() => {
+                      setSelectedImageIndex(0);
+                      setSelectedColorIndex(index);
+                    }}
+                  />
+                </div>
               ))}
             </div>
           </div>

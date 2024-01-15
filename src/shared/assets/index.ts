@@ -1,3 +1,4 @@
+export { ReactComponent as EditIcon } from './icons/edit.svg';
 export { ReactComponent as Logo } from './icons/logo.svg';
 export { ReactComponent as LocationIcon } from './icons/location.svg';
 export { ReactComponent as PhoneIcon } from './icons/phone.svg';

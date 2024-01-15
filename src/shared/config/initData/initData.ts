@@ -6,3 +6,10 @@ export const initPaginationData: PaginationRecord = {
   totalElements: 0,
   totalPages: 0,
 };
+
+export const singleSizePaginationData: PaginationRecord = {
+  pageNumber: 0,
+  pageSize: 1,
+  totalElements: 0,
+  totalPages: 0,
+};

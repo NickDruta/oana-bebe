@@ -149,6 +149,18 @@ input[type="file"] {
   cursor: pointer;
 }
 
+.colorRelative {
+  position: relative;
+}
+
+.colorClear {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  font-family: "Inter-Bold";
+  cursor: pointer;
+}
+
 .color {
   border: 1px solid #000;
   border-radius: 50%;

@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { ProductInterface } from "entities/ProductsData";
-import { DeleteIcon, DiscountIcon, EyeIcon } from "shared/assets";
+import { DeleteIcon, DiscountIcon, EditIcon, EyeIcon } from "shared/assets";
 import cls from "./Product.module.scss";
 import { i18n } from "shared/providers";
 
@@ -12,6 +12,7 @@ interface ProductProps {
   isAdmin?: boolean;
   onClickDelete?: (productId: number) => void;
   onClickDiscount?: (productId: number) => void;
+  onClickEdit?: (productId: number) => void;
 }
 
 const Product = ({
@@ -20,9 +21,10 @@ const Product = ({
   isAdmin,
   onClickDelete,
   onClickDiscount,
+  onClickEdit,
 }: ProductProps) => {
   const navigate = useNavigate();
-  const isRu = i18n.language === 'ru';
+  const isRu = i18n.language === "ru";
 
   return (
     <div
@@ -44,6 +46,15 @@ const Product = ({
           className={cls.discount}
         />
       )}
+      {isAdmin && (
+        <EditIcon
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickEdit?.(product.productId);
+          }}
+          className={cls.edit}
+        />
+      )}
       {(product.isDiscount || product.haveDiscount) && !isAdmin && (
         <p className={cls.discountTag}>Reducere</p>
       )}
@@ -62,7 +73,9 @@ const Product = ({
         }`}
         alt=""
       />
-      <p className={cls.productName}>{isRu ? product.productNameRu : product.productName}</p>
+      <p className={cls.productName}>
+        {isRu ? product.productNameRu : product.productName}
+      </p>
       <div className={cls.priceWrapper}>
         <p
           className={clsx(
@@ -70,10 +83,14 @@ const Product = ({
             (product.isDiscount || product.haveDiscount) && cls.oldPrice
           )}
         >
-          {product.images ? product.images[0].price : product.imageShortDetails?.price} MDL
+          {product.images
+            ? product.images[0].price
+            : product.imageShortDetails?.price}{" "}
+          MDL
         </p>
         {!isAdmin &&
-        (product.imageShortDetails?.imageDiscountPrice || product.images?.[0].discount) ? (
+        (product.imageShortDetails?.imageDiscountPrice ||
+          product.images?.[0].discount) ? (
           <p className={cls.price}>
             {product.imageShortDetails?.imageDiscountPrice ??
               product.images[0].discount}{" "}

@@ -1,30 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCategoriesQuery } from "entities/CategoryData";
 import {
   ProductInterface,
   useGetProductsByCategoryMutation,
   useGetProductsByFilterMutation,
-  useGetProductsQuery,
+  useGetProductsTriggerMutation,
 } from "entities/ProductsData";
 import { Product } from "entities/Product";
 import { StickyInfo } from "entities/StickyInfo";
+import { ProductLoading } from "entities/ProductLoading";
 import { Header } from "features/Header";
 import { MobileHeader } from "features/MobileHeader";
 import { Footer } from "features/Footer";
 import { CategoryView } from "features/CategoryView";
-import { companies } from "shared/config";
+import { companies, singleSizePaginationData } from "shared/config";
 import { Button, Input, LoadingSpinner } from "shared/ui";
 import cls from "./Products.module.scss";
-import { initPaginationData } from "shared/config";
+
+type Request = "default" | "filter" | "category";
 
 const Products = () => {
   const { t } = useTranslation();
-  const [pagination, setPagination] = useState(initPaginationData);
-  const [hasInitiated, setHasInitiated] = useState(false);
-  const { data: categories, isLoading } = useGetCategoriesQuery();
-  const { data: productsData, isLoading: isProductsLoading } =
-    useGetProductsQuery(pagination);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useCallback((node: any) => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    });
+
+    if (node) {
+      observer.observe(node);
+    }
+  }, []);
+
+  const [pagination, setPagination] = useState(singleSizePaginationData);
+  const { data: categories, isLoading: isCategoryLoading } =
+    useGetCategoriesQuery();
+  const [productLoading, setProductLoading] = useState(true);
+  const [productsFinished, setProductsFinished] = useState(false);
+
+  const [typeOfRequest, setTypeOfReqeust] = useState<Request>("default");
+  const [getProductsTrigger] = useGetProductsTriggerMutation();
   const [getProductsByCategory] = useGetProductsByCategoryMutation();
   const [getProductsByFilters] = useGetProductsByFilterMutation();
 
@@ -37,6 +54,9 @@ const Products = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
+  /**
+   * Handle companies selected
+   */
   const handleCompany = (item: string) => {
     if (companiesSelected.includes(item)) {
       setCompaniesSelected([
@@ -47,71 +67,140 @@ const Products = () => {
     }
   };
 
-  const getDataByCategory = async () => {
-    if (!categoryId && productsData) {
-      setProducts(productsData.products);
+  const changeTypeOfRequest = (typeOfRequest: Request) => {
+    setTypeOfReqeust(typeOfRequest);
+    setPagination(singleSizePaginationData);
+    setProducts([]);
+    setIsVisible(true);
+
+    if (typeOfRequest !== "category") {
+      setCategoryActive("");
+      setCategoryId(null);
     }
-
-    if (!categoryId) return;
-
-    const response = await getProductsByCategory({ categoryId, pagination });
-    if ("data" in response) {
-      setPagination({
-        pageSize: pagination.pageSize,
-        pageNumber: pagination.pageNumber,
-        totalElements: response.data.totalElements,
-        totalPages: response.data.totalPages,
-      });
-      setProducts(response.data.products);
-    } else if ("error" in response) {
-      console.error("Error fetching products by category:", response.error);
+    if (typeOfRequest !== "filter") {
+      setCompaniesSelected([]);
+      setSearchValue("");
+      setMaxPrice("");
+      setMinPrice("");
     }
   };
 
-  const getDataByFilters = async () => {
-    if (!searchValue && !companiesSelected.length && !minPrice && !maxPrice)
-      return;
+  /**
+   * Get data(products)
+   */
+  const fetchProduct = async (pageNumber: number) => {
+    const response = await getProductsTrigger({
+      ...pagination,
+      pageNumber: pageNumber,
+    });
 
+    if ("data" in response) {
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        ...response.data.products,
+      ]);
+      if (!response.data.products.length) {
+        setProductsFinished(true);
+      }
+    } else if ("error" in response) {
+      console.error("Error fetching product:", response.error);
+    }
+    setProductLoading(false);
+  };
+
+  /**
+   * Get data with a category applied
+   */
+  const fetchProductByCategory = async (pageNumber: number) => {
+    if (!categoryId) {
+      changeTypeOfRequest("default");
+    } else {
+      setProductLoading(true);
+      const paginationReformed = {
+        ...pagination,
+        pageNumber: pageNumber,
+      };
+      const response = await getProductsByCategory({
+        categoryId,
+        pagination: paginationReformed,
+      });
+      if ("data" in response) {
+        setProducts((prevProducts) => [
+          ...prevProducts,
+          ...response.data.products,
+        ]);
+        if (!response.data.products.length) {
+          setProductsFinished(true);
+        }
+      } else if ("error" in response) {
+        console.error("Error fetching products by category:", response.error);
+      }
+      setProductLoading(false);
+    }
+  };
+
+  /**
+   * Get data with some filters applied
+   */
+  const fetchProductByFilter = async (pageNumber: number) => {
+    if (!searchValue && !companiesSelected.length && !minPrice && !maxPrice) {
+      if (typeOfRequest === "filter") {
+        console.log('!')
+        changeTypeOfRequest("default");
+      }
+    }
+
+    setProductLoading(true);
     const response = await getProductsByFilters({
       productName: searchValue ? searchValue : null,
       companyName: companiesSelected.length ? companiesSelected : null,
       minPrice: minPrice ? minPrice : null,
       maxPrice: maxPrice ? maxPrice : null,
       pageSize: pagination.pageSize,
-      pageNumber: pagination.pageNumber,
+      pageNumber: pageNumber,
     });
     if ("data" in response) {
-      setPagination({
-        pageSize: pagination.pageSize,
-        pageNumber: pagination.pageNumber,
-        totalElements: response.data.totalElements,
-        totalPages: response.data.totalPages,
-      });
-      setProducts(response.data.products);
-      setCategoryId(null);
-      setCategoryActive("");
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        ...response.data.products,
+      ]);
+      if (!response.data.products.length) {
+        setProductsFinished(true);
+      }
     } else if ("error" in response) {
       console.error("Error fetching products by category:", response.error);
     }
+    setProductLoading(false);
+  };
+
+  const loadNextProducts = async () => {
+    setProductLoading(true);
+    for (let i = pagination.pageNumber; i < pagination.pageNumber + 6; i++) {
+      if (typeOfRequest === "default") {
+        await fetchProduct(i);
+      } else if (typeOfRequest === "filter") {
+        await fetchProductByFilter(i);
+      } else {
+        await fetchProductByCategory(i);
+      }
+    }
+    setPagination((prevPagination) => ({
+      ...prevPagination,
+      pageNumber: pagination.pageNumber + 6,
+    }));
+    setProductLoading(false);
   };
 
   useEffect(() => {
-    if (productsData && !hasInitiated) {
-      console.log(productsData.totalPages);
-      setProducts(productsData.products);
-      setPagination({
-        pageSize: pagination.pageSize,
-        pageNumber: pagination.pageNumber,
-        totalElements: productsData.totalElements,
-        totalPages: productsData.totalPages,
-      });
-      setHasInitiated(true);
-    }
-  }, [productsData]);
+    loadNextProducts();
+  }, []);
 
   useEffect(() => {
-    getDataByCategory();
-  }, [categoryId]);
+    if (isVisible && !productLoading && !productsFinished) {
+      loadNextProducts();
+      setIsVisible(false);
+    }
+  }, [isVisible, productLoading]);
 
   return (
     <>
@@ -119,7 +208,7 @@ const Products = () => {
       <Header />
       <MobileHeader />
       <div className={cls.productsWrapper}>
-        {isLoading || isProductsLoading ? (
+        {isCategoryLoading ? (
           <LoadingSpinner />
         ) : (
           <>
@@ -139,6 +228,7 @@ const Products = () => {
                       setCategoryId(
                         subcategory !== categoryId ? subcategory : null
                       );
+                      changeTypeOfRequest("category");
                     }}
                   />
                 ))}
@@ -186,48 +276,28 @@ const Products = () => {
                 <Button
                   type="primary"
                   text={t("content:APPLY")}
-                  onClick={() => getDataByFilters()}
+                  onClick={() => {
+                    setPagination(singleSizePaginationData);
+                    changeTypeOfRequest("filter");
+                  }}
                 />
               </div>
-              <div className={cls.productsDataWrapper}>
-                {products.length ? (
-                  products.map((product, index) => (
+              {products.length || productLoading ? (
+                <div className={cls.productsDataWrapper}>
+                  {products.map((product, index) => (
                     <Product key={index} product={product} />
-                  ))
-                ) : (
-                  <p className={cls.title}>Nu exista asa produse</p>
-                )}
-              </div>
+                  ))}
+                  {!productsFinished ? (
+                    <div ref={ref}>
+                      <ProductLoading />
+                    </div>
+                  ) : <></>}
+                </div>
+              ) : (
+                <p className={cls.title}>Nu exista asa produse</p>
+              )}
             </div>
           </>
-        )}
-        {pagination.totalPages > 1 ? (
-          <div className={cls.paginationWrapper}>
-            {Array.from(
-              { length: pagination.totalPages },
-              (_, index) => index + 1
-            ).map((item) => (
-              <Button
-                key={item}
-                type={
-                  item === pagination.pageNumber + 1 ? "primary" : "secondary"
-                }
-                text={String(item)}
-                className={cls.paginationItem}
-                onClick={() => {
-                  setHasInitiated(false);
-                  setPagination({
-                    pageNumber: item - 1,
-                    pageSize: pagination.pageSize,
-                    totalElements: pagination.totalElements,
-                    totalPages: pagination.totalPages,
-                  });
-                }}
-              />
-            ))}
-          </div>
-        ) : (
-          <></>
         )}
       </div>
       <Footer />
