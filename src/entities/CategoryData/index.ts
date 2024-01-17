@@ -1,3 +1,3 @@
-export * from './slices/categoryData';
-export * from './types/categoryDataApiEnum';
-export * from './types/categoryType';
+export * from './slices/categoryData'
+export * from './types/categoryDataApiEnum'
+export * from './types/categoryType'

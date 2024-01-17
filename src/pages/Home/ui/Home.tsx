@@ -1,4 +1,4 @@
-import React from "react";
+import xReact from "react";
 import { useTranslation } from "react-i18next";
 import { ProductsOwerview } from "widgets/ProductsOwerview";
 import { Swiper } from "features/Swiper";

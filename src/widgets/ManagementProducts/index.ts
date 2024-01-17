@@ -1,1 +1,1 @@
-export { default as ManagementProducts } from './ui/ManagementProducts';
+export { default as ManagementProducts } from './ui/ManagementProducts'

@@ -1,1 +1,1 @@
-export { default as ManagementSideBar } from './ui/ManagementSideBar';
+export { default as ManagementSideBar } from './ui/ManagementSideBar'

@@ -1,1 +1,1 @@
-export { default as ShowConnections } from './ui/ShowConnections';
+export { default as ShowConnections } from './ui/ShowConnections'

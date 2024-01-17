@@ -76,6 +76,9 @@
 .description {
   font-size: 18px;
   letter-spacing: 0.9px;
+  width: 100%;
+  height: fit-content;
+  text-wrap: wrap;
 }
 
 .colorsWrapper {

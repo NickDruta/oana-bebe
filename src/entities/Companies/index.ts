@@ -1,1 +1,1 @@
-export { default as Companies } from './ui/Companies';
+export { default as Companies } from './ui/Companies'

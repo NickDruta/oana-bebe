@@ -1,1 +1,1 @@
-export { default as MobileHeader } from './ui/MobileHeader';
+export { default as MobileHeader } from './ui/MobileHeader'

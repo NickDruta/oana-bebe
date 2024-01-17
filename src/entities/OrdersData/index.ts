@@ -1,2 +1,2 @@
-export * from "./slices/ordersData";
-export * from "./types/ordersDataApiEnum";
+export * from './slices/ordersData'
+export * from './types/ordersDataApiEnum'

@@ -1,1 +1,1 @@
-export { default as LeafletMap } from './ui/LeafletMap';
+export { default as LeafletMap } from './ui/LeafletMap'

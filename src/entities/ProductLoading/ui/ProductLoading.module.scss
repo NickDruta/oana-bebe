@@ -12,6 +12,12 @@
   max-width: 300px;
   height: -moz-fit-content;
   height: fit-content;
+
+  @media screen and (max-width: 800px) {
+    padding: 0;
+    gap: 6px;
+    max-width: 150px;
+  }
 }
 
 .image {
@@ -20,6 +26,11 @@
   background: #ebebeb;
   border-radius: 15px;
   position: relative;
+
+  @media screen and (max-width: 800px) {
+    width: 115px;
+    height: 115px;
+  }
 }
 
 .title {
@@ -28,6 +39,10 @@
   background: #ebebeb;
   border-radius: 15px;
   position: relative;
+
+  @media screen and (max-width: 800px) {
+    height: 17px;
+  }
 }
 
 .price {
@@ -36,6 +51,11 @@
   background: #ebebeb;
   border-radius: 15px;
   position: relative;
+  
+  @media screen and (max-width: 800px) {
+    width: 70px;
+    height: 10px;
+  }
 }
 
 .image,

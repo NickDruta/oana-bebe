@@ -1,1 +1,1 @@
-export { default as DiscountModal } from './ui/DiscountModal';
+export { default as DiscountModal } from './ui/DiscountModal'

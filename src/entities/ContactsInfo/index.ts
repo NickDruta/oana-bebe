@@ -1,1 +1,1 @@
-export { default as ContactsInfo } from './ui/ContactsInfo';
+export { default as ContactsInfo } from './ui/ContactsInfo'

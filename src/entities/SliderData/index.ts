@@ -1,2 +1,2 @@
-export * from './slices/sliderData';
-export * from './types/sliderDataApiEnum';
+export * from './slices/sliderData'
+export * from './types/sliderDataApiEnum'

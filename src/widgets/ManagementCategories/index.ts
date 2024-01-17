@@ -1,1 +1,1 @@
-export { default as ManagementCategories } from './ui/ManagementCategories';
+export { default as ManagementCategories } from './ui/ManagementCategories'

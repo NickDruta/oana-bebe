@@ -1,1 +1,1 @@
-export { default as AddMobileModal } from './ui/AddMobileModal';
+export { default as AddMobileModal } from './ui/AddMobileModal'

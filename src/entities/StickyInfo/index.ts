@@ -1,1 +1,1 @@
-export { default as StickyInfo } from './ui/StickyInfo';
+export { default as StickyInfo } from './ui/StickyInfo'

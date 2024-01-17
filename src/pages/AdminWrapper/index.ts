@@ -1,1 +1,1 @@
-export { default as AdminWrapper } from './ui/AdminWrapper';
+export { default as AdminWrapper } from './ui/AdminWrapper'

@@ -16,6 +16,12 @@
   &:hover {
     border: 1px solid #cc3292;
   }
+
+  @media screen and (max-width: 800px) {
+    padding: 0;
+    gap: 6px;
+    max-width: 150px;
+  }
 }
 
 .delete {
@@ -64,11 +70,22 @@
   align-items: center;
   gap: 8px;
 
+  @media screen and (max-width: 800px) {
+    gap: 4px;
+    top: 10px;
+    right: 7px;
+  }
+
   p {
     color: #cc3292;
     font-family: "Inter-Medium";
     font-size: 14px;
     letter-spacing: 0.28px;
+
+    @media screen and (max-width: 800px) {
+      font-size: 10px;
+      font-family: "Inter-Regular";
+    }
   }
 }
 
@@ -76,12 +93,22 @@
   width: 230px;
   height: 230px;
   object-fit: contain;
+
+  @media screen and (max-width: 800px) {
+    width: 115px;
+    height: 115px;
+  }
 }
 
 .productName {
   color: #000;
   font-family: "Inter-Bold";
   letter-spacing: 0.8px;
+
+  @media screen and (max-width: 800px) {
+    font-family: "Inter-Medium";
+    font-size: 12px;
+  }
 }
 
 .priceWrapper {
@@ -95,6 +122,11 @@
   font-family: "Inter-SemiBold";
   font-size: 14px;
   letter-spacing: 0.7px;
+
+  @media screen and (max-width: 800px) {
+    font-size: "Inter-Regular";
+    font-size: 10px;
+  }
 }
 
 .oldPrice {

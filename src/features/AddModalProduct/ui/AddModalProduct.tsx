@@ -24,7 +24,7 @@ const AddModalProduct = ({
   handleClose,
 }: AddModalProductProps) => {
   const { data: categories } = useGetCategoriesQuery();
-  const { data: productData, isLoading: isProductLoading } = useGetProductDetailsQuery(
+  const { data: productData } = useGetProductDetailsQuery(
     productSelected?.productId, 
     {
       skip: !productSelected
@@ -269,6 +269,8 @@ const AddModalProduct = ({
       });
     }
   };
+
+  console.log(description)
 
   return (
     <Modal handleClickAway={handleAddModalClose}>

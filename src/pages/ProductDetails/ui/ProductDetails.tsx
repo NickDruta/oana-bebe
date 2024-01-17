@@ -132,9 +132,9 @@ const ProductDetails = () => {
                     )}
                   </div>
                 </div>
-                <p className={cls.description}>
+                <pre className={cls.description}>
                   {isRu ? product?.descriptionRu : product?.description}
-                </p>
+                </pre>
                 <p className={cls.description}>
                   {product &&
                     parseSpecifications(

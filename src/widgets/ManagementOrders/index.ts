@@ -1,1 +1,1 @@
-export { default as ManagementOrders } from './ui/ManagementOrders';
+export { default as ManagementOrders } from './ui/ManagementOrders'

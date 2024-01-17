@@ -1,1 +1,1 @@
-export { default as CategoryView } from './ui/CategoryView';
+export { default as CategoryView } from './ui/CategoryView'

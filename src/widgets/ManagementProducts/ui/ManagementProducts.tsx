@@ -24,6 +24,7 @@ const ManagementProducts = () => {
 
   const [typeOfRequest, setTypeOfReqeust] = useState<Request>("default");
   const [isVisible, setIsVisible] = useState(false);
+  const [isInit, setIsInit] = useState(true);
   const ref = useCallback((node: any) => {
     const observer = new IntersectionObserver(([entry]) => {
       setIsVisible(entry.isIntersecting);
@@ -83,7 +84,6 @@ const ManagementProducts = () => {
   };
 
   const changeTypeOfRequest = (typeOfRequest: Request) => {
-    console.log("!");
     setTypeOfReqeust(typeOfRequest);
     setPagination(singleSizePaginationData);
     setProducts([]);
@@ -163,6 +163,7 @@ const ManagementProducts = () => {
       ...prevPagination,
       pageNumber: pagination.pageNumber + 6,
     }));
+    isInit && setIsInit(false);
     setProductLoading(false);
   };
 
@@ -175,7 +176,7 @@ const ManagementProducts = () => {
   }, []);
 
   useEffect(() => {
-    if (isVisible && !productLoading && !productsFinished) {
+    if (isVisible && !productLoading && !productsFinished && !isInit) {
       loadNextProducts();
       setIsVisible(false);
     }
@@ -204,7 +205,11 @@ const ManagementProducts = () => {
             <Button
               type="primary"
               text="Aplica"
-              onClick={() => changeTypeOfRequest("filter")}
+              onClick={() => {
+                changeTypeOfRequest("filter");
+                setProductLoading(false);
+                setProductsFinished(false);
+              }}
             />
           </div>
         </div>

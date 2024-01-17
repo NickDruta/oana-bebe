@@ -1,1 +1,1 @@
-export { default as CategoryViewAdmin } from './ui/CategoryViewAdmin';
+export { default as CategoryViewAdmin } from './ui/CategoryViewAdmin'

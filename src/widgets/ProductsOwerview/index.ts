@@ -1,1 +1,1 @@
-export { default as ProductsOwerview } from './ui/ProductsOverview';
+export { default as ProductsOwerview } from './ui/ProductsOverview'
