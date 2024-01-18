@@ -81,6 +81,8 @@ const Products = () => {
         setPagination(singleSizePaginationData);
         setProducts([]);
         setIsVisible(true);
+        setProductLoading(false);
+        setProductsFinished(false);
 
         if (typeOfRequest !== "category") {
             setCategoryActive("");
