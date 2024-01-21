@@ -46,14 +46,14 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <InstagramIcon />
+              <InstagramIcon fill={'#000'}/>
             </a>
             <a
               href="https://www.facebook.com/oanabebe.md"
               target="_blank"
               rel="noreferrer"
             >
-              <FacebookIcon />
+              <FacebookIcon fill={'#000'}/>
             </a>
           </div>
           <div className={cls.infoWrapper}>

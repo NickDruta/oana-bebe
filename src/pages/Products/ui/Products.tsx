@@ -187,21 +187,35 @@ const Products = () => {
     };
 
     const loadNextProducts = async () => {
+
         setProductLoading(true);
+        const promises = [];
         for (let i = pagination.pageNumber; i < pagination.pageNumber + 6; i++) {
             if (typeOfRequest === "default") {
-                await fetchProduct(i);
+                promises.push(getProductsTrigger({ ...pagination, pageNumber: i }).unwrap());
             } else if (typeOfRequest === "filter") {
-                await fetchProductByFilter(i);
-            } else {
-                await fetchProductByCategory(i);
+                promises.push(getProductsByFilters({ ...pagination, pageNumber: i }).unwrap());
+            } else if (categoryId) {
+                promises.push(getProductsByCategory({ categoryId, pagination: { ...pagination, pageNumber: i } }).unwrap());
             }
         }
-        setPagination((prevPagination) => ({
-            ...prevPagination,
-            pageNumber: pagination.pageNumber + 6,
-        }));
-        isInit && setIsInit(false);
+
+        try {
+            const results = await Promise.all(promises);
+            results.forEach(result => {
+                if (result && result.products) {
+                    setProducts(prevProducts => [...prevProducts, ...result.products]);
+                    if (!result.products.length) {
+                        setProductsFinished(true);
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error loading products:", error);
+        }
+
+        setPagination(prev => ({ ...prev, pageNumber: prev.pageNumber + 6 }));
+        setIsInit(false);
         setProductLoading(false);
     };
 

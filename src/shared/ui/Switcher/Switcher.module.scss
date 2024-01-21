@@ -1,7 +1,7 @@
 .switcherWrapper {
   border-radius: 10px;
-  background: #202020;
-  filter: drop-shadow(0px 4px 10px #191919);
+  background: #ffffff;
+  filter: drop-shadow(0px 4px 10px #ffffff);
   display: flex;
   align-items: center;
   position: relative;
@@ -9,10 +9,11 @@
 
 .item {
   padding: 8px 12px;
-  color: #fff;
+  color: #000000;
   z-index: 3;
   cursor: pointer;
-  font-family: "Inter-Bold";
+  font-family: "Inter-SemiBold";
+  font-size: 14px;
   letter-spacing: 0.8px;
 }
 
@@ -21,7 +22,7 @@
   top: 0;
   left: 50%;
   border-radius: 10px;
-  background: #404040;
+  background: #b7b7b7;
   height: 35px;
   width: 50%;
   z-index: 2;

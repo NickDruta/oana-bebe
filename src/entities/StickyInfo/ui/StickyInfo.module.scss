@@ -1,5 +1,5 @@
 .stikyInfoWrapper {
-  background-color: #000;
+  background-color: #e8e8e8;
   padding: 13px 26px;
 }
 
@@ -24,19 +24,21 @@
   svg {
     width: auto;
     height: 24px;
+    fill: #000;
   }
 
   p {
-    color: #fff;
-    font-family: "Inter-Bold";
+    color: #000;
+    font-family: "Inter-SemiBold";
     letter-spacing: 0.8px;
   }
 
   a {
     text-decoration: none;
-    font-family: "Inter-Bold";
+    font-family: "Inter-SemiBold";
+    font-size: 14px;
     letter-spacing: 0.8px;
-    color: #fff;
+    color: #000;
   }
 }
 

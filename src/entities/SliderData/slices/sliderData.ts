@@ -6,11 +6,11 @@ export const sliderDataApiSlice = createApi({
   reducerPath: 'sliderApi',
   keepUnusedDataFor: 3600,
   endpoints: (builder) => ({
-    getSliderData: builder.query<any, void>({
-      query: () => ({
+    getSliderData: builder.mutation<any, number>({
+      query: (pageNumber) => ({
         url: SliderDataApi.GET_SLIDER,
         method: 'GET',
-        params: { pageSize: 20, pageNumber: 0 },
+        params: { pageSize: 1, pageNumber: pageNumber },
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
@@ -18,4 +18,4 @@ export const sliderDataApiSlice = createApi({
   }),
 });
 
-export const { useGetSliderDataQuery } = sliderDataApiSlice;
+export const { useGetSliderDataMutation } = sliderDataApiSlice;

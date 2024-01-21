@@ -1,5 +1,5 @@
 .footerWrapper {
-  background: #000;
+  background: #e8e8e8;
   padding: 48px 26px;
 }
 
@@ -28,10 +28,10 @@
   gap: 24px;
 
   a {
-    font-family: "Inter-Medium";
+    font-family: "Inter-SemiBold";
     font-size: 14px;
-    letter-spacing: 0.36px;
-    color: #fff;
+    letter-spacing: 0.8px;
+    color: #000;
     text-decoration: none;
   }
 }
@@ -59,27 +59,28 @@
   svg {
     width: auto;
     height: 24px;
+    fill: #000;
   }
 
   p {
-    color: #fff;
-    font-family: "Inter-Medium";
-    letter-spacing: 0.8px;
+    font-family: "Inter-SemiBold";
     font-size: 14px;
+    letter-spacing: 0.8px;
+    color: #000;
   }
 
   a {
     text-decoration: none;
-    font-family: "Inter-Medium";
-    letter-spacing: 0.8px;
-    color: #fff;
+    font-family: "Inter-SemiBold";
     font-size: 14px;
+    letter-spacing: 0.8px;
+    color: #000;
   }
 }
 
 .copyRight {
-  color: #fff;
-  font-family: "Inter-Medium";
+  font-family: "Inter-SemiBold";
   font-size: 14px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.8px;
+  color: #000;
 }
