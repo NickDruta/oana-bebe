@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  ProductInterface,
+  ProductInterface, useGetProductDetailsQuery,
   useUpdateProductMutation,
 } from "entities/ProductsData";
 import { Button, Input, Modal } from "shared/ui";
@@ -16,25 +16,27 @@ const DiscountModal = ({
   handleClose,
   selectedProduct,
 }: DiscountModalProps) => {
+  const { data: productData } = useGetProductDetailsQuery(selectedProduct.productId);
   const [discountValue, setDiscountValue] = useState("");
   const [index, setIndex] = useState(0);
   const [updateProduct] = useUpdateProductMutation();
 
   const handleCreate = () => {
-    let newImages = selectedProduct.images.map((img, idx) =>
+    let newImages = productData?.images.map((img, idx) =>
       idx === index ? { ...img, discount: Number(discountValue) } : img
     );
 
     updateProduct({
-      productId: selectedProduct.productId,
-      imageId: selectedProduct.images[index].imageId,
+      productId: productData?.productId,
+      imageId: productData?.images[index].imageId,
       productName: null,
       description: null,
       price: null,
       productCompany: null,
       isDiscount: true,
       discountPrice: discountValue,
-    }).then(() => window.location.reload());
+    })
+        .then(() => handleClose());
   };
 
   const handleReset = () => {
@@ -55,12 +57,12 @@ const DiscountModal = ({
       <div className={cls.modalWrapper}>
         <p className={cls.title}>Crează reducere</p>
         <div className={cls.colorsWrapper}>
-          {selectedProduct.images.map((item, i) => (
+          {productData?.images.map((item, i) => (
             <div
               key={i}
               className={clsx(
                 cls.color,
-                selectedProduct.images[index].imageId === item.imageId &&
+                  productData.images[index].imageId === item.imageId &&
                   cls.activeColor
               )}
               style={{ background: item.colorName }}
@@ -69,13 +71,13 @@ const DiscountModal = ({
           ))}
         </div>
         <Input
-          defaultValue={selectedProduct.images[index].discount ?? ""}
+          defaultValue={productData?.images[index].discount ?? ""}
           value={discountValue ?? ''}
           handleChange={(value) => setDiscountValue(value)}
           placeholder="Reducerea"
         />
         <div className={cls.buttonsWrapper}>
-          {selectedProduct.images[index].discount ? (
+          {productData?.images[index].discount ? (
               <Button type="secondary" text="Resetează" onClick={handleReset} />
             ) : <></>}
           <Button type="primary" text="Crează" onClick={handleCreate} />

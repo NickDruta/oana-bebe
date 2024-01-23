@@ -270,7 +270,7 @@ const AddModalProduct = ({
     }
   };
 
-  console.log(description)
+  console.log(specifications)
 
   return (
     <Modal handleClickAway={handleAddModalClose}>
@@ -460,13 +460,13 @@ const AddModalProduct = ({
                 Adauga Specificatie
               </div>
 
-              {Object.entries(specifications).map(([key, value], index) => (
+              {productData?.specifications !== '{}' ? Object.entries(specifications).map(([key, value], index) => (
                 <div key={index} className={cls.specificationItem}>
                   <span>
                     {key}: {value}
                   </span>
                 </div>
-              ))}
+              )) : <></>}
             </div>
           </div>
         </div>
