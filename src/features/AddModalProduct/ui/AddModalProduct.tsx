@@ -36,8 +36,8 @@ const AddModalProduct = ({
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [colorsR, setColorsR] = useState<ImageShortInferface[]>(
-    productSelected
-      ? (productSelected.images as ImageShortInferface[])
+      productData
+      ? (productData.images as ImageShortInferface[])
       : [
           {
             colorName: "#000000",
@@ -47,15 +47,15 @@ const AddModalProduct = ({
         ]
   );
 
-  const [name, setName] = useState<string>(productSelected?.productName ?? "");
+  const [name, setName] = useState<string>(productData ? productData.productName : "");
   const [description, setDescription] = useState<string>(
-    productSelected?.description ?? ""
+      productData ? productData.description : ""
   );
   const [company, setCompany] = useState<string>(
-    productSelected?.companyName ?? ""
+      productData ? productData.companyName : ""
   );
   const [categoryName, setCategoryName] = useState<string>(
-    productSelected?.categoryName ?? ""
+      productData && productData.categoryName ? productData.categoryName : ""
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
