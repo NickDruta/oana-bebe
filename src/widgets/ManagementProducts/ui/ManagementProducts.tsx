@@ -11,8 +11,8 @@ import {
 } from "entities/ProductsData";
 import { AddModalProduct } from "features/AddModalProduct";
 import { DiscountModal } from "features/DiscountModal";
-import { singleSizePaginationData } from "shared/config";
-import { Button, LoadingSpinner, Input } from "shared/ui";
+import {companies, singleSizePaginationData} from "shared/config";
+import {Button, LoadingSpinner, Input, Select} from "shared/ui";
 import { AddIcon } from "shared/assets";
 import { ProductLoading } from "entities/ProductLoading";
 import cls from "./ManagementProducts.module.scss";
@@ -42,6 +42,7 @@ const ManagementProducts = () => {
   const [getProductsByFilters] = useGetProductsByFilterMutation();
   const [pagination, setPagination] = useState(singleSizePaginationData);
   const [searchValue, setSearchValue] = useState("");
+  const [company, setCompany] = useState("");
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
@@ -94,76 +95,39 @@ const ManagementProducts = () => {
     }
   };
 
-  /**
-   * Get data(products)
-   */
-  const fetchProduct = async (pageNumber: number) => {
-    const response = await getProductsTrigger({
-      ...pagination,
-      pageNumber: pageNumber,
-    });
-
-    if ("data" in response) {
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        ...response.data.products,
-      ]);
-      if (!response.data.products.length) {
-        setProductsFinished(true);
-      }
-    } else if ("error" in response) {
-      console.error("Error fetching product:", response.error);
-    }
-    setProductLoading(false);
-  };
-
-  /**
-   * Get data with some filters applied
-   */
-  const fetchProductByFilter = async (pageNumber: number) => {
-    if (!searchValue) {
-      if (typeOfRequest === "filter") {
-        changeTypeOfRequest("default");
-      }
-    }
-
-    setProductLoading(true);
-    const response = await getProductsByFilters({
-      productName: searchValue ? searchValue : null,
-      companyName: null,
-      minPrice: null,
-      maxPrice: null,
-      pageSize: pagination.pageSize,
-      pageNumber: pageNumber,
-    });
-    if ("data" in response) {
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        ...response.data.products,
-      ]);
-      if (!response.data.products.length) {
-        setProductsFinished(true);
-      }
-    } else if ("error" in response) {
-      console.error("Error fetching products by category:", response.error);
-    }
-    setProductLoading(false);
-  };
-
   const loadNextProducts = async () => {
+
     setProductLoading(true);
+    const promises = [];
     for (let i = pagination.pageNumber; i < pagination.pageNumber + 6; i++) {
       if (typeOfRequest === "default") {
-        await fetchProduct(i);
+        promises.push(getProductsTrigger({ ...pagination, pageNumber: i }).unwrap());
       } else if (typeOfRequest === "filter") {
-        await fetchProductByFilter(i);
+        promises.push(getProductsByFilters({
+          productName: searchValue ? searchValue.trim() : null,
+          companyName: company ? [company] : null,
+          pageSize: pagination.pageSize,
+          pageNumber: i
+        }).unwrap());
       }
     }
-    setPagination((prevPagination) => ({
-      ...prevPagination,
-      pageNumber: pagination.pageNumber + 6,
-    }));
-    isInit && setIsInit(false);
+
+    try {
+      const results = await Promise.all(promises);
+      results.forEach(result => {
+        if (result && result.products) {
+          setProducts(prevProducts => [...prevProducts, ...result.products]);
+          if (!result.products.length) {
+            setProductsFinished(true);
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error loading products:", error);
+    }
+
+    setPagination(prev => ({ ...prev, pageNumber: prev.pageNumber + 6 }));
+    setIsInit(false);
     setProductLoading(false);
   };
 
@@ -194,6 +158,13 @@ const ManagementProducts = () => {
         >
           <p className={cls.title}>Produse</p>
           <div style={{display: "flex", alignItems: "center", gap: "12px"}}>
+            <Select
+                options={companies}
+                value={company}
+                placeholder={"Companie"}
+                handleChange={(value) => setCompany(value)}
+                optionsClassName={cls.optionsClassName}
+            />
             <Input
               className={cls.maxWidth}
               placeholder={"Cauta produs"}
@@ -213,9 +184,6 @@ const ManagementProducts = () => {
             />
           </div>
         </div>
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
           <>
             <div className={cls.productsWrapper}>
               <div
@@ -247,39 +215,7 @@ const ManagementProducts = () => {
                 <></>
               )}
             </div>
-            {pagination.totalPages > 1 ? (
-              <div className={cls.paginationWrapper}>
-                {Array.from(
-                  {
-                    length: pagination.totalPages,
-                  },
-                  (_, index) => index + 1
-                ).map((item) => (
-                  <Button
-                    key={item}
-                    type={
-                      item === pagination.pageNumber + 1
-                        ? "primary"
-                        : "secondary"
-                    }
-                    text={String(item)}
-                    className={cls.paginationItem}
-                    onClick={() => {
-                      setPagination({
-                        pageNumber: item - 1,
-                        pageSize: pagination.pageSize,
-                        totalElements: pagination.totalElements,
-                        totalPages: pagination.totalPages,
-                      });
-                    }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <></>
-            )}
           </>
-        )}
       </div>
       {isAddModalOpen ? (
         <AddModalProduct

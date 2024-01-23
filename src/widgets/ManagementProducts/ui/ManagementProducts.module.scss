@@ -24,6 +24,12 @@
   letter-spacing: 1.8px;
 }
 
+.optionsClassName {
+  transform: translateY(40px);
+  z-index: 999;
+  width: fit-content;
+}
+
 .createProduct {
   border: 1px solid #ffbbeb;
   border-radius: 15px;

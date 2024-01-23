@@ -27,8 +27,8 @@ type Request = "default" | "filter" | "category";
 
 const Products = () => {
     const isMobile = useDeviceType();
-    const {t} = useTranslation();
     const location = useLocation();
+    const queryParameters = new URLSearchParams(window.location.search)
 
     const [isVisible, setIsVisible] = useState(false);
     const ref = useCallback((node: any) => {
@@ -187,14 +187,20 @@ const Products = () => {
     };
 
     const loadNextProducts = async () => {
-
         setProductLoading(true);
         const promises = [];
         for (let i = pagination.pageNumber; i < pagination.pageNumber + 6; i++) {
             if (typeOfRequest === "default") {
                 promises.push(getProductsTrigger({ ...pagination, pageNumber: i }).unwrap());
             } else if (typeOfRequest === "filter") {
-                promises.push(getProductsByFilters({ ...pagination, pageNumber: i }).unwrap());
+                promises.push(getProductsByFilters({
+                    productName: searchValue ? searchValue : null,
+                    companyName: companiesSelected.length ? companiesSelected : null,
+                    minPrice: minPrice ? minPrice : null,
+                    maxPrice: maxPrice ? maxPrice : null,
+                    pageSize: pagination.pageSize,
+                    pageNumber: i
+                }).unwrap());
             } else if (categoryId) {
                 promises.push(getProductsByCategory({ categoryId, pagination: { ...pagination, pageNumber: i } }).unwrap());
             }
@@ -221,17 +227,43 @@ const Products = () => {
 
     useEffect(() => {
         if (
-            location.search &&
-            location.search.split("?")[1] &&
-            location.search.split("?")[1].split("=")[0] === "companies"
+            queryParameters.get("companies")
+            || queryParameters.get("search")
+            || queryParameters.get("minPrice")
+            || queryParameters.get("maxPrice")
+            || queryParameters.get("category")
         ) {
-            setCompaniesSelected([location.search.split("?")[1].split("=")[1]]);
-            setProductLoading(false);
-            changeTypeOfRequest("filter");
+            const companies: any = queryParameters.get("companies") ? queryParameters.get("companies")?.split(',').flat() : [];
+            const search: any = queryParameters.get("search") ? queryParameters.get("search") : '';
+            const minPrice: any = queryParameters.get("minPrice") ? queryParameters.get("minPrice") : '';
+            const maxPrice: any = queryParameters.get("maxPrice") ? queryParameters.get("maxPrice") : '';
+            const category: any = queryParameters.get("category") ? queryParameters.get("category") : '';
+
+            setCompaniesSelected(companies);
+            setSearchValue(search);
+            setMinPrice(minPrice);
+            setMaxPrice(maxPrice);
+            setCategoryId(category);
+
+            changeTypeOfRequest(category ? "category" : "filter");
+            setIsInit(false);
         } else {
             loadNextProducts();
         }
     }, []);
+
+    useEffect(() => {
+        if (categoryId && categories && !categoryActive) {
+            const matchingCategory = categories?.find((categoryItem) =>
+                categoryItem.subCategoryResponse.some(
+                    (subcategory) =>
+                        subcategory.subCategoryId === Number(categoryId)
+                )
+            );
+
+            matchingCategory && setCategoryActive(matchingCategory.categoryType.categoryTypeName)
+        }
+    }, [categories]);
 
     useEffect(() => {
         if (isVisible && !productLoading && !productsFinished && !isInit) {

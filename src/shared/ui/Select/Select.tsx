@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import cls from "./Select.module.scss";
+import clsx from "clsx";
 
 interface SelectProps {
   options: string[];
   value: string;
   placeholder: string;
   handleChange: (option: string) => void;
+  optionsClassName?: string;
 }
 
-const Select = ({ options, value, handleChange, placeholder }: SelectProps) => {
+const Select = ({ options, value, handleChange, placeholder, optionsClassName }: SelectProps) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
 
   const selectOption = (value: string) => {
@@ -26,7 +28,7 @@ const Select = ({ options, value, handleChange, placeholder }: SelectProps) => {
         <p>&#8593;</p>
       </div>
       {optionsVisible ? (
-        <div className={cls.optionsWrapper}>
+        <div className={clsx(cls.optionsWrapper, optionsClassName)}>
           {options.map((option, index) => (
             <div
               key={index}
