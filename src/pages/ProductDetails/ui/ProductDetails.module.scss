@@ -17,9 +17,9 @@
   display: flex;
   gap: 10vw;
 
-  @media screen and (max-width: 800px) {
-    flex-direction: column;
-  }
+    @media screen and (max-width: 800px) {
+      flex-direction: column;
+    }
 }
 
 .imageWrapper {
@@ -78,7 +78,12 @@
   letter-spacing: 0.9px;
   width: 100%;
   height: fit-content;
-  text-wrap: wrap;
+  //text-wrap: wrap;
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;
 }
 
 .colorsWrapper {
@@ -142,6 +147,10 @@
   width: 500px;
   overflow: auto;
   padding: 8px;
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
 }
 
 .previewSmallImage {
