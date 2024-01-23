@@ -189,6 +189,11 @@ const AddModalProduct = ({
     }
   };
 
+  function isEmptyObject(obj: Record<string, string>) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  }
+
+
   const handleSave = async () => {
     if (!name) {
       setError("Numele lipseste");
@@ -206,9 +211,6 @@ const AddModalProduct = ({
       setError("Categoria lipseste");
     }
 
-    if (!specifications) {
-      setError("Specificatiile lipsesc");
-    }
 
     if (
       !name ||
@@ -216,27 +218,28 @@ const AddModalProduct = ({
       colorsR.filter((item) => !item.price).length ||
       !company ||
       !categoryName ||
-      !specifications ||
       isLoading
     )
       return;
-    setIsLoading(true);
+    // setIsLoading(true);
 
     let selectedId;
 
     const matchingCategory = categories?.find((categoryItem) =>
       categoryItem.subCategoryResponse.some(
         (subcategory) =>
-          `${categoryItem.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` ===
-          categoryName
+          productSelected
+              ? subcategory.subCategoryName === categoryName
+              : `${categoryItem.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` === categoryName
       )
     );
 
     if (matchingCategory) {
       const matchingSubCategory = matchingCategory.subCategoryResponse.find(
         (subcategory) =>
-          `${matchingCategory.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` ===
-          categoryName
+            productSelected
+                ? subcategory.subCategoryName === categoryName
+                : `${matchingCategory.categoryType.categoryTypeName}, ${subcategory.subCategoryName}` === categoryName
       );
 
       selectedId = matchingSubCategory?.subCategoryId;
@@ -250,27 +253,30 @@ const AddModalProduct = ({
       const ruDescription =
         ruDescriptionResponse.data.translations[0].translatedText;
 
-      if (productSelected) {
-        deleteProduct(productSelected.productId);
-      }
-
-      createProduct({
+      const data = {
         product_name: name,
         product_name_ru: ruName,
         description: description,
         description_ru: ruDescription,
         company_product: company,
         category: selectedId ?? "",
-        specification: specifications,
-        specificationRu: specificationsRu,
+        specification: isEmptyObject(specifications) ? null : specifications,
+        specificationRu: isEmptyObject(specificationsRu) ? null : specificationsRu,
         images: colorsR,
+      }
+      console.log(data);
+
+      fetch(`${process.env.REACT_APP_API_URL}product/add`, {
+        method: "POST",
+        body: JSON.stringify(data)
       }).then(() => {
-        window.location.reload();
+        productSelected && deleteProduct(productSelected.productId).then(() =>
+            window.location.reload()
+        );
+        !productSelected && window.location.reload()
       });
     }
   };
-
-  console.log(specifications)
 
   return (
     <Modal handleClickAway={handleAddModalClose}>
