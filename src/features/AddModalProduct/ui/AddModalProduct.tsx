@@ -193,6 +193,42 @@ const AddModalProduct = ({
     return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
 
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key: any, value: any) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
+
+  function isCircular(obj: any) {
+    const seenObjects = new WeakSet();
+
+    function detect(obj: any) {
+      if (obj && typeof obj === 'object') {
+        if (seenObjects.has(obj)) {
+          // Found a circular reference
+          return true;
+        }
+        seenObjects.add(obj);
+
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key) && detect(obj[key])) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    return detect(obj);
+  }
+
 
   const handleSave = async () => {
     if (!name) {
@@ -221,7 +257,7 @@ const AddModalProduct = ({
       isLoading
     )
       return;
-    // setIsLoading(true);
+    setIsLoading(true);
 
     let selectedId;
 
@@ -260,15 +296,18 @@ const AddModalProduct = ({
         description_ru: ruDescription,
         company_product: company,
         category: selectedId ?? "",
-        specification: isEmptyObject(specifications) ? null : specifications,
-        specificationRu: isEmptyObject(specificationsRu) ? null : specificationsRu,
+        specification: isEmptyObject(specifications) || isCircular(specifications) ? {} : specifications,
+        specificationRu: isEmptyObject(specificationsRu) || isCircular(specificationsRu) ? {} : specificationsRu,
         images: colorsR,
       }
-      console.log(data);
 
       fetch(`${process.env.REACT_APP_API_URL}product/add`, {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify(data, getCircularReplacer()),
+        headers: {
+          Authorization: sessionStorage.getItem("admin") || "",
+          "Content-Type": "application/json",
+        },
       }).then(() => {
         productSelected && deleteProduct(productSelected.productId).then(() =>
             window.location.reload()
