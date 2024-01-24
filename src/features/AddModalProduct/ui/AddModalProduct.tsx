@@ -308,10 +308,12 @@ const AddModalProduct = ({
           Authorization: sessionStorage.getItem("admin") || "",
           "Content-Type": "application/json",
         },
-      }).then(() => {
-        productSelected && deleteProduct(productSelected.productId).then(() =>
-            window.location.reload()
-        );
+      }).then((res: any) => {
+        if (productSelected && res.ok) {
+          deleteProduct(productSelected.productId).then(() =>
+              window.location.reload()
+          );
+        }
         !productSelected && window.location.reload()
       });
     }
