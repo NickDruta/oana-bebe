@@ -57,6 +57,7 @@ const Products = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const [categoryActive, setCategoryActive] = useState("");
+    const [subcategoryActive, setSubcategoryActive] = useState("");
     const [categoryId, setCategoryId] = useState<number | null>(null);
     const [searchValue, setSearchValue] = useState("");
     const [companiesSelected, setCompaniesSelected] = useState<string[]>([]);
@@ -253,17 +254,22 @@ const Products = () => {
     }, []);
 
     useEffect(() => {
-        if (categoryId && categories && !categoryActive) {
+        if (categories && categoryId) {
             const matchingCategory = categories?.find((categoryItem) =>
                 categoryItem.subCategoryResponse.some(
                     (subcategory) =>
                         subcategory.subCategoryId === Number(categoryId)
                 )
             );
+            const matchingSubCategory = matchingCategory?.subCategoryResponse.find(
+                (subcategory) =>
+                    subcategory.subCategoryId === Number(categoryId)
+            );
 
             matchingCategory && setCategoryActive(matchingCategory.categoryType.categoryTypeName)
+            matchingSubCategory && setSubcategoryActive(matchingSubCategory.subCategoryName)
         }
-    }, [categories]);
+    }, [categories, categoryActive]);
 
     useEffect(() => {
         if (isVisible && !productLoading && !productsFinished && !isInit) {
@@ -304,6 +310,7 @@ const Products = () => {
                                 ))}
                             {isMobile && <FilterIcon onClick={() => setIsFilterOpen(!isFilterOpen)} style={{width: 35, height: 35}}/>}
                         </div>
+                        {categoryId ? <span>Produse &rarr; {categoryActive} &rarr; {subcategoryActive}</span> : <></>}
                         <div className={cls.contentWrapper}>
                             {((isFilterOpen && isMobile) || !isMobile) && (
                                 <Filter search={searchValue} handleSearch={(value) => setSearchValue(value)}
