@@ -120,7 +120,7 @@ const ProductDetails = () => {
                     <p
                       className={clsx(
                         cls.price,
-                        product?.images[selectedIndex].price && cls.oldPrice
+                        product?.images[selectedIndex].discount && cls.oldPrice
                       )}
                     >
                       {product?.images[selectedIndex].price} MDL
