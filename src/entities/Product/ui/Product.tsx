@@ -80,7 +80,7 @@ const Product = ({
         <p
           className={clsx(
             cls.price,
-            (product.isDiscount || product.haveDiscount) && cls.oldPrice
+            (product.imageShortDetails?.imageDiscountPrice || product.images?.[0]?.discount) && cls.oldPrice
           )}
         >
           {product.images
