@@ -7,6 +7,7 @@ import cls from "./App.module.scss";
 const App = () => {
   const routes = useRoutes();
 
+
   return (
     <Router>
       <StoreProvider>
