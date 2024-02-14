@@ -8,7 +8,7 @@ import { i18n } from "shared/providers";
 interface CategoryViewProps {
   category: CategoryAndSubcategory;
   isActive: boolean;
-  handleCategoryChange: (category: string, subcategoryId: number) => void;
+  handleCategoryChange: (category: string, subcategoryId: string) => void;
 }
 
 const CategoryView = ({
@@ -49,7 +49,7 @@ const CategoryView = ({
                 setIsOpen(false);
                 handleCategoryChange(
                   category.categoryType.categoryTypeName,
-                  subcategory.subCategoryId
+                  subcategory.subCategoryName
                 );
               }}
             >

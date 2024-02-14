@@ -1,10 +1,7 @@
 import React, {useEffect, useState, useCallback} from "react";
-import {useTranslation} from "react-i18next";
-import {useLocation} from "react-router-dom";
 import {useGetCategoriesQuery} from "entities/CategoryData";
 import {
     ProductInterface,
-    useGetProductsByCategoryMutation,
     useGetProductsByFilterMutation,
     useGetProductsTriggerMutation,
 } from "entities/ProductsData";
@@ -21,14 +18,14 @@ import cls from "./Products.module.scss";
 import {useDeviceType} from "shared/hooks";
 import {Filter} from "entities/Filter";
 import { FilterIcon } from "shared/assets";
-import filter from "../../../entities/Filter/ui/Filter";
+import {useNavigate} from "react-router-dom";
 
 type Request = "default" | "filter" | "category";
 
 const Products = () => {
     const isMobile = useDeviceType();
-    const location = useLocation();
-    const queryParameters = new URLSearchParams(window.location.search)
+    const queryParameters = new URLSearchParams(window.location.search);
+    const navigate = useNavigate()
 
     const [isVisible, setIsVisible] = useState(false);
     const ref = useCallback((node: any) => {
@@ -50,7 +47,6 @@ const Products = () => {
 
     const [typeOfRequest, setTypeOfReqeust] = useState<Request>("default");
     const [getProductsTrigger] = useGetProductsTriggerMutation();
-    const [getProductsByCategory] = useGetProductsByCategoryMutation();
     const [getProductsByFilters] = useGetProductsByFilterMutation();
 
     const [products, setProducts] = useState<ProductInterface[]>([]);
@@ -85,106 +81,14 @@ const Products = () => {
         setProductLoading(false);
         setProductsFinished(false);
 
-        if (typeOfRequest !== "category") {
-            setCategoryActive("");
-            setCategoryId(null);
-        }
         if (typeOfRequest !== "filter") {
             setCompaniesSelected([]);
             setSearchValue("");
             setMaxPrice("");
             setMinPrice("");
+            setCategoryActive("");
+            setCategoryId(null);
         }
-    };
-
-    /**
-     * Get data(products)
-     */
-    const fetchProduct = async (pageNumber: number) => {
-        const response = await getProductsTrigger({
-            ...pagination,
-            pageNumber: pageNumber,
-        });
-
-        if ("data" in response) {
-            if (!products.filter((item) => item.productId === response.data.products[0].productId).length) {
-                //console.log(products.filter((item) => item.productId === response.data.products[0].productId).length)
-                setProducts((prevProducts) => [
-                    ...prevProducts,
-                    ...response.data.products,
-                ]);
-            }
-            if (!response.data.products.length) {
-                setProductsFinished(true);
-            }
-        } else if ("error" in response) {
-            console.error("Error fetching product:", response.error);
-        }
-        setProductLoading(false);
-    };
-
-    /**
-     * Get data with a category applied
-     */
-    const fetchProductByCategory = async (pageNumber: number) => {
-        if (!categoryId) {
-            changeTypeOfRequest("default");
-        } else {
-            setProductLoading(true);
-            const paginationReformed = {
-                ...pagination,
-                pageNumber: pageNumber,
-            };
-            const response = await getProductsByCategory({
-                categoryId,
-                pagination: paginationReformed,
-            });
-            if ("data" in response) {
-                setProducts((prevProducts) => [
-                    ...prevProducts,
-                    ...response.data.products,
-                ]);
-                if (!response.data.products.length) {
-                    setProductsFinished(true);
-                }
-            } else if ("error" in response) {
-                console.error("Error fetching products by category:", response.error);
-            }
-            setProductLoading(false);
-        }
-    };
-
-    /**
-     * Get data with some filters applied
-     */
-    const fetchProductByFilter = async (pageNumber: number) => {
-        if (!searchValue && !companiesSelected.length && !minPrice && !maxPrice) {
-            if (typeOfRequest === "filter") {
-                changeTypeOfRequest("default");
-            }
-        }
-
-        setProductLoading(true);
-        const response = await getProductsByFilters({
-            productName: searchValue ? searchValue : null,
-            companyName: companiesSelected.length ? companiesSelected : null,
-            minPrice: minPrice ? minPrice : null,
-            maxPrice: maxPrice ? maxPrice : null,
-            pageSize: pagination.pageSize,
-            pageNumber: pageNumber,
-        });
-        if ("data" in response) {
-            setProducts((prevProducts) => [
-                ...prevProducts,
-                ...response.data.products,
-            ]);
-            if (!response.data.products.length) {
-                setProductsFinished(true);
-            }
-        } else if ("error" in response) {
-            console.error("Error fetching products by category:", response.error);
-        }
-        setProductLoading(false);
     };
 
     const loadNextProducts = async () => {
@@ -200,10 +104,9 @@ const Products = () => {
                     minPrice: minPrice ? minPrice : null,
                     maxPrice: maxPrice ? maxPrice : null,
                     pageSize: pagination.pageSize,
+                    categoryId: categoryId,
                     pageNumber: i
                 }).unwrap());
-            } else if (categoryId) {
-                promises.push(getProductsByCategory({ categoryId, pagination: { ...pagination, pageNumber: i } }).unwrap());
             }
         }
 
@@ -226,32 +129,74 @@ const Products = () => {
         setProductLoading(false);
     };
 
+    const handleApply = () => {
+        const queryParams = [];
+
+        if (companiesSelected.length) {
+            queryParams.push(`pwb-brand=${companiesSelected.join(',')}`);
+        }
+
+        if (searchValue) {
+            queryParams.push(`search=${encodeURIComponent(searchValue)}`);
+        }
+
+        const searchString = queryParams.join('&');
+
+        navigate({
+            search: searchString ? `?${searchString}` : ''
+        });
+
+        setPagination(singleSizePaginationData);
+        changeTypeOfRequest("filter");
+    }
+
+    function removeDiacritics(str: string) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[îâă]/g, 'a').replace(/[șş]/g, 's').replace(/[țţ]/g, 't');
+    }
+
     useEffect(() => {
         if (
             queryParameters.get("companies")
             || queryParameters.get("search")
             || queryParameters.get("minPrice")
             || queryParameters.get("maxPrice")
-            || queryParameters.get("category")
+            || window.location.pathname.includes('categorie-produs')
         ) {
+            const includesCategory = window.location.pathname.includes('categorie-produs')
             const companies: any = queryParameters.get("companies") ? queryParameters.get("companies")?.split(',').flat() : [];
             const search: any = queryParameters.get("search") ? queryParameters.get("search") : '';
             const minPrice: any = queryParameters.get("minPrice") ? queryParameters.get("minPrice") : '';
             const maxPrice: any = queryParameters.get("maxPrice") ? queryParameters.get("maxPrice") : '';
-            const category: any = queryParameters.get("category") ? queryParameters.get("category") : '';
+
+            if (includesCategory) {
+                const pathname = window.location.pathname.replace("/categorie-produs/", '');
+                const category = removeDiacritics(pathname.split('/')[0].replaceAll('-', ' '));
+                const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+
+                const subcategory = pathname.split('/')[1].includes('grupa')
+                    ? removeDiacritics(pathname.split('/')[1].replace('-', ' '))
+                    : removeDiacritics(pathname.split('/')[1].replaceAll('-', ' '));
+                const capitalizedSubcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
+
+                const foundedCategory = categories?.find((item) => removeDiacritics(item.categoryType.categoryTypeName) === capitalizedCategory);
+                const foundedSubcategory = foundedCategory && foundedCategory.subCategoryResponse.find((item) => removeDiacritics(item.subCategoryName) === capitalizedSubcategory);
+
+                setCategoryActive(foundedCategory ? foundedCategory.categoryType.categoryTypeName : '')
+                setCategoryId(foundedSubcategory ? foundedSubcategory.subCategoryId : null);
+            }
+
 
             setCompaniesSelected(companies);
             setSearchValue(search);
             setMinPrice(minPrice);
             setMaxPrice(maxPrice);
-            setCategoryId(category);
 
-            changeTypeOfRequest(category ? "category" : "filter");
+            changeTypeOfRequest("filter");
             setIsInit(false);
-        } else {
+        } else if (categories) {
             loadNextProducts();
         }
-    }, []);
+    }, [categories]);
 
     useEffect(() => {
         if (categories && categoryId) {
@@ -298,13 +243,8 @@ const Products = () => {
                                             item.categoryType.categoryTypeName === categoryActive
                                         }
                                         handleCategoryChange={(category, subcategory) => {
-                                            setCategoryActive(
-                                                subcategory !== categoryId ? category : ""
-                                            );
-                                            setCategoryId(
-                                                subcategory !== categoryId ? subcategory : null
-                                            );
-                                            changeTypeOfRequest("category");
+                                            navigate(`/categorie-produs/${removeDiacritics(category.toLowerCase().replaceAll(' ', '-'))}/${removeDiacritics(subcategory.toLowerCase().replaceAll(' ', '-'))}`);
+                                            window.location.reload();
                                         }}
                                     />
                                 ))}
@@ -317,10 +257,7 @@ const Products = () => {
                                         companiesSelected={companiesSelected} handleCompaniesSelected={handleCompany}
                                         minPrice={minPrice} handleMinPrice={(value) => setMinPrice((value))}
                                         maxPrice={maxPrice} handleMaxPrice={(value) => setMaxPrice(value)}
-                                        handleApply={() => {
-                                            setPagination(singleSizePaginationData);
-                                            changeTypeOfRequest("filter");
-                                        }}/>
+                                        handleApply={handleApply}/>
                             )}
                             {products.length || productLoading ? (
                                 <div className={cls.productsDataWrapper}>

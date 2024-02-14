@@ -21,6 +21,10 @@ export const useRoutes = () => {
       element: <Products />,
     },
     {
+      path: "/categorie-produs/:category/:subcategory",
+      element: <Products />,
+    },
+    {
       path: "/produse/:id",
       element: <ProductDetails />,
     },

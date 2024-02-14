@@ -34,7 +34,7 @@ const DiscountModal = ({
       price: null,
       productCompany: null,
       isDiscount: true,
-      discountPrice: discountValue,
+      discountPrice: Number(discountValue),
     })
         .then(() => handleClose());
   };
