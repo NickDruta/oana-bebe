@@ -3,7 +3,6 @@ import { useGetCategoriesQuery } from "entities/CategoryData";
 import {
   ImageShortInferface,
   ProductInterface,
-  useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductDetailsQuery,
 } from "entities/ProductsData";
@@ -30,7 +29,6 @@ const AddModalProduct = ({
       skip: !productSelected
     }
   );
-  const [createProduct] = useCreateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
 
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -63,7 +61,7 @@ const AddModalProduct = ({
   const [newSpecValue, setNewSpecValue] = useState("");
 
   const parseSpecifications = (specificationsString: string) => {
-    if (specificationsString === "{}") return <></>;
+    if (specificationsString === "{}") return {};
 
     const specsObject: Record<string, string> = {};
 
@@ -212,7 +210,6 @@ const AddModalProduct = ({
     function detect(obj: any) {
       if (obj && typeof obj === 'object') {
         if (seenObjects.has(obj)) {
-          // Found a circular reference
           return true;
         }
         seenObjects.add(obj);
@@ -495,19 +492,19 @@ const AddModalProduct = ({
                 <Input
                   placeholder="Specificati"
                   value={newSpecName}
-                  handleChange={setNewSpecName}
+                  handleChange={(value) => setNewSpecName(value)}
                 />
                 <Input
                   placeholder="Valoare"
                   value={newSpecValue}
-                  handleChange={setNewSpecValue}
+                  handleChange={(value) => setNewSpecValue(value)}
                 />
               </div>
               <div className={cls.saveButton} onClick={handleAddSpecification}>
                 Adauga Specificatie
               </div>
 
-              {productData?.specifications !== '{}' ? Object.entries(specifications).map(([key, value], index) => (
+              {!isEmptyObject(specifications) ? Object.entries(specifications).map(([key, value], index) => (
                 <div key={index} className={cls.specificationItem}>
                   <span>
                     {key}: {value}
