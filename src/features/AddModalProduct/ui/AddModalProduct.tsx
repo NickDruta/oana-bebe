@@ -181,7 +181,7 @@ const AddModalProduct = ({
       const ruValueText = ruValueTranslated.data.translations[0].translatedText;
 
       setSpecifications({ ...specifications, [newSpecName]: newSpecValue });
-      setSpecificationsRu({ ...specifications, [ruKeyText]: ruValueText });
+      setSpecificationsRu({ ...specificationsRu, [ruKeyText]: ruValueText });
       setNewSpecName("");
       setNewSpecValue("");
     }
