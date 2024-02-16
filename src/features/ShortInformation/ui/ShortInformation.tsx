@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "shared/ui";
-import aboutIllustration from "shared/assets/images/about_illustration.png";
+import aboutIllustration from "shared/assets/images/about.jpg";
 import cls from "./ShortInformation.module.scss";
 
 interface ShortInformationProps {
@@ -19,7 +19,7 @@ const ShortInformation = ({
 
   return (
     <div className={cls.shortInformationWrapper}>
-      <img src={aboutIllustration} alt="" />
+      <img className={cls.infoImage} src={aboutIllustration} alt="" />
       <div className={cls.infoWrapper}>
         <p
           className={cls.infoTitle}

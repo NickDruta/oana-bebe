@@ -1,6 +1,6 @@
 {
   "name": "oana-bebe",
-  "version": "2.1.4",
+  "version": "2.1.7",
   "private": true,
   "dependencies": {
     "@react-google-maps/api": "^2.19.2",
