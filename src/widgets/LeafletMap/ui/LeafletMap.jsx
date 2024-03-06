@@ -13,12 +13,12 @@ const customIcon = L.icon({
 
 const LeafletMap = () => {
   return (
-    <MapContainer center={[47.0437225, 28.8660977]} zoom={15} className={cls.mapWrapper}>
+    <MapContainer center={[47.04338212068771, 28.867810769014476]} zoom={15} className={cls.mapWrapper}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[47.0437225, 28.8660977]} icon={customIcon}/>
+      <Marker position={[47.04338212068771, 28.867810769014476]} icon={customIcon}/>
     </MapContainer>
   );
 };

@@ -8,7 +8,7 @@ import { StickyInfo } from "entities/StickyInfo";
 import { Header } from "features/Header";
 import { MobileHeader } from "features/MobileHeader";
 import { Footer } from "features/Footer";
-import { MessengerIcon, ViberIcon } from "shared/assets";
+import {MessengerIcon, ViberIcon, Whatsapp} from "shared/assets";
 import { LoadingSpinner } from "shared/ui";
 import cls from "./Home.module.scss";
 
@@ -48,20 +48,25 @@ const Home = () => {
             <div className={cls.homeWrapper}>
                 <div className={cls.viber}>
                     <a href="viber://chat?number=+37360223422" target="_blank">
-                        <ViberIcon />
+                        <ViberIcon/>
                     </a>
                 </div>
                 <div className={cls.messenger}>
                     <a href="http://m.me/oanabebe.md" target="_blank">
-                        <MessengerIcon />
+                        <MessengerIcon/>
+                    </a>
+                </div>
+                <div className={cls.whatsapp}>
+                    <a href="https://wa.me/37360223422" target="_blank">
+                        <Whatsapp />
                     </a>
                 </div>
                 {!sliderImages.length ? (
-                    <LoadingSpinner />
+                    <LoadingSpinner/>
                 ) : (
                     <>
-                        <Swiper images={sliderImages.reverse()} />
-                        <Companies />
+                        <Swiper images={sliderImages.reverse()}/>
+                        <Companies/>
                         {/*{newProducts && newProducts.products.length ? (*/}
                         {/*  <ProductsOwerview*/}
                         {/*    title={t("content:NEW_OFFERS")}*/}
@@ -85,7 +90,7 @@ const Home = () => {
                     </>
                 )}
             </div>
-            <Footer />
+            <Footer/>
         </>
     );
 };

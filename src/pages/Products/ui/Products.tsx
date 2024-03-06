@@ -242,6 +242,7 @@ const Products = () => {
                                         isActive={
                                             item.categoryType.categoryTypeName === categoryActive
                                         }
+                                        subcategoryActive={subcategoryActive}
                                         handleCategoryChange={(category, subcategory) => {
                                             navigate(`/categorie-produs/${removeDiacritics(category.toLowerCase().replaceAll(' ', '-'))}/${removeDiacritics(subcategory.toLowerCase().replaceAll(' ', '-'))}`);
                                             window.location.reload();

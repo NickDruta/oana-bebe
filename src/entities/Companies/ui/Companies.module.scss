@@ -16,6 +16,8 @@
     opacity: 0.5;
     transition: all 0.5s;
     cursor: pointer;
+    height: 30px;
+    width: auto;
 
     &:hover {
       opacity: 1;

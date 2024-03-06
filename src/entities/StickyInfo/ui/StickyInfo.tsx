@@ -31,8 +31,7 @@ const StickyInfo = () => {
         <div className={cls.itemWrapper}>
           <PhoneIcon />
           <p>
-            <a href="tel:+37360-223-422">060-223-422</a> /{" "}
-            <a href="tel:+37378-410-807">078-410-807</a>
+            <a href="tel:+37360-223-422">060-223-422</a>
           </p>
         </div>
         <div>

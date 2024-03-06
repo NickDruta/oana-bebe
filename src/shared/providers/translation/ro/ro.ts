@@ -8,11 +8,11 @@ export const ro = {
   SPECIAL_OFFERS: 'Oferte Speciale',
   SHORT_INFORMATION_TITLE: 'Cărucioare pentru copii moderne, <br /> scaune auto și pături în Moldova',
   SHORT_INFORMATION_DESCRIPTION:
-    'Noi suntem dileri oficiali a intregii linii de produse, <br /> reprezentanti ai brandurilor europene <br /> de inalta calitate, cum ar fi:<br /> <i>Mutsy, Cybex, Anex, Muuvo, Verdi,Tutis, EasyGO si altele.</i>',
+    'Principiul principal al magazinului  nostru este să selectăm și să oferim părinților produse de înaltă calitate și verificate ! În fiecare zi studiem și selectăm sortimentul astfel încât să poți alege cel mai bun din fiecare segment de preț!',
   MORE: 'Mai Multe',
   ALL_PRODUCTS: 'Toate produsele',
   ABOUT_PAGE_DESCRIPTION:
-    'Noi suntem dileri oficiali a intregii linii de produse, <br /> reprezentanti ai brandurilor europene <br /> de inalta calitate, cum ar fi:<br /> <i>Mutsy, Cybex, Anex, Muuvo, Verdi,Tutis, EasyGO si altele.</i> <br /><br />Plus la asta avem o echipă de cea mai înaltă calitate,<br />care cu siguranță vă vor ajuta să alegeți cel mai bun <br />produs pentru copilul dvs.',
+    'Principiul principal al magazinului  nostru este să selectăm și să oferim părinților produse de înaltă calitate și verificate ! În fiecare zi studiem și selectăm sortimentul astfel încât să poți alege cel mai bun din fiecare segment de preț!',
   SEND_A_MESSAGE: 'Trimite un mesaj',
   SEND: 'Trimite',
   PHONE: 'Telefon',

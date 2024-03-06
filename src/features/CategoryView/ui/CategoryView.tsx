@@ -8,12 +8,14 @@ import { i18n } from "shared/providers";
 interface CategoryViewProps {
   category: CategoryAndSubcategory;
   isActive: boolean;
+  subcategoryActive: string;
   handleCategoryChange: (category: string, subcategoryId: string) => void;
 }
 
 const CategoryView = ({
   category,
   isActive,
+  subcategoryActive,
   handleCategoryChange,
 }: CategoryViewProps) => {
   const isRu = i18n.language === "ru";
@@ -45,6 +47,7 @@ const CategoryView = ({
           {category.subCategoryResponse.map((subcategory, index) => (
             <p
               key={index}
+              style={subcategory.subCategoryName === subcategoryActive ? {color: '#cc3292'} : {}}
               onClick={() => {
                 setIsOpen(false);
                 handleCategoryChange(

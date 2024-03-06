@@ -18,3 +18,5 @@ export { ReactComponent as BurgerMenuIcon } from './icons/burgerMenu.svg'
 export { ReactComponent as ViberIcon } from './icons/viber.svg'
 export { ReactComponent as MessengerIcon } from './icons/messenger.svg'
 export { ReactComponent as FilterIcon } from './icons/filter.svg';
+export { ReactComponent as Whatsapp } from './icons/whatsapp.svg';
+export { ReactComponent as TikTokIcon } from './icons/tiktok.svg';

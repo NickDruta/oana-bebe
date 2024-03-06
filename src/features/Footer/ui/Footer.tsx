@@ -5,7 +5,7 @@ import {
   FacebookIcon,
   InstagramIcon,
   LocationIcon,
-  PhoneIcon,
+  PhoneIcon, TikTokIcon,
 } from "shared/assets";
 import cls from "./Footer.module.scss";
 
@@ -42,27 +42,34 @@ const Footer = () => {
           </div>
           <div className={cls.socialWrapper}>
             <a
-              href="https://www.instagram.com/oanabebe.md"
-              target="_blank"
-              rel="noreferrer"
+                href="https://www.instagram.com/oanabebe.md"
+                target="_blank"
+                rel="noreferrer"
             >
               <InstagramIcon fill={'#000'}/>
             </a>
             <a
-              href="https://www.facebook.com/oanabebe.md"
-              target="_blank"
-              rel="noreferrer"
+                href="https://www.facebook.com/oanabebe.md"
+                target="_blank"
+                rel="noreferrer"
             >
               <FacebookIcon fill={'#000'}/>
+            </a>
+            <a
+                href="https://www.tiktok.com/@oanabebe.md"
+                target="_blank"
+                rel="noreferrer"
+            >
+              <TikTokIcon fill={'#000'}/>
             </a>
           </div>
           <div className={cls.infoWrapper}>
             <div className={cls.itemWrapper}>
-              <LocationIcon />
+              <LocationIcon/>
               <p>
                 <a
-                  rel="noreferrer"
-                  target="_blank"
+                    rel="noreferrer"
+                    target="_blank"
                   href="https://www.google.com/maps/place/Carucioare+Anex+in+Moldova+(Chisinau)/@47.0437225,28.8660977,17z/data=!4m6!3m5!1s0x40c97da0a31514db:0x2108b9770caaac24!8m2!3d47.0434229!4d28.8678753!16s%2Fg%2F11h3wtwzr9?entry=ttu"
                 >
                   {t("content:STREET")}
@@ -72,8 +79,7 @@ const Footer = () => {
             <div className={cls.itemWrapper}>
               <PhoneIcon />
               <p>
-                <a href="tel:+37360-223-422">060-223-422</a> /{" "}
-                <a href="tel:+37378-410-807">078-410-807</a>
+                <a href="tel:+37360-223-422">060-223-422</a>
               </p>
             </div>
           </div>
