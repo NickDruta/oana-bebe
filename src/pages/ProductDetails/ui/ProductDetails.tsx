@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
 import {
   useGetProductDetailsQuery,
@@ -14,6 +14,8 @@ import { Footer } from "features/Footer";
 import { i18n } from "shared/providers";
 
 const ProductDetails = () => {
+  const queryParameters = new URLSearchParams(window.location.search);
+  const navigate = useNavigate();
   const { id } = useParams();
   const { data: product, isLoading } = useGetProductDetailsQuery(id);
   const {} = useUpdateViewsQuery(id);
@@ -22,6 +24,7 @@ const ProductDetails = () => {
   const [itemsNumber, setItemsNumber] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
 
   const handleAddCart = () => {
     const cart = localStorage.getItem("cart");
@@ -74,6 +77,19 @@ const ProductDetails = () => {
       </div>
     );
   };
+
+  useEffect(() => {
+    const color = queryParameters.get("color")
+    if (color) {
+      setSelectedIndex(Number(color))
+    }
+  }, []);
+
+  useEffect(() => {
+    navigate({
+      search: `?color=${selectedIndex}`
+    });
+  }, [selectedIndex]);
 
   return (
     <>
