@@ -1,27 +1,18 @@
 export interface ProductInterface {
-  productId: number;
-  productName: string;
-  productNameRu: string;
   companyName: string;
-  price: number;
+  createdDate: string;
   description: string;
   descriptionRu: string;
   isDiscount: boolean;
-  discountPrice: number;
   isNew: boolean;
-  createdDate: Date;
-  viewsCount: number;
-  category: CategoryInterface;
+  price: number;
+  productId: number;
+  productName: string;
+  productNameRu: string;
   specifications: string;
   specificationsRu: string;
-  imageShortDetails?: {
-    imageDate: string;
-    imageDiscountPrice: string;
-    price: string;
-  };
-  haveDiscount?: boolean;
-  categoryName?: string;
-  images: ImageInterface[];
+  viewsCount: number;
+  image: ImageInterface[];
 }
 
 export interface CategoryInterface {
@@ -38,11 +29,10 @@ export interface CategoryTypeInterface {
 }
 
 export interface ImageInterface {
-  imageId: number;
-  colorName: string;
-  image: string[];
-  price: string;
-  discount: string | null;
+  color: string;
+  discountPrice: number | null;
+  price: number;
+  url: string;
 }
 
 export interface ProductsPageable {

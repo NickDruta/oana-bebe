@@ -6,7 +6,6 @@ export const categoryDataApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
   reducerPath: "categoryApi",
   keepUnusedDataFor: 3600,
-  tagTypes: ["Category"],
   endpoints: (builder) => ({
     getCategories: builder.query<CategoryAndSubcategory[], void>({
       query: () => ({
@@ -16,6 +15,11 @@ export const categoryDataApiSlice = createApi({
         refetchOnFocus: true,
         refetchOnReconnect: true,
         refetchOnMountOrArgChange: true,
+        headers: {
+          'Accept': '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive'
+        },
         providesTags: (result: any) =>
           result
             ? [
@@ -27,6 +31,9 @@ export const categoryDataApiSlice = createApi({
               ]
             : ["Category"],
       }),
+      transformResponse: (data: {data: any}) => {
+        return data.data;
+      }
     }),
     createCategory: builder.mutation<void, any>({
       query: ({roText, ruText}) => ({
@@ -34,7 +41,6 @@ export const categoryDataApiSlice = createApi({
         method: "POST",
         refetchOnFocus: true,
         refetchOnReconnect: true,
-        invalidatesTags: ["Category"],
         headers: {
           Authorization: sessionStorage.getItem("admin") || "",
         },
@@ -46,7 +52,6 @@ export const categoryDataApiSlice = createApi({
         method: "POST",
         refetchOnFocus: true,
         refetchOnReconnect: true,
-        invalidatesTags: ["Category"],
         body: data,
         headers: {
           Authorization: sessionStorage.getItem("admin") || "",
@@ -59,7 +64,6 @@ export const categoryDataApiSlice = createApi({
         method: "DELETE",
         refetchOnFocus: true,
         refetchOnReconnect: true,
-        invalidatesTags: ["Category"],
         headers: {
           Authorization: sessionStorage.getItem("admin") || "",
         },

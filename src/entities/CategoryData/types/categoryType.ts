@@ -1,14 +1,12 @@
 export interface CategoryAndSubcategory {
-    categoryType: {
-      categoryTypeId: number,
-      categoryTypeName: string,
-      categoryTypeNameRu: string;
-    },
-    subCategoryResponse: SubCategoryResponse[],
+    categoryTypeId: number,
+    categoryType: string,
+    categoryTypeRu: string;
+    categorySet: SubCategoryResponse[],
 }
 
 export interface SubCategoryResponse {
-  subCategoryId: number,
-  subCategoryName: string,
-  subCategoryNameRu: string,
+  categoryId: number,
+  categoryName: string,
+  categoryNameRu: string,
 }

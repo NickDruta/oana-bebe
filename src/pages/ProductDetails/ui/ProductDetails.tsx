@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
 import {
+  ImageShortInferface,
   useGetProductDetailsQuery,
   useUpdateViewsQuery,
 } from "entities/ProductsData";
@@ -18,12 +19,12 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: product, isLoading } = useGetProductDetailsQuery(id);
-  const {} = useUpdateViewsQuery(id);
+  // const {} = useUpdateViewsQuery(id);
   const isRu = i18n.language === "ru";
 
   const [itemsNumber, setItemsNumber] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
 
   const handleAddCart = () => {
@@ -34,7 +35,7 @@ const ProductDetails = () => {
     const existingProductIndex = newCart.findIndex(
       (item) =>
         item.productId === id &&
-        item.colors[0] === Object.keys(product?.images ?? {})[selectedIndex]
+        item.colors[0] === Object.keys(product?.image ?? {})[selectedIndex]
     );
 
     if (existingProductIndex !== -1) {
@@ -44,7 +45,7 @@ const ProductDetails = () => {
         productId: id,
         productName: product?.productName,
         quantity: itemsNumber,
-        colors: [product?.images[selectedIndex].colorName],
+        colors: product?.image[selectedIndex].color,
       });
     }
 
@@ -105,27 +106,25 @@ const ProductDetails = () => {
               <div>
                 <div className={cls.imageWrapper}>
                   <img
-                    src={`data:image/png;base64,${
+                    src={
                       product
-                        ? Object.values(product.images)[selectedIndex].image[
-                            selectedImageIndex
-                          ]
+                        ? product.image[selectedIndex].url
                         : ""
-                    }`}
+                    }
                     alt=""
                   />
                 </div>
-                <div className={cls.imagesPreview}>
-                  {product &&
-                    product.images[selectedIndex].image.map((item, index) => (
-                      <img
-                        src={`data:image/png;base64,${item}`}
-                        alt=""
-                        className={cls.previewSmallImage}
-                        onClick={() => setSelectedImageIndex(index)}
-                      />
-                    ))}
-                </div>
+                {/*<div className={cls.imagesPreview}>*/}
+                {/*  {product &&*/}
+                {/*    product.image[selectedIndex].image.map((item, index) => (*/}
+                {/*      <img*/}
+                {/*        src={`data:image/png;base64,${item}`}*/}
+                {/*        alt=""*/}
+                {/*        className={cls.previewSmallImage}*/}
+                {/*        onClick={() => setSelectedImageIndex(index)}*/}
+                {/*      />*/}
+                {/*    ))}*/}
+                {/*</div>*/}
               </div>
               <div className={cls.infoWrapper}>
                 <div className={cls.subWrapper}>
@@ -136,14 +135,14 @@ const ProductDetails = () => {
                     <p
                       className={clsx(
                         cls.price,
-                        product?.images[selectedIndex].discount && cls.oldPrice
+                        product?.image[selectedIndex].discountPrice && cls.oldPrice
                       )}
                     >
-                      {product?.images[selectedIndex].price} MDL
+                      {product?.image[selectedIndex].price} MDL
                     </p>
-                    {product?.images[selectedIndex].discount && (
+                    {product?.image[selectedIndex].discountPrice && (
                       <p className={cls.price}>
-                        {product?.images[selectedIndex].discount} MDL
+                        {product?.image[selectedIndex].discountPrice} MDL
                       </p>
                     )}
                   </div>
@@ -158,14 +157,14 @@ const ProductDetails = () => {
                     )}
                 </p>
                 <div className={cls.colorsWrapper}>
-                  {product?.images.map((item, index) => (
+                  {product?.image.map((item, index) => (
                     <div
                       key={index}
                       className={clsx(
                         cls.color,
                         selectedIndex === index && cls.activeColor
                       )}
-                      style={{ background: item.colorName }}
+                      style={{ background: item.color }}
                       onClick={() => setSelectedIndex(index)}
                     />
                   ))}
@@ -209,7 +208,7 @@ const ProductDetails = () => {
         </>
       )}
     </>
-  );
+  )
 };
 
 export default ProductDetails;

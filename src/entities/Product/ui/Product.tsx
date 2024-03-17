@@ -26,6 +26,10 @@ const Product = ({
   const navigate = useNavigate();
   const isRu = i18n.language === "ru";
 
+  if (!product) return (
+      <></>
+  )
+
   return (
     <div
       className={clsx(cls.productWrapper, className)}
@@ -55,10 +59,10 @@ const Product = ({
           className={cls.edit}
         />
       )}
-      {(product.isDiscount || product.haveDiscount) && !isAdmin && (
+      {(product?.image[0]?.discountPrice) && !isAdmin && (
         <p className={cls.discountTag}>Reducere</p>
       )}
-      {product.viewsCount > 10 && !isAdmin && (
+      {product?.viewsCount > 10 && !isAdmin && (
         <div className={cls.viewsWrapper}>
           <EyeIcon />
           <p>{product.viewsCount}</p>
@@ -66,34 +70,29 @@ const Product = ({
       )}
       <img
         className={cls.previewImage}
-        src={`data:image/png;base64,${
-          product.images
-            ? product.images[0].image[0]
-            : product.imageShortDetails?.imageDate
-        }`}
+        src={
+          product?.image.length
+            ? product?.image[0].url : ''
+        }
         alt=""
       />
       <p className={cls.productName}>
-        {isRu ? product.productNameRu : product.productName}
+        {isRu ? product?.productNameRu : product?.productName}
       </p>
       <div className={cls.priceWrapper}>
         <p
           className={clsx(
             cls.price,
-            (product.imageShortDetails?.imageDiscountPrice || product.images?.[0]?.discount) && cls.oldPrice
+            (product?.image[0]?.discountPrice) && cls.oldPrice
           )}
         >
-          {product.images
-            ? product.images[0].price
-            : product.imageShortDetails?.price}{" "}
+          {product?.image[0]?.price}{" "}
           MDL
         </p>
-        {!isAdmin &&
-        (product.imageShortDetails?.imageDiscountPrice ||
-          product.images?.[0].discount) ? (
+        {!isAdmin && product.image[0]?.discountPrice ? (
           <p className={cls.price}>
-            {product.imageShortDetails?.imageDiscountPrice ??
-              product.images[0].discount}{" "}
+            {product?.image[0]?.discountPrice ??
+                product?.image[0]?.discountPrice}{" "}
             MDL
           </p>
         ) : (

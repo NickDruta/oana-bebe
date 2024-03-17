@@ -37,28 +37,28 @@ const CategoryView = ({
       >
         <p>
           {isRu
-            ? category.categoryType.categoryTypeNameRu
-            : category.categoryType.categoryTypeName}
+            ? category.categoryTypeRu
+            : category.categoryType}
         </p>
         <p>&#8595;</p>
       </div>
       {isOpen ? (
         <div className={cls.subcategoriesWrapper}>
-          {category.subCategoryResponse.map((subcategory, index) => (
+          {category.categorySet.map((subcategory, index) => (
             <p
               key={index}
-              style={subcategory.subCategoryName === subcategoryActive ? {color: '#cc3292'} : {}}
+              style={subcategory.categoryName === subcategoryActive ? {color: '#cc3292'} : {}}
               onClick={() => {
                 setIsOpen(false);
                 handleCategoryChange(
-                  category.categoryType.categoryTypeName,
-                  subcategory.subCategoryName
+                  category.categoryType,
+                  subcategory.categoryName
                 );
               }}
             >
               {isRu
-                ? subcategory.subCategoryNameRu
-                : subcategory.subCategoryName}
+                ? subcategory.categoryNameRu
+                : subcategory.categoryName}
             </p>
           ))}
         </div>

@@ -1,3 +1,31 @@
+import sliderImage1 from './sliderImages/1.png';
+import sliderImage2 from './sliderImages/2.png';
+import sliderImage3 from './sliderImages/3.png';
+import sliderImage4 from './sliderImages/4.png';
+import sliderImage5 from './sliderImages/5.png';
+import sliderImage6 from './sliderImages/6.png';
+import sliderImage7 from './sliderImages/7.png';
+import sliderImage8 from './sliderImages/8.png';
+import sliderImage9 from './sliderImages/9.png';
+import sliderImage10 from './sliderImages/10.png';
+import sliderImage11 from './sliderImages/10.png';
+import sliderImage12 from './sliderImages/11.png';
+export const sliderImages = [
+    sliderImage1,
+    sliderImage2,
+    sliderImage3,
+    sliderImage4,
+    sliderImage5,
+    sliderImage6,
+    sliderImage7,
+    sliderImage8,
+    sliderImage9,
+    sliderImage10,
+    sliderImage11,
+    sliderImage12,
+];
+
+
 export { ReactComponent as EditIcon } from './icons/edit.svg'
 export { ReactComponent as Logo } from './icons/logo.svg'
 export { ReactComponent as LocationIcon } from './icons/location.svg'

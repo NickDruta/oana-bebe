@@ -39,7 +39,7 @@ const CategoryViewAdmin = ({ category, isAdd }: CategoryViewAdminProps) => {
       const ruText = ruResponse.data.translations[0].translatedText;
       
       createSubcategory({
-        type_id: category.categoryType.categoryTypeId,
+        type_id: category.categoryTypeId,
         name: subCategoryText,
         nameRu: ruText,
       }).then(() => window.location.reload());
@@ -48,7 +48,7 @@ const CategoryViewAdmin = ({ category, isAdd }: CategoryViewAdminProps) => {
 
   const handleDelete = () => {
     if (category) {
-      deleteCategory(category.categoryType.categoryTypeId).then(() =>
+      deleteCategory(category.categoryTypeId).then(() =>
         window.location.reload()
       );
     }
@@ -76,14 +76,14 @@ const CategoryViewAdmin = ({ category, isAdd }: CategoryViewAdminProps) => {
             />
           ) : (
             <p className={cls.title}>
-              {category?.categoryType.categoryTypeName}
+              {category?.categoryType}
             </p>
           )}
           <div className={cls.subCategoriesWrapper}>
             {category &&
-              category.subCategoryResponse.map((item, index) => (
+              category.categorySet.map((item, index) => (
                 <div className={cls.subCategory} key={index}>
-                  {item.subCategoryName}
+                  {item.categoryName}
                 </div>
               ))}
             {subCategoryAdd ? (

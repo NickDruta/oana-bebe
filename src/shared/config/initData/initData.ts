@@ -8,7 +8,7 @@ export const initPaginationData: PaginationRecord = {
 };
 
 export const singleSizePaginationData: PaginationRecord = {
-  pageNumber: 0,
+  pageNumber: 1,
   pageSize: 1,
   totalElements: 0,
   totalPages: 0,

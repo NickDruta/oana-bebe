@@ -56,7 +56,7 @@ const Swiper = ({ images }: SwiperProps) => {
         {images.map((item, index) => (
           <img
             key={index}
-            src={`data:image/png;base64,${item}`}
+            src={item}
             alt=""
             className={clsx(cls.img, index === activeImage && cls.activeImg)}
           />

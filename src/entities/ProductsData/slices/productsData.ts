@@ -4,36 +4,27 @@ import {
   ProductsDataApi,
   ProductsPageable,
 } from "entities/ProductsData";
-import { PaginationRecord } from "shared/config";
 
 export const productsDataApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
   reducerPath: "productsApi",
   keepUnusedDataFor: 3600,
   endpoints: (builder) => ({
-    getProducts: builder.query<ProductsPageable, PaginationRecord>({
-      query: (pagination) => ({
+    getProductsTrigger: builder.mutation<ProductInterface[], any>({
+      query: (data) => ({
         url: ProductsDataApi.GET_PRODUCTS,
-        method: "GET",
-        params: {
-          pageSize: pagination.pageSize,
-          pageNumber: pagination.pageNumber,
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
         },
         refetchOnFocus: true,
         refetchOnReconnect: true,
+        params: { pageSize: data.pageSize, pageNumber: data.pageNumber },
       }),
-    }),
-    getProductsTrigger: builder.mutation<ProductsPageable, PaginationRecord>({
-      query: (pagination) => ({
-        url: ProductsDataApi.GET_PRODUCTS,
-        method: "GET",
-        params: {
-          pageSize: pagination.pageSize,
-          pageNumber: pagination.pageNumber,
-        },
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-      }),
+      transformResponse: (data: {data: any}) => {
+        return data.data;
+      }
     }),
     getNewProducts: builder.query<ProductsPageable, void>({
       query: () => ({
@@ -55,40 +46,14 @@ export const productsDataApiSlice = createApi({
     }),
     getProductDetails: builder.query<ProductInterface, any>({
       query: (data) => ({
-        url: ProductsDataApi.GET_PRODUCT_DETAILS,
+        url: `${ProductsDataApi.GET_PRODUCT_DETAILS}/${data}`,
         method: "GET",
         refetchOnFocus: true,
         refetchOnReconnect: true,
-        params: { productId: data },
       }),
-    }),
-    getProductsByCategory: builder.mutation<
-      ProductsPageable,
-      { categoryId: number; pagination: PaginationRecord }
-    >({
-      query: ({ categoryId, pagination }) => ({
-        url: ProductsDataApi.GET_PRODUCTS_BY_CATEGORY,
-        method: "GET",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-        params: {
-          pageSize: pagination.pageSize,
-          categoryId: categoryId,
-          pageNumber: pagination.pageNumber,
-        },
-      }),
-    }),
-    getProductsByFilter: builder.mutation<ProductsPageable, any>({
-      query: (data) => ({
-        url: ProductsDataApi.GET_PRODUCTS_BY_FILTERS,
-        method: "POST",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      transformResponse: (data: {data: any}) => {
+        return data.data;
+      }
     }),
     createProduct: builder.mutation<any, any>({
       query: (data) => ({
@@ -141,13 +106,10 @@ export const productsDataApiSlice = createApi({
 });
 
 export const {
-  useGetProductsQuery,
   useGetProductsTriggerMutation,
   useGetNewProductsQuery,
   useGetDiscountProductsQuery,
   useGetProductDetailsQuery,
-  useGetProductsByCategoryMutation,
-  useGetProductsByFilterMutation,
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,

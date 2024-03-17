@@ -2,7 +2,6 @@ import React, {useEffect, useState, useCallback} from "react";
 import {useGetCategoriesQuery} from "entities/CategoryData";
 import {
     ProductInterface,
-    useGetProductsByFilterMutation,
     useGetProductsTriggerMutation,
 } from "entities/ProductsData";
 import {Product} from "entities/Product";
@@ -19,8 +18,6 @@ import {useDeviceType} from "shared/hooks";
 import {Filter} from "entities/Filter";
 import { FilterIcon } from "shared/assets";
 import {useNavigate} from "react-router-dom";
-
-type Request = "default" | "filter" | "category";
 
 const Products = () => {
     const isMobile = useDeviceType();
@@ -45,15 +42,14 @@ const Products = () => {
     const [productsFinished, setProductsFinished] = useState(false);
     const [isInit, setIsInit] = useState(true);
 
-    const [typeOfRequest, setTypeOfReqeust] = useState<Request>("default");
     const [getProductsTrigger] = useGetProductsTriggerMutation();
-    const [getProductsByFilters] = useGetProductsByFilterMutation();
 
     const [products, setProducts] = useState<ProductInterface[]>([]);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const [categoryActive, setCategoryActive] = useState("");
     const [subcategoryActive, setSubcategoryActive] = useState("");
+
     const [categoryId, setCategoryId] = useState<number | null>(null);
     const [searchValue, setSearchValue] = useState("");
     const [companiesSelected, setCompaniesSelected] = useState<string[]>([]);
@@ -73,32 +69,11 @@ const Products = () => {
         }
     };
 
-    const changeTypeOfRequest = (typeOfRequest: Request) => {
-        setTypeOfReqeust(typeOfRequest);
-        setPagination(singleSizePaginationData);
-        setProducts([]);
-        setIsVisible(true);
-        setProductLoading(false);
-        setProductsFinished(false);
-
-        if (typeOfRequest !== "filter") {
-            setCompaniesSelected([]);
-            setSearchValue("");
-            setMaxPrice("");
-            setMinPrice("");
-            setCategoryActive("");
-            setCategoryId(null);
-        }
-    };
-
     const loadNextProducts = async () => {
         setProductLoading(true);
         const promises = [];
         for (let i = pagination.pageNumber; i < pagination.pageNumber + 6; i++) {
-            if (typeOfRequest === "default") {
-                promises.push(getProductsTrigger({ ...pagination, pageNumber: i }).unwrap());
-            } else if (typeOfRequest === "filter") {
-                promises.push(getProductsByFilters({
+                promises.push(getProductsTrigger({
                     productName: searchValue ? searchValue : null,
                     companyName: companiesSelected.length ? companiesSelected : null,
                     minPrice: minPrice ? minPrice : null,
@@ -107,17 +82,16 @@ const Products = () => {
                     categoryId: categoryId,
                     pageNumber: i
                 }).unwrap());
-            }
         }
 
         try {
             const results = await Promise.all(promises);
+            console.log(results)
             results.forEach(result => {
-                if (result && result.products) {
-                    setProducts(prevProducts => [...prevProducts, ...result.products]);
-                    if (!result.products.length) {
-                        setProductsFinished(true);
-                    }
+                if (result && result[0]) {
+                    setProducts(prevProducts => [...prevProducts, result[0]]);
+                } else {
+                    setProductsFinished(true)
                 }
             });
         } catch (error) {
@@ -145,9 +119,7 @@ const Products = () => {
         navigate({
             search: searchString ? `?${searchString}` : ''
         });
-
-        setPagination(singleSizePaginationData);
-        changeTypeOfRequest("filter");
+        navigate(0);
     }
 
     function removeDiacritics(str: string) {
@@ -178,11 +150,11 @@ const Products = () => {
                     : removeDiacritics(pathname.split('/')[1].replaceAll('-', ' '));
                 const capitalizedSubcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
 
-                const foundedCategory = categories?.find((item) => removeDiacritics(item.categoryType.categoryTypeName) === capitalizedCategory);
-                const foundedSubcategory = foundedCategory && foundedCategory.subCategoryResponse.find((item) => removeDiacritics(item.subCategoryName) === capitalizedSubcategory);
+                const foundedCategory = categories?.find((item) => removeDiacritics(item.categoryType) === capitalizedCategory);
+                const foundedSubcategory = foundedCategory && foundedCategory.categorySet.find((item) => removeDiacritics(item.categoryName) === capitalizedSubcategory);
 
-                setCategoryActive(foundedCategory ? foundedCategory.categoryType.categoryTypeName : '')
-                setCategoryId(foundedSubcategory ? foundedSubcategory.subCategoryId : null);
+                setCategoryActive(foundedCategory ? foundedCategory.categoryType : '')
+                setCategoryId(foundedSubcategory ? foundedSubcategory.categoryId : null);
             }
 
 
@@ -191,28 +163,29 @@ const Products = () => {
             setMinPrice(minPrice);
             setMaxPrice(maxPrice);
 
-            changeTypeOfRequest("filter");
+            loadNextProducts()
             setIsInit(false);
         } else if (categories) {
             loadNextProducts();
         }
     }, [categories]);
+    console.log(products);
 
     useEffect(() => {
         if (categories && categoryId) {
             const matchingCategory = categories?.find((categoryItem) =>
-                categoryItem.subCategoryResponse.some(
+                categoryItem.categorySet.some(
                     (subcategory) =>
-                        subcategory.subCategoryId === Number(categoryId)
+                        subcategory.categoryId === Number(categoryId)
                 )
             );
-            const matchingSubCategory = matchingCategory?.subCategoryResponse.find(
+            const matchingSubCategory = matchingCategory?.categorySet.find(
                 (subcategory) =>
-                    subcategory.subCategoryId === Number(categoryId)
+                    subcategory.categoryId === Number(categoryId)
             );
 
-            matchingCategory && setCategoryActive(matchingCategory.categoryType.categoryTypeName)
-            matchingSubCategory && setSubcategoryActive(matchingSubCategory.subCategoryName)
+            matchingCategory && setCategoryActive(matchingCategory.categoryType)
+            matchingSubCategory && setSubcategoryActive(matchingSubCategory.categoryName)
         }
     }, [categories, categoryActive]);
 
@@ -240,7 +213,7 @@ const Products = () => {
                                         key={index}
                                         category={item}
                                         isActive={
-                                            item.categoryType.categoryTypeName === categoryActive
+                                            item.categoryType === categoryActive
                                         }
                                         subcategoryActive={subcategoryActive}
                                         handleCategoryChange={(category, subcategory) => {
