@@ -69,13 +69,10 @@ const Catalog = () => {
                   </p>
                 </div>
                 <div className={cls.colors}>
-                  {item.colors.map((color: string, colorIndex: string) => (
                     <div
-                      key={colorIndex}
                       className={cls.color}
-                      style={{ backgroundColor: color }}
+                      style={{ backgroundColor: item.colors }}
                     ></div>
-                  ))}
                 </div>
                 <p
                   className={cls.remove}
