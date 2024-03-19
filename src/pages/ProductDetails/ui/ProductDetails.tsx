@@ -24,7 +24,7 @@ const ProductDetails = () => {
 
   const [itemsNumber, setItemsNumber] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
 
   const handleAddCart = () => {
@@ -108,23 +108,23 @@ const ProductDetails = () => {
                   <img
                     src={
                       product
-                        ? product.image[selectedIndex].url
+                        ? product.image[selectedIndex].urls[selectedImageIndex]
                         : ""
                     }
                     alt=""
                   />
                 </div>
-                {/*<div className={cls.imagesPreview}>*/}
-                {/*  {product &&*/}
-                {/*    product.image[selectedIndex].image.map((item, index) => (*/}
-                {/*      <img*/}
-                {/*        src={`data:image/png;base64,${item}`}*/}
-                {/*        alt=""*/}
-                {/*        className={cls.previewSmallImage}*/}
-                {/*        onClick={() => setSelectedImageIndex(index)}*/}
-                {/*      />*/}
-                {/*    ))}*/}
-                {/*</div>*/}
+                <div className={cls.imagesPreview}>
+                  {product &&
+                    product.image[selectedIndex].urls.map((item, index) => (
+                      <img
+                        src={item}
+                        alt=""
+                        className={cls.previewSmallImage}
+                        onClick={() => setSelectedImageIndex(index)}
+                      />
+                    ))}
+                </div>
               </div>
               <div className={cls.infoWrapper}>
                 <div className={cls.subWrapper}>

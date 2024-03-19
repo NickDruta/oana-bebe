@@ -72,7 +72,7 @@ const Product = ({
         className={cls.previewImage}
         src={
           product?.image.length
-            ? product?.image[0].url : ''
+            ? product?.image[0].urls[0] : ''
         }
         alt=""
       />

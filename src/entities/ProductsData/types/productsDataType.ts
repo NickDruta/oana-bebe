@@ -32,7 +32,7 @@ export interface ImageInterface {
   color: string;
   discountPrice: number | null;
   price: number;
-  url: string;
+  urls: string[];
 }
 
 export interface ProductsPageable {

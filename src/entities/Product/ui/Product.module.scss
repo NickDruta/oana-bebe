@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  max-width: 300px;
+  width: 300px;
   height: fit-content;
   cursor: pointer;
   animation: appear 0.5s ease-in-out;
@@ -124,7 +124,7 @@
   letter-spacing: 0.7px;
 
   @media screen and (max-width: 800px) {
-    font-size: "Inter-Regular";
+    font-family: "Inter-Regular";
     font-size: 10px;
   }
 }

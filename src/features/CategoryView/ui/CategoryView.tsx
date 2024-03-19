@@ -9,7 +9,7 @@ interface CategoryViewProps {
   category: CategoryAndSubcategory;
   isActive: boolean;
   subcategoryActive: string;
-  handleCategoryChange: (category: string, subcategoryId: string) => void;
+  handleCategoryChange: (category: string, subcategoryId: string, subCategoryId: number) => void;
 }
 
 const CategoryView = ({
@@ -52,7 +52,8 @@ const CategoryView = ({
                 setIsOpen(false);
                 handleCategoryChange(
                   category.categoryType,
-                  subcategory.categoryName
+                  subcategory.categoryName,
+                  subcategory.categoryId
                 );
               }}
             >

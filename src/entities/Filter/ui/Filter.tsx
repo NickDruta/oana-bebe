@@ -1,22 +1,21 @@
 import React from 'react';
-import {Button, Input} from "shared/ui";
-import {companies} from "shared/config";
-import {useTranslation} from "react-i18next";
+import { Input } from "shared/ui";
+import { companies } from "shared/config";
+import { useTranslation } from "react-i18next";
 import cls from './Filter.module.scss';
 
 interface Props {
     search: string;
-    handleSearch: (_: string) => void;
+    handleSearch: (value: string) => void;
     companiesSelected: string[];
-    handleCompaniesSelected: (_: string) => void;
+    handleCompaniesSelected: (companies: string[]) => void;
     minPrice: string;
-    handleMinPrice: (_: string) => void;
+    handleMinPrice: (value: string) => void;
     maxPrice: string;
-    handleMaxPrice: (_: string) => void;
-    handleApply: () => void;
+    handleMaxPrice: (value: string) => void;
 }
 
-const Filter = ({
+const Filter: React.FC<Props> = ({
         search,
         handleSearch,
         companiesSelected,
@@ -25,9 +24,16 @@ const Filter = ({
         handleMinPrice,
         maxPrice,
         handleMaxPrice,
-        handleApply
-    }: Props) => {
-    const {t} = useTranslation();
+    }) => {
+    const { t } = useTranslation();
+
+    const toggleCompanySelection = (company: string) => {
+        if (companiesSelected.includes(company)) {
+            handleCompaniesSelected(companiesSelected.filter(c => c !== company));
+        } else {
+            handleCompaniesSelected([...companiesSelected, company]);
+        }
+    };
 
     return (
         <div className={cls.filtersWrapper}>
@@ -35,21 +41,22 @@ const Filter = ({
             <Input
                 placeholder={t("content:SEARCH_PRODUCT")}
                 value={search}
-                handleChange={(value) => handleSearch(value)}
+                handleChange={handleSearch}
             />
             <div className={cls.companiesWrapper}>
-                {companies.map((item, index) => (
+                {companies.map((company, index) => (
                     <div
                         key={index}
                         className={cls.company}
-                        onClick={() => handleCompaniesSelected(item)}
+                        onClick={() => toggleCompanySelection(company)}
                     >
                         <input
                             type="checkbox"
-                            checked={companiesSelected.includes(item)}
+                            checked={companiesSelected.includes(company)}
+                            onChange={() => toggleCompanySelection(company)} // This ensures the checkbox reflects the current state
                             readOnly
                         />
-                        <p>{item}</p>
+                        <p>{company}</p>
                     </div>
                 ))}
             </div>
@@ -58,7 +65,7 @@ const Filter = ({
                 <Input
                     placeholder={t("content:PRICE")}
                     value={minPrice}
-                    handleChange={(value) => handleMinPrice(value)}
+                    handleChange={handleMinPrice}
                 />
             </div>
             <div className={cls.priceInputWrapper}>
@@ -66,16 +73,11 @@ const Filter = ({
                 <Input
                     placeholder={t("content:PRICE")}
                     value={maxPrice}
-                    handleChange={(value) => handleMaxPrice(value)}
+                    handleChange={handleMaxPrice}
                 />
             </div>
-            <Button
-                type="primary"
-                text={t("content:APPLY")}
-                onClick={handleApply}
-            />
         </div>
-    )
+    );
 }
 
 export default Filter;
