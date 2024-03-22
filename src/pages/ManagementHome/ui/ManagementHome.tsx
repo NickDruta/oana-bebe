@@ -5,7 +5,7 @@ import cls from "./ManagementHome.module.scss";
 
 const ManagementHome = () => {
   const navigate = useNavigate();
-  const sessionLogin = sessionStorage.getItem("admin");
+  const localLogin = sessionStorage.getItem("jwt");
 
   const goToMainPage = () => {
     navigate("/");
@@ -13,7 +13,7 @@ const ManagementHome = () => {
   };
 
   useEffect(() => {
-    if (sessionLogin) {
+    if (localLogin) {
       navigate("/management/categories");
     }
   }, [])

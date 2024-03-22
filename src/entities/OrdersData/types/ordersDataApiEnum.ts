@@ -1,5 +1,5 @@
 export enum OrdersDataApi {
-  GET_ORDERS = 'order/getOrders',
+  GET_ORDERS = 'orders',
   CREATE_ORDER = 'orders',
-  DELETE_ORDER = 'order/deleteById'
+  DELETE_ORDER = 'orders'
 }

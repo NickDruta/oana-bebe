@@ -15,9 +15,6 @@ export const ordersDataApiSlice = createApi({
           pageSize: pagination.pageSize,
           pageNumber: pagination.pageNumber,
         },
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-        refetchOnMountOrArgChange: true,
         headers: {
           Authorization: sessionStorage.getItem("admin") || "",
         },
@@ -35,12 +32,9 @@ export const ordersDataApiSlice = createApi({
     }),
     deleteOrder: builder.mutation<void, any>({
       query: (data) => ({
-        url: `${OrdersDataApi.DELETE_ORDER}?orderId=${data}`,
+        url: OrdersDataApi.DELETE_ORDER,
         method: "DELETE",
         body: data,
-        headers: {
-          Authorization: sessionStorage.getItem("admin") || "",
-        },
       }),
     }),
   }),

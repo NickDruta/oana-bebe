@@ -20,28 +20,31 @@ const LoginForm = ({ goToMainPage }: LoginFormProps) => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    const formdata = new FormData();
-
-    formdata.append("username", data.username);
-    formdata.append("password", data.password);
-
-    fetch(`${process.env.REACT_APP_API_URL}login`, {
+    fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
-      body: formdata,
-    }).then((response) => {
-      if (response.url.includes("handler/success")) {
-        sessionStorage.setItem(
-          "admin",
-          `Basic ${window.btoa(`${data.username}:${data.password}`)}`
-        );
-        window.location.reload();
-      } else {
-        setError("password", {
-          type: "custom",
-          message: "Datele sunt gresite",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: data.username,
+        password: data.password
+      }),
+    })
+        .then(response => response.json())
+        .then(data => {
+          if (data.jwt) {
+            sessionStorage.setItem("jwt", data.jwt);
+            window.location.reload();
+          } else {
+            setError("password", {
+              type: "custom",
+              message: "Datele sunt gresite",
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
         });
-      }
-    });
   };
 
   return (

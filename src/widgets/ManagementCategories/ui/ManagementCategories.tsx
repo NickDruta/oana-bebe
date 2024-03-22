@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery } from "entities/CategoryData";
 import { CategoryViewAdmin } from "entities/CategoryViewAdmin";
@@ -8,9 +8,10 @@ import cls from "./ManagementCategories.module.scss";
 const ManagementCategories = () => {
   const navigate = useNavigate();
   const { data: categoriesData, isLoading } = useGetCategoriesQuery();
+  console.log(categoriesData)
 
   useEffect(() => {
-    if (!sessionStorage.getItem("admin")) navigate("/management");
+    if (!sessionStorage.getItem("jwt")) navigate("/management");
   }, []);
 
   return (

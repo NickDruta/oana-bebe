@@ -13,11 +13,11 @@ const ManagementOrders = () => {
   const [completeOrder] = useDeleteOrderMutation();
 
   const handleComplete = (value: number) => {
-    completeOrder(value).then(() => window.location.reload());
+    completeOrder({id: value}).then(() => window.location.reload());
   };
 
   useEffect(() => {
-    if (!sessionStorage.getItem("admin")) navigate("/management");
+    if (!sessionStorage.getItem("jwt")) navigate("/management");
   }, []);
 
   useEffect(() => {
@@ -42,24 +42,24 @@ const ManagementOrders = () => {
         ) : (
           <div className={cls.ordersWrapper}>
             {ordersData &&
-              ordersData.orders &&
-              ordersData.orders.map((item: any, index: number) => (
+              ordersData.data &&
+              ordersData.data.map((item: any, index: number) => (
                 <div className={cls.item} key={index}>
                   <SuccessIcon
                     className={cls.complete}
                     onClick={() => {
-                      handleComplete(item.productDetails.orderId);
+                      handleComplete(item.id);
                     }}
                   />
                   <p className={cls.title}>{item.phoneNumber}</p>
-                  <p className={cls.name}>{item.productDetails.productName}</p>
+                  <p className={cls.name}>{item.productName}</p>
                   <p className={cls.quantity}>
-                    Cantitate: {item.productDetails.quantity}
+                    Cantitate: {item.quantity}
                   </p>
                   <div
                     className={cls.color}
                     style={{
-                      backgroundColor: item.productDetails.colors.slice(1, -1),
+                      backgroundColor: item.colors,
                     }}
                   />
                 </div>
