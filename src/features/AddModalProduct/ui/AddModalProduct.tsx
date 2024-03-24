@@ -1,6 +1,8 @@
 import React, {useCallback, useState} from "react";
+import { toast } from 'react-toastify';
 import { AddBasicInfo } from "features/AddBasicInfo";
 import { ColorInfo } from "features/ColorInfo";
+import {PricesInfo} from "features/PricesInfo";
 import {
   ProductInterface, useAddImagesMutation, useCreateBasicInfoProductMutation,
 } from "entities/ProductsData";
@@ -14,12 +16,10 @@ interface FileWithPreview extends File {
 }
 
 interface AddModalProductProps {
-  productSelected: ProductInterface | null;
   handleClose: () => void;
 }
 
 const AddModalProduct = ({
-  productSelected,
   handleClose,
 }: AddModalProductProps) => {
   const [triggerCreateBasicInfo] = useCreateBasicInfoProductMutation();
@@ -42,8 +42,7 @@ const AddModalProduct = ({
   /**
    * Product Data
    */
-  const [product, setProduct] = useState<ProductInterface>(productSelected ?? emptyProduct);
-  console.log(product)
+  const [product, setProduct] = useState<ProductInterface>(emptyProduct);
 
   /**
    * Color of the product
@@ -54,6 +53,11 @@ const AddModalProduct = ({
    * Color of the product
    */
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+
+  /**
+   * State for triggering the function in PricesInfo
+   */
+  const [triggerAction, setTriggerAction] = useState(false);
 
   /**
    * Function to change some value from the product
@@ -88,8 +92,18 @@ const AddModalProduct = ({
                 stepsNumber={stepsNumber}
                 handleChange={handleChange}
                 handleStepsNumber={(value) => setStepsNumber(value)}
+                hasSteps
             />
         );
+      case stepsNumber:
+        return (
+            <PricesInfo
+              product={product}
+              triggerAction={triggerAction}
+              resetTrigger={() => setTriggerAction(false)}
+              handleClose={handleClose}
+            />
+        )
       default:
         return (
             <ColorInfo
@@ -109,7 +123,10 @@ const AddModalProduct = ({
     if (step === 1) {
       // setStep(step + 1)
       saveBasicInfo();
+    } else if (step === stepsNumber) {
+      setTriggerAction(true);
     } else {
+      // setStep(step + 1)
       saveColor();
     }
   }
@@ -142,6 +159,10 @@ const AddModalProduct = ({
         })
         setStep(step + 1);
         setLoading(false);
+        toast.success('Informațiile generale ale produsului au fost salvate!');
+      } else {
+        setLoading(false);
+        toast.error(res.error.data.error);
       }
     })
   }
@@ -157,10 +178,12 @@ const AddModalProduct = ({
         files: files
       }).unwrap();
       setStep(step + 1);
-      console.log("Images uploaded successfully", result);
-    } catch (error) {
-      // Handle error
+      setFiles([]);
+      setColor('#ffffff');
+      toast.success("Culoarea cu imagini a fost salvată cu succes!")
+    } catch (error: any) {
       console.error("Failed to upload images", error);
+      toast.error(`Failed to upload images: ${error.data?.message || 'An unknown error occurred'}`);
     }
   };
 
@@ -168,7 +191,7 @@ const AddModalProduct = ({
     <Modal handleClickAway={handleConfirmedClose}>
       <div className={cls.modalWrapper}>
         <p className={cls.title}>
-          {productSelected ? "Editează produs" : "Adaugă produs"}
+          Adaugă produs
         </p>
         <p className={cls.description}>Adăugarea unui produs constă din mai mulți pași, adaugă până la sfârșit pentru a adăuga produsul!</p>
         <div className={cls.dataWrapper}>

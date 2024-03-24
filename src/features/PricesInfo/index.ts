@@ -1,0 +1,1 @@
+export { default as PricesInfo } from './ui/PricesInfo';
