@@ -1,17 +1,17 @@
-import React, {useEffect, useState, useCallback, useRef} from "react";
-import {toast} from "react-toastify";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
-  ProductInterface, useDeleteProductMutation,
+  ProductInterface,
+  useDeleteProductMutation,
 } from "entities/ProductsData";
 import { Product } from "entities/Product";
-import {
-  useGetProductsTriggerMutation,
-} from "entities/ProductsData";
+import { useGetProductsTriggerMutation } from "entities/ProductsData";
 import { AddModalProduct } from "features/AddModalProduct";
-import {EditProduct} from "features/EditProduct";
+import { EditProduct } from "features/EditProduct";
 import { DiscountModal } from "features/DiscountModal";
-import {companies, initPaginationData} from "shared/config";
-import {Input, Select} from "shared/ui";
+import { companies, initPaginationData } from "shared/config";
+import { Input, Select } from "shared/ui";
 import { AddIcon } from "shared/assets";
 import { ProductLoading } from "entities/ProductLoading";
 import cls from "./ManagementProducts.module.scss";
@@ -27,13 +27,14 @@ interface FiltersState {
 }
 
 const ManagementProducts = () => {
+  const navigate = useNavigate();
   const [triggerDelete] = useDeleteProductMutation();
 
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const lastProductElementRef = useCallback((node: HTMLDivElement | null) => {
     if (observerRef.current) observerRef.current.disconnect();
-    observerRef.current = new IntersectionObserver(entries => {
+    observerRef.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         setIsVisible(true);
       }
@@ -50,21 +51,21 @@ const ManagementProducts = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
-  const [productSelected, setProductSelected] = useState<ProductInterface | null>(null)
-
+  const [productSelected, setProductSelected] =
+    useState<ProductInterface | null>(null);
 
   const [filters, setFilters] = useState<FiltersState>({
-    categoryActive: '',
-    subcategoryActive: '',
+    categoryActive: "",
+    subcategoryActive: "",
     categoryId: null,
-    searchValue: '',
+    searchValue: "",
     companiesSelected: [],
-    minPrice: '',
-    maxPrice: ''
+    minPrice: "",
+    maxPrice: "",
   });
 
   const handleFiltersChange = (newFilters: Partial<FiltersState>) => {
-    setFilters(prevFilters => {
+    setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters, ...newFilters };
       setProductLoading(true);
       setProducts([]);
@@ -75,39 +76,56 @@ const ManagementProducts = () => {
     });
   };
 
-  const loadNextProducts = useCallback(async (filters: FiltersState, reset: boolean = false) => {
-    setProductLoading(true);
+  const loadNextProducts = useCallback(
+    async (filters: FiltersState, reset: boolean = false) => {
+      setProductLoading(true);
 
-    try {
-      const response = await getProductsTrigger({
-        productName: filters.searchValue || undefined,
-        companyName: filters.companiesSelected.length ? filters.companiesSelected : undefined,
-        minPrice: filters.minPrice || undefined,
-        maxPrice: filters.maxPrice || undefined,
-        pageSize: pagination.pageSize,
-        pageNumber: reset ? 1 : pagination.pageNumber,
-        categoryId: filters.categoryId || undefined,
-      }).unwrap();
+      try {
+        const response = await getProductsTrigger({
+          productName: filters.searchValue || undefined,
+          companyName: filters.companiesSelected.length
+            ? filters.companiesSelected
+            : undefined,
+          minPrice: filters.minPrice || undefined,
+          maxPrice: filters.maxPrice || undefined,
+          pageSize: pagination.pageSize,
+          pageNumber: reset ? 1 : pagination.pageNumber,
+          categoryId: filters.categoryId || undefined,
+        }).unwrap();
 
-      if (response && response.length) {
-        setProducts(prevProducts => reset ? response : [...prevProducts, ...response]);
-        setPagination(prev => ({ ...prev, pageNumber: prev.pageNumber + 1 }));
-      } else {
-        setProductsFinished(true);
+        if (response && response.length) {
+          setProducts((prevProducts) =>
+            reset ? response : [...prevProducts, ...response],
+          );
+          setPagination((prev) => ({
+            ...prev,
+            pageNumber: prev.pageNumber + 1,
+          }));
+        } else {
+          setProductsFinished(true);
+        }
+      } catch (error) {
+        console.error("Error loading products:", error);
+      } finally {
+        setProductLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading products:", error);
-    } finally {
-      setProductLoading(false);
-    }
-  }, [productLoading, productsFinished, filters, pagination.pageSize, pagination.pageNumber, getProductsTrigger]);
+    },
+    [
+      productLoading,
+      productsFinished,
+      filters,
+      pagination.pageSize,
+      pagination.pageNumber,
+      getProductsTrigger,
+    ],
+  );
 
   const handleClose = () => {
     isDiscountModalOpen && setIsDiscountModalOpen(false);
     isAddModalOpen && setIsAddModalOpen(false);
     isEditModalOpen && setIsEditModalOpen(false);
     setProductSelected(null);
-  }
+  };
 
   useEffect(() => {
     if (isVisible && !productLoading && !productsFinished) {
@@ -117,7 +135,7 @@ const ManagementProducts = () => {
   }, [isVisible, productLoading, productsFinished]);
 
   useEffect(() => {
-    // if (!sessionStorage.getItem("jwt")) navigate("/management");
+    if (!sessionStorage.getItem("jwt")) navigate("/management");
     loadNextProducts(filters);
   }, []);
 
@@ -132,9 +150,11 @@ const ManagementProducts = () => {
       handleFiltersChange(filters);
     } catch (error: any) {
       console.error(error);
-      toast.error(`Eroare la ștergerea produsului: ${error?.data?.error || error?.response?.data?.message || 'An unknown error occurred'}`);
+      toast.error(
+        `Eroare la ștergerea produsului: ${error?.data?.error || error?.response?.data?.message || "An unknown error occurred"}`,
+      );
     }
-  }
+  };
 
   return (
     <div className={cls.managementProductsWrapper}>
@@ -147,84 +167,80 @@ const ManagementProducts = () => {
           }}
         >
           <p className={cls.title}>Produse</p>
-          <div style={{display: "flex", alignItems: "center", gap: "12px"}}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Select
-                options={companies}
-                value={filters.companiesSelected?.[0]}
-                placeholder={"Companie"}
-                handleChange={(value) => handleFiltersChange({...filters, companiesSelected: [value]})}
-                optionsClassName={cls.optionsClassName}
+              options={companies}
+              value={filters.companiesSelected?.[0]}
+              placeholder={"Companie"}
+              handleChange={(value) =>
+                handleFiltersChange({ ...filters, companiesSelected: [value] })
+              }
+              optionsClassName={cls.optionsClassName}
             />
             <Input
               className={cls.maxWidth}
               placeholder={"Cauta produs"}
               value={filters.searchValue}
               handleChange={(value) => {
-                handleFiltersChange({...filters, searchValue: value})
+                handleFiltersChange({ ...filters, searchValue: value });
               }}
             />
           </div>
         </div>
-          <>
-            <div className={cls.productsWrapper}>
-              <div
-                className={cls.createProduct}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsAddModalOpen(true);
-                }}
-              >
-                <AddIcon style={{ width: 36, height: 36, stroke: "#ffbbeb" }} />
-              </div>
-              {products.length || productLoading ? (
-                  <>
-                    {products.map((product, index) => (
-                        <Product
-                            key={index}
-                            product={product}
-                            isAdmin
-                            onClickEdit={() => {
-                              setProductSelected(product)
-                              setIsEditModalOpen(true)
-                            }}
-                            onClickDiscount={() => {
-                              setProductSelected(product)
-                              setIsDiscountModalOpen(true)
-                            }}
-                            onClickDelete={() => handleDelete(product.productId)}
-                        />
-                    ))}
-                    {!productsFinished ? (
-                        <div ref={lastProductElementRef}>
-                          <ProductLoading/>
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                  </>
-              ) : (
-                  <p className={cls.title}>Nu exista asa produse</p>
-              )}
+        <>
+          <div className={cls.productsWrapper}>
+            <div
+              className={cls.createProduct}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsAddModalOpen(true);
+              }}
+            >
+              <AddIcon style={{ width: 36, height: 36, stroke: "#ffbbeb" }} />
             </div>
-          </>
+            {products.length || productLoading ? (
+              <>
+                {products.map((product, index) => (
+                  <Product
+                    key={index}
+                    product={product}
+                    isAdmin
+                    onClickEdit={() => {
+                      setProductSelected(product);
+                      setIsEditModalOpen(true);
+                    }}
+                    onClickDiscount={() => {
+                      setProductSelected(product);
+                      setIsDiscountModalOpen(true);
+                    }}
+                    onClickDelete={() => handleDelete(product.productId)}
+                  />
+                ))}
+                {!productsFinished ? (
+                  <div ref={lastProductElementRef}>
+                    <ProductLoading />
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <p className={cls.title}>Nu exista asa produse</p>
+            )}
+          </div>
+        </>
       </div>
-      {isAddModalOpen ? (
-        <AddModalProduct
-          handleClose={handleClose}
+      {isAddModalOpen ? <AddModalProduct handleClose={handleClose} /> : <></>}
+      {isEditModalOpen && productSelected ? (
+        <EditProduct
+          selectedProduct={productSelected}
+          handleClose={() => {
+            handleClose();
+            handleFiltersChange(filters);
+          }}
         />
       ) : (
         <></>
-      )}
-      {isEditModalOpen && productSelected ? (
-          <EditProduct
-              selectedProduct={productSelected}
-              handleClose={() => {
-                handleClose();
-                handleFiltersChange(filters);
-              }}
-          />
-      ) : (
-          <></>
       )}
       {isDiscountModalOpen && productSelected ? (
         <DiscountModal
