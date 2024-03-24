@@ -8,12 +8,13 @@ import {translateText} from "../../../shared/lib/translateText/translateText";
 
 interface Props {
     product: ProductInterface;
-    stepsNumber: number | null;
     handleChange: (key: keyof ProductInterface, value: string | number | boolean | object | null) => void;
-    handleStepsNumber: (value: number) => void;
+    stepsNumber?: number | null;
+    handleStepsNumber?: (value: number) => void;
+    hasSteps?: boolean;
 }
 
-const AddBasicInfo = ({product, stepsNumber, handleChange, handleStepsNumber}: Props) => {
+const AddBasicInfo = ({product, handleChange, stepsNumber, handleStepsNumber, hasSteps}: Props) => {
     const {data: categories} = useGetCategoriesQuery();
 
     /**
@@ -119,7 +120,9 @@ const AddBasicInfo = ({product, stepsNumber, handleChange, handleStepsNumber}: P
     return (
         <div className={cls.addBasicInfoWrapper}>
             <div className={cls.smallDataWrapper}>
-                <Input placeholder="Numarul de culori" value={!stepsNumber ? '' : String(stepsNumber - 1)} handleChange={(value) => handleStepsNumber(Number(value) + 1)} />
+                {hasSteps && handleStepsNumber ? (
+                    <Input placeholder="Numarul de culori" value={!stepsNumber ? '' : String(stepsNumber - 2)} handleChange={(value) => handleStepsNumber(Number(value) + 2)} />
+                ) : <></>}
                 <Input placeholder="Numele" value={product.productName} handleChange={(value) => handleChange('productName', value)} />
                 <TextArea placeholder="Descrierea" value={product.description} handleChange={(value) => handleChange('description', value)} />
                 <Select placeholder="Compania" options={companies} value={product.companyName} handleChange={(value) => handleChange('companyName', value)} />

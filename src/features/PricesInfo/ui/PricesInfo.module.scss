@@ -1,0 +1,18 @@
+.pricesInfoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .dataWrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .color {
+      width: 30px;
+      height: 30px;
+      border-radius: 100%;
+    }
+  }
+}
