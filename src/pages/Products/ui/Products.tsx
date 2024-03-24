@@ -136,7 +136,6 @@ const Products = () => {
   }
 
   useEffect(() => {
-    // Decode URL path segments to find category and subcategory names
     const pathSegments = location.pathname.split("/").filter(Boolean);
     let categoryActive = "";
     let subcategoryActive = "";
@@ -152,7 +151,7 @@ const Products = () => {
         categories.find(
           (cat) =>
             removeDiacritics(cat.categoryType).toLowerCase() ===
-            decodedCategoryPath.replace(/-/g, " "),
+            decodedCategoryPath.replace(/—/g, " "),
         );
       if (category) {
         categoryActive = category.categoryType;
@@ -160,7 +159,7 @@ const Products = () => {
         const subcategory = category.categorySet.find(
           (sub) =>
             removeDiacritics(sub.categoryName).toLowerCase() ===
-            decodedSubcategoryPath.replace(/-/g, " "),
+            decodedSubcategoryPath.replace(/—/g, " "),
         );
         if (subcategory) {
           subcategoryActive = subcategory.categoryName;
@@ -196,10 +195,9 @@ const Products = () => {
   };
 
   useEffect(() => {
-    if (isVisible && !productLoading && !productsFinished) {
+    if (isVisible && !productLoading && !productsFinished && !isInit) {
       loadNextProducts(filters);
       setIsVisible(false);
-      console.log("once");
     }
   }, [isVisible, productLoading, productsFinished, isInit]);
 
@@ -239,7 +237,7 @@ const Products = () => {
                           categoryId: subCategoryId,
                         });
                         navigate(
-                          `/categorie-produs/${removeDiacritics(category.toLowerCase().replaceAll(" ", "-"))}/${removeDiacritics(subcategory.toLowerCase().replaceAll(" ", "-"))}`,
+                          `/categorie-produs/${removeDiacritics(category.toLowerCase().replaceAll(" ", "—"))}/${removeDiacritics(subcategory.toLowerCase().replaceAll(" ", "—"))}`,
                         );
                       }}
                     />
