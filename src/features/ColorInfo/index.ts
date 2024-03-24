@@ -1,0 +1,1 @@
+export { default as ColorInfo } from './ui/ColorInfo';

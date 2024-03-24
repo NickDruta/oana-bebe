@@ -1,23 +1,25 @@
 export interface ProductInterface {
+  productId: number | null;
+  productName: string;
+  productNameRu: string;
   companyName: string;
-  createdDate: string;
   description: string;
   descriptionRu: string;
   isDiscount: boolean;
   isNew: boolean;
-  price: number;
-  productId: number;
-  productName: string;
-  productNameRu: string;
+  createdDate: string;
+  viewsCount: number;
   specifications: string;
   specificationsRu: string;
-  viewsCount: number;
+  bucketName: string;
+  category: CategoryInterface;
   image: ImageInterface[];
 }
 
 export interface CategoryInterface {
-  categoryId: number;
+  categoryId: number | null;
   categoryName: string;
+  categoryNameRu: string;
   categoryType?: CategoryTypeInterface;
   products?: ProductInterface[];
 }

@@ -24,7 +24,7 @@ const Input = ({
       debounce((value: string) => {
         handleChange(value);
       }, 500),
-      [handleChange]
+      []
   );
 
   useEffect(() => {

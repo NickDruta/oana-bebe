@@ -55,18 +55,31 @@ export const productsDataApiSlice = createApi({
         return data.data;
       }
     }),
-    createProduct: builder.mutation<any, any>({
+    createBasicInfoProduct: builder.mutation<any, any>({
       query: (data) => ({
-        url: ProductsDataApi.CREATE_PRODUCT,
+        url: ProductsDataApi.CREATE_BASIC_INFO_PRODUCT,
         method: "POST",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
         body: JSON.stringify(data),
         headers: {
-          Authorization: sessionStorage.getItem("admin") || "",
           "Content-Type": "application/json",
         },
       }),
+    }),
+    addImages: builder.mutation<any, any>({
+      query: ({ bucketName, color, files }) => {
+        const formData = new FormData();
+        files.forEach((file: any) => formData.append('files', file));
+        formData.append('bucketName', bucketName)
+        formData.append('color', color)
+
+        const encodedColor = encodeURIComponent(color);
+        const url = `${ProductsDataApi.ADD_IMAGES}/${bucketName}/${encodedColor}/`;
+        return {
+          url,
+          method: "POST",
+          body: formData,
+        };
+      },
     }),
     updateProduct: builder.mutation<any, any>({
       query: (data) => ({
@@ -110,7 +123,8 @@ export const {
   useGetNewProductsQuery,
   useGetDiscountProductsQuery,
   useGetProductDetailsQuery,
-  useCreateProductMutation,
+  useCreateBasicInfoProductMutation,
+  useAddImagesMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
   useUpdateViewsQuery,

@@ -1,0 +1,78 @@
+.colorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.colorPicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 16px;
+  }
+}
+
+.colorInput {
+  width: 100px;
+  height: 40px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.dragDropArea {
+  border: 2px dashed #d9d9d9;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  height: 150px;
+  background-color: #fafafa;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  &:hover {
+    border-color: #cc3292;
+  }
+}
+
+.fileInput {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    margin: 10px 0;
+  }
+}
+
+.deleteButton {
+  background-color: #cc3292;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken(#cc3292, 10%);
+  }
+}

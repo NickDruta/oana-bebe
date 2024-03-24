@@ -9,12 +9,17 @@ interface ButtonProps {
   text: string;
   onClick: (e?: any) => void;
   className?: string;
+  disabled?: boolean;
 }
 
-const Button = ({ type, text, onClick, className }: ButtonProps) => {
+const Button = ({ type, text, onClick, className, disabled }: ButtonProps) => {
   return (
     <div
-      className={clsx(cls.button, type === "primary" ? cls.primaryButton : cls.secondaryButton, className)}
+      className={clsx(
+          cls.button,
+          type === "primary" ? cls.primaryButton : cls.secondaryButton,
+          className,
+          disabled && cls.disabled)}
       onClick={onClick}
     >
       {text}

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import clsx from "clsx";
-import cls from "./TextArea.module.scss";
+import React, { useState, useEffect, useCallback } from 'react';
+import debounce from 'lodash/debounce';
+import clsx from 'clsx';
+import cls from './TextArea.module.scss';
 
 interface TextAreaProps {
   placeholder: string;
@@ -10,34 +11,41 @@ interface TextAreaProps {
 }
 
 const TextArea = ({
-  value,
-  handleChange,
-  placeholder,
-  className,
-}: TextAreaProps) => {
+    value,
+    handleChange,
+    placeholder,
+    className,
+  }: TextAreaProps) => {
   const [textValue, setTextValue] = useState(value);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleChange(textValue);
-    }, 500);
+  const debouncedHandleChange = useCallback(
+      debounce((value: string) => {
+        handleChange(value);
+      }, 500),
+      []
+  );
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [textValue, handleChange]);
+  useEffect(() => {
+    if (textValue !== value) {
+      debouncedHandleChange(textValue);
+    }
+  }, [textValue, debouncedHandleChange]);
+
+  useEffect(() => {
+    setTextValue(value);
+  }, [value]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(e.target.value);
   };
 
   return (
-    <textarea
-      className={clsx(cls.textArea, className)}
-      placeholder={placeholder}
-      value={textValue}
-      onChange={handleTextChange}
-    ></textarea>
+      <textarea
+          className={clsx(cls.textArea, className)}
+          placeholder={placeholder}
+          value={textValue}
+          onChange={handleTextChange}
+      />
   );
 };
 

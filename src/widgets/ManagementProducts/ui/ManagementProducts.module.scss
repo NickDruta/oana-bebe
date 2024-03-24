@@ -34,8 +34,12 @@
   border: 1px solid #ffbbeb;
   border-radius: 15px;
   padding: 120px 85px;
-  width: calc(278px / 2 * 1.5);
-  height: 283.5px;
+  flex: 1;
+  max-width: 300px;
+  max-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 

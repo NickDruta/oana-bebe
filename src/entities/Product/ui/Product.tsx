@@ -10,9 +10,9 @@ interface ProductProps {
   product: ProductInterface;
   className?: string;
   isAdmin?: boolean;
-  onClickDelete?: (productId: number) => void;
-  onClickDiscount?: (productId: number) => void;
-  onClickEdit?: (productId: number) => void;
+  onClickDelete?: (productId: number | null) => void;
+  onClickDiscount?: (productId: number | null) => void;
+  onClickEdit?: (productId: number | null) => void;
 }
 
 const Product = ({
