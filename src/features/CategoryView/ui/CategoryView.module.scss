@@ -1,5 +1,6 @@
 .categoryWrapper {
   position: relative;
+  height: 100%;
 
   @media screen and (max-width: 800px) {
     &:nth-of-type(2) > .subcategoriesWrapper {
@@ -14,10 +15,14 @@
   border: 2px solid #e8e8e8;
   color: #979797;
   border-radius: 10px;
-  display: flex;
   gap: 8px;
   cursor: pointer;
   transition: all 0.5s;
+  height: 55px;
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   p {
     font-family: "Inter-Medium";
@@ -34,6 +39,14 @@
   }
 }
 
+@media (min-width: 800px) {
+  .category {
+    max-width: 240px;
+    width: 100%;
+    height: 70px;
+  }
+}
+
 .activeCategory {
   background-color: #e8e8e8;
   color: #000;
@@ -41,7 +54,7 @@
 
 .subcategoriesWrapper {
   position: absolute;
-  top: 50px;
+  top: 70px;
   left: 0;
   background-color: #e8e8e8;
   color: #000;

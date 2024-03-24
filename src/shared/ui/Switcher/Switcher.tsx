@@ -22,7 +22,10 @@ const Switcher = <T extends string>({
         <div
           key={index}
           className={cls.item}
-          onClick={() => changeLanguage(item)}
+          onClick={() => {
+            window.location.reload();
+            changeLanguage(item);
+          }}
         >
           {item}
         </div>
@@ -30,7 +33,7 @@ const Switcher = <T extends string>({
       <div
         className={clsx(
           cls.activeBackground,
-          selectedOption !== options[0] ? cls.right : cls.left
+          selectedOption !== options[0] ? cls.right : cls.left,
         )}
       />
     </div>

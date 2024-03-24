@@ -5,7 +5,10 @@
   padding: 16px;
   background-color: #e8e8e8;
   border-radius: 10px;
-  height: fit-content;
+  max-height: 95vh;
+  height: 100%;
+  overflow: scroll;
+  min-width: 216px;
   position: sticky;
   top: 20px;
 }
@@ -37,4 +40,10 @@
     font-size: 14px;
     letter-spacing: 0.8px;
   }
+}
+
+@media screen and (max-width: 800px){
+.filtersWrapper {
+  position: relative;
+}
 }
