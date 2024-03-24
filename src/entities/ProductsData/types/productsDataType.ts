@@ -32,8 +32,8 @@ export interface CategoryTypeInterface {
 
 export interface ImageInterface {
   color: string;
-  discountPrice: number | null;
-  price: number;
+  discountPrice: string | null;
+  price: string;
   urls: string[];
 }
 

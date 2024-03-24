@@ -18,31 +18,11 @@ export const productsDataApiSlice = createApi({
         headers: {
           "Content-Type": "application/json",
         },
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
         params: { pageSize: data.pageSize, pageNumber: data.pageNumber },
       }),
       transformResponse: (data: {data: any}) => {
         return data.data;
       }
-    }),
-    getNewProducts: builder.query<ProductsPageable, void>({
-      query: () => ({
-        url: ProductsDataApi.GET_NEW_PRODUCTS,
-        method: "GET",
-        params: { pageSize: 4, pageNumber: 0 },
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-      }),
-    }),
-    getDiscountProducts: builder.query<ProductsPageable, void>({
-      query: () => ({
-        url: ProductsDataApi.GET_DISCOUNT_PRODUCTS,
-        method: "GET",
-        params: { pageSize: 4, pageNumber: 0 },
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-      }),
     }),
     getProductDetails: builder.query<ProductInterface, any>({
       query: (data) => ({
@@ -68,7 +48,7 @@ export const productsDataApiSlice = createApi({
     addImages: builder.mutation<any, any>({
       query: ({ bucketName, color, files }) => {
         const formData = new FormData();
-        files.forEach((file: any) => formData.append('files', file));
+        files.forEach((file: any) => formData.append('images', file));
         formData.append('bucketName', bucketName)
         formData.append('color', color)
 
@@ -81,29 +61,30 @@ export const productsDataApiSlice = createApi({
         };
       },
     }),
-    updateProduct: builder.mutation<any, any>({
+    updateProductPrices: builder.mutation<any, any>({
       query: (data) => ({
-        url: ProductsDataApi.UPDATE_PRODUCT,
+        url: `${ProductsDataApi.UPDATE_PRODUCT_PRICES}/${data.productId}/price`,
         method: "PUT",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
         body: JSON.stringify(data),
         headers: {
-          Authorization: sessionStorage.getItem("admin") || "",
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    updateBasicInfo: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `${ProductsDataApi.UPDATE_BASIC_INFO}/${data.productId}`,
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
           "Content-Type": "application/json",
         },
       }),
     }),
     deleteProduct: builder.mutation<any, any>({
       query: (data) => ({
-        url: ProductsDataApi.DELETE_PRODUCT,
+        url: `${ProductsDataApi.DELETE_PRODUCT}/${data}`,
         method: "DELETE",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-        params: { productId: data },
-        headers: {
-          Authorization: sessionStorage.getItem("admin") || "",
-        },
       }),
     }),
     updateViews: builder.query<any, any>({
@@ -120,12 +101,11 @@ export const productsDataApiSlice = createApi({
 
 export const {
   useGetProductsTriggerMutation,
-  useGetNewProductsQuery,
-  useGetDiscountProductsQuery,
   useGetProductDetailsQuery,
   useCreateBasicInfoProductMutation,
   useAddImagesMutation,
-  useUpdateProductMutation,
+  useUpdateProductPricesMutation,
+  useUpdateBasicInfoMutation,
   useDeleteProductMutation,
   useUpdateViewsQuery,
 } = productsDataApiSlice;

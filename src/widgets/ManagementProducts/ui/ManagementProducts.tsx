@@ -1,15 +1,17 @@
 import React, {useEffect, useState, useCallback, useRef} from "react";
+import {toast} from "react-toastify";
 import {
-  ProductInterface,
+  ProductInterface, useDeleteProductMutation,
 } from "entities/ProductsData";
 import { Product } from "entities/Product";
 import {
   useGetProductsTriggerMutation,
 } from "entities/ProductsData";
 import { AddModalProduct } from "features/AddModalProduct";
+import {EditProduct} from "features/EditProduct";
 import { DiscountModal } from "features/DiscountModal";
 import {companies, initPaginationData} from "shared/config";
-import {Button, Input, Select} from "shared/ui";
+import {Input, Select} from "shared/ui";
 import { AddIcon } from "shared/assets";
 import { ProductLoading } from "entities/ProductLoading";
 import cls from "./ManagementProducts.module.scss";
@@ -25,6 +27,8 @@ interface FiltersState {
 }
 
 const ManagementProducts = () => {
+  const [triggerDelete] = useDeleteProductMutation();
+
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const lastProductElementRef = useCallback((node: HTMLDivElement | null) => {
@@ -44,6 +48,7 @@ const ManagementProducts = () => {
   const [productLoading, setProductLoading] = useState(true);
   const [productsFinished, setProductsFinished] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
   const [productSelected, setProductSelected] = useState<ProductInterface | null>(null)
 
@@ -100,6 +105,7 @@ const ManagementProducts = () => {
   const handleClose = () => {
     isDiscountModalOpen && setIsDiscountModalOpen(false);
     isAddModalOpen && setIsAddModalOpen(false);
+    isEditModalOpen && setIsEditModalOpen(false);
     setProductSelected(null);
   }
 
@@ -114,6 +120,21 @@ const ManagementProducts = () => {
     // if (!sessionStorage.getItem("jwt")) navigate("/management");
     loadNextProducts(filters);
   }, []);
+
+  const handleDelete = async (productId: number | null) => {
+    if (!productId) return;
+
+    try {
+      await triggerDelete(productId).unwrap();
+
+      toast.success("Produsul a fost șters cu succes!");
+      setPagination(initPaginationData);
+      handleFiltersChange(filters);
+    } catch (error: any) {
+      console.error(error);
+      toast.error(`Eroare la ștergerea produsului: ${error?.data?.error || error?.response?.data?.message || 'An unknown error occurred'}`);
+    }
+  }
 
   return (
     <div className={cls.managementProductsWrapper}>
@@ -142,14 +163,6 @@ const ManagementProducts = () => {
                 handleFiltersChange({...filters, searchValue: value})
               }}
             />
-            <Button
-              type="primary"
-              text="Aplica"
-              onClick={() => {
-                setProductLoading(false);
-                setProductsFinished(false);
-              }}
-            />
           </div>
         </div>
           <>
@@ -172,12 +185,13 @@ const ManagementProducts = () => {
                             isAdmin
                             onClickEdit={() => {
                               setProductSelected(product)
-                              setIsAddModalOpen(true)
+                              setIsEditModalOpen(true)
                             }}
                             onClickDiscount={() => {
                               setProductSelected(product)
                               setIsDiscountModalOpen(true)
                             }}
+                            onClickDelete={() => handleDelete(product.productId)}
                         />
                     ))}
                     {!productsFinished ? (
@@ -196,15 +210,29 @@ const ManagementProducts = () => {
       </div>
       {isAddModalOpen ? (
         <AddModalProduct
-          productSelected={productSelected}
           handleClose={handleClose}
         />
       ) : (
         <></>
       )}
+      {isEditModalOpen && productSelected ? (
+          <EditProduct
+              selectedProduct={productSelected}
+              handleClose={() => {
+                handleClose();
+                handleFiltersChange(filters);
+              }}
+          />
+      ) : (
+          <></>
+      )}
       {isDiscountModalOpen && productSelected ? (
         <DiscountModal
           handleClose={handleClose}
+          resetData={() => {
+            handleFiltersChange(filters);
+            setProductSelected(null);
+          }}
           selectedProduct={productSelected}
         />
       ) : (
