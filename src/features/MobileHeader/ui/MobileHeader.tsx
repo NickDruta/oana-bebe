@@ -6,6 +6,7 @@ import { useClickAwayListener } from "shared/hooks";
 import { i18n } from "shared/providers";
 import { Switcher } from "shared/ui";
 import cls from "./MobileHeader.module.scss";
+import CloseIcon from "../../../shared/assets/icons/CloseIcon";
 
 const MobileHeader = () => {
   const { t } = useTranslation();
@@ -22,6 +23,20 @@ const MobileHeader = () => {
     setIsBurgerOpen(false);
   };
   const wrapperRef = useClickAwayListener({ handleClickAway });
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 800) {
+        setIsBurgerOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const cart = localStorage.getItem("cart");
@@ -50,6 +65,9 @@ const MobileHeader = () => {
       />
       {isBurgerOpen ? (
         <div ref={wrapperRef} className={cls.burgerWrapper}>
+          <div className={cls.closeBtn} onClick={() => setIsBurgerOpen(false)}>
+            <CloseIcon />
+          </div>
           <Link to="/" className={pathname === "/" ? cls.activeLink : ""}>
             {t("content:HOME")}
           </Link>

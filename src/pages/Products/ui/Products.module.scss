@@ -21,11 +21,18 @@
 
 .categoriesWrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
+  align-items: center;
+  max-width: 100vw;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
 
   @media screen and (max-width: 800px) {
-    flex-wrap: wrap;
+    max-width: calc(100vw - 70px);
+    width: 100%;
     gap: 12px;
+    flex-wrap: wrap;
   }
 }
 
@@ -46,5 +53,37 @@
 
   @media screen and (max-width: 800px) {
     justify-content: center;
+  }
+}
+
+.filterIconBox {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media screen and (min-width: 800px) {
+    width: 0;
+    height: 0;
+  }
+}
+
+.filterIcon {
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (min-width: 800px) {
+  .filterIcon {
+    display: none;
+  }
+}
+
+.filterBox {
+  display: none;
+
+  @media screen and (min-width: 800px) {
+    display: block !important;
   }
 }

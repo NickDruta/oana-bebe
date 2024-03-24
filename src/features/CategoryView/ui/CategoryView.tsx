@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import { CategoryAndSubcategory } from "entities/CategoryData";
+import {
+  CategoryAndSubcategory,
+  SubCategoryResponse,
+} from "entities/CategoryData";
 import { useClickAwayListener } from "shared/hooks";
 import cls from "./CategoryView.module.scss";
 import { i18n } from "shared/providers";
@@ -9,7 +12,11 @@ interface CategoryViewProps {
   category: CategoryAndSubcategory;
   isActive: boolean;
   subcategoryActive: string;
-  handleCategoryChange: (category: string, subcategoryId: string, subCategoryId: number) => void;
+  handleCategoryChange: (
+    category: string,
+    subcategoryId: string,
+    subCategoryId: number,
+  ) => void;
 }
 
 const CategoryView = ({
@@ -24,22 +31,42 @@ const CategoryView = ({
   const handleClickAway = () => {
     setIsOpen(false);
   };
+
   const wrapperRef = useClickAwayListener({ handleClickAway });
+
+  const handleClick = (subcategory: SubCategoryResponse) => {
+    console.log("subcategory --->", subcategory);
+    if (subcategory.categoryName === subcategoryActive) {
+      setIsOpen(false);
+      setTimeout(() => {
+        window.location.href = "/produse";
+      }, 100); // 0.1 second timeout
+    } else {
+      setIsOpen(false);
+      setTimeout(() => {
+        handleCategoryChange(
+          category.categoryType,
+          subcategory.categoryName,
+          subcategory.categoryId,
+        );
+      }, 100); // 0.1 second timeout
+    }
+  };
+
+  const handleOpening = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div className={cls.categoryWrapper} ref={wrapperRef}>
       <div
         className={clsx(
           cls.category,
-          (isOpen || isActive) && cls.activeCategory
+          (isOpen || isActive) && cls.activeCategory,
         )}
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpening}
       >
-        <p>
-          {isRu
-            ? category.categoryTypeRu
-            : category.categoryType}
-        </p>
+        <p>{isRu ? category.categoryTypeRu : category.categoryType}</p>
         <p>&#8595;</p>
       </div>
       {isOpen ? (
@@ -47,19 +74,16 @@ const CategoryView = ({
           {category.categorySet.map((subcategory, index) => (
             <p
               key={index}
-              style={subcategory.categoryName === subcategoryActive ? {color: '#cc3292'} : {}}
+              style={
+                subcategory.categoryName === subcategoryActive
+                  ? { color: "#cc3292" }
+                  : {}
+              }
               onClick={() => {
-                setIsOpen(false);
-                handleCategoryChange(
-                  category.categoryType,
-                  subcategory.categoryName,
-                  subcategory.categoryId
-                );
+                handleClick(subcategory);
               }}
             >
-              {isRu
-                ? subcategory.categoryNameRu
-                : subcategory.categoryName}
+              {isRu ? subcategory.categoryNameRu : subcategory.categoryName}
             </p>
           ))}
         </div>
