@@ -180,7 +180,9 @@ const Products = () => {
         : [],
     };
 
-    handleFiltersChange(initialFilters);
+    if (!window.location.pathname.includes("produse")) {
+      handleFiltersChange(initialFilters);
+    }
   }, [location.pathname, location.search, categories]);
 
   const handleFilterClick = () => {
@@ -200,6 +202,12 @@ const Products = () => {
       setIsVisible(false);
     }
   }, [isVisible, productLoading, productsFinished, isInit]);
+
+  useEffect(() => {
+    if (window.location.pathname.includes("produse")) {
+      loadNextProducts(filters);
+    }
+  }, []);
 
   return (
     <>

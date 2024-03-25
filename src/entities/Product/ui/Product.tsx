@@ -1,6 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
+import { parseISO, differenceInDays } from "date-fns";
 import { ProductInterface } from "entities/ProductsData";
 import { DeleteIcon, DiscountIcon, EditIcon, EyeIcon } from "shared/assets";
 import cls from "./Product.module.scss";
@@ -26,9 +27,11 @@ const Product = ({
   const navigate = useNavigate();
   const isRu = i18n.language === "ru";
 
-  if (!product) return (
-      <></>
-  )
+  if (!product) return <></>;
+
+  const createdDate = parseISO(product.createdDate);
+  const daysSinceCreation = differenceInDays(new Date(), createdDate);
+  const isNew = daysSinceCreation <= 7;
 
   return (
     <div
@@ -59,9 +62,10 @@ const Product = ({
           className={cls.edit}
         />
       )}
-      {(product?.image[0]?.discountPrice) && !isAdmin && (
+      {!isNew && product?.image[0]?.discountPrice && !isAdmin && (
         <p className={cls.discountTag}>Reducere</p>
       )}
+      {isNew && !isAdmin && <p className={cls.discountTag}>Nou</p>}
       {product?.viewsCount > 10 && !isAdmin && (
         <div className={cls.viewsWrapper}>
           <EyeIcon />
@@ -70,10 +74,7 @@ const Product = ({
       )}
       <img
         className={cls.previewImage}
-        src={
-          product?.image.length
-            ? product?.image[0].urls[0] : ''
-        }
+        src={product?.image.length ? product?.image[0].urls[0] : ""}
         alt=""
       />
       <p className={cls.productName}>
@@ -83,16 +84,15 @@ const Product = ({
         <p
           className={clsx(
             cls.price,
-            (product?.image[0]?.discountPrice) && cls.oldPrice
+            product?.image[0]?.discountPrice && cls.oldPrice,
           )}
         >
-          {product?.image[0]?.price}{" "}
-          MDL
+          {product?.image[0]?.price} MDL
         </p>
         {!isAdmin && product.image[0]?.discountPrice ? (
           <p className={cls.price}>
             {product?.image[0]?.discountPrice ??
-                product?.image[0]?.discountPrice}{" "}
+              product?.image[0]?.discountPrice}{" "}
             MDL
           </p>
         ) : (
