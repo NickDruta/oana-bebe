@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { SliderItemIcon, SliderLeftIcon, SliderRightIcon } from "shared/assets";
 import cls from "./Swiper.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface SwiperProps {
   images: { image: string; url: string }[];
 }
 
 const Swiper = ({ images }: SwiperProps) => {
+  const navigate = useNavigate();
   const [activeImage, setActiveImage] = useState(0);
   const [translateX, setTranslateX] = useState(0);
 
@@ -53,31 +55,13 @@ const Swiper = ({ images }: SwiperProps) => {
         style={{ transform: `translateX(${translateX}%)` }}
       >
         {images.map((item, index) => (
-          <>
-            {item.url ? (
-              <a href={item.url} key={index}>
-                <img
-                  key={index}
-                  src={item.image}
-                  alt=""
-                  className={clsx(
-                    cls.img,
-                    index === activeImage && cls.activeImg,
-                  )}
-                />
-              </a>
-            ) : (
-              <img
-                key={index}
-                src={item.image}
-                alt=""
-                className={clsx(
-                  cls.img,
-                  index === activeImage && cls.activeImg,
-                )}
-              />
-            )}
-          </>
+          <img
+            key={index}
+            src={item.image}
+            alt=""
+            className={clsx(cls.img, index === activeImage && cls.activeImg)}
+            onClick={() => (item.url ? navigate(item.url) : {})}
+          />
         ))}
       </div>
       <div className={clsx(cls.swiperArrow, cls.left)} onClick={handlePrevious}>

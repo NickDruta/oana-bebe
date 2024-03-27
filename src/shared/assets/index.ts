@@ -15,9 +15,9 @@ import sliderImage14 from "./sliderImages/14.png";
 import sliderImage15 from "./sliderImages/15.png";
 
 export const sliderImages = [
-  { image: sliderImage1, url: "https://oanabebe.md/produse/508?color=0" },
-  { image: sliderImage2, url: "https://oanabebe.md/produse/506?color=0" },
-  { image: sliderImage3, url: "https://oanabebe.md/produse/526?color=0" },
+  { image: sliderImage1, url: "/produse/508?color=0" },
+  { image: sliderImage2, url: "/produse/506?color=0" },
+  { image: sliderImage3, url: "/produse/526?color=0" },
   { image: sliderImage4, url: "" },
   { image: sliderImage5, url: "" },
   { image: sliderImage6, url: "" },
