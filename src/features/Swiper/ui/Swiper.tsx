@@ -4,13 +4,12 @@ import { SliderItemIcon, SliderLeftIcon, SliderRightIcon } from "shared/assets";
 import cls from "./Swiper.module.scss";
 
 interface SwiperProps {
-  images: string[];
+  images: { image: string; url: string }[];
 }
 
 const Swiper = ({ images }: SwiperProps) => {
   const [activeImage, setActiveImage] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  
 
   const handleImageChange = (index: number) => {
     setTranslateX(index * -100);
@@ -54,12 +53,31 @@ const Swiper = ({ images }: SwiperProps) => {
         style={{ transform: `translateX(${translateX}%)` }}
       >
         {images.map((item, index) => (
-          <img
-            key={index}
-            src={item}
-            alt=""
-            className={clsx(cls.img, index === activeImage && cls.activeImg)}
-          />
+          <>
+            {item.url ? (
+              <a href={item.url} key={index}>
+                <img
+                  key={index}
+                  src={item.image}
+                  alt=""
+                  className={clsx(
+                    cls.img,
+                    index === activeImage && cls.activeImg,
+                  )}
+                />
+              </a>
+            ) : (
+              <img
+                key={index}
+                src={item.image}
+                alt=""
+                className={clsx(
+                  cls.img,
+                  index === activeImage && cls.activeImg,
+                )}
+              />
+            )}
+          </>
         ))}
       </div>
       <div className={clsx(cls.swiperArrow, cls.left)} onClick={handlePrevious}>
