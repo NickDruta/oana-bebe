@@ -13,15 +13,19 @@ import sliderImage12 from "./sliderImages/12.png";
 import sliderImage13 from "./sliderImages/13.png";
 import sliderImage14 from "./sliderImages/14.png";
 import sliderImage15 from "./sliderImages/15.png";
+import sliderImage16 from "./sliderImages/16.png";
+import sliderImage17 from "./sliderImages/17.png";
+import sliderImage18 from "./sliderImages/18.png";
+import sliderImage19 from "./sliderImages/19.png";
 
 export const sliderImages = [
-  { image: sliderImage1, url: "/produse/508?color=0" },
-  { image: sliderImage2, url: "/produse/506?color=0" },
-  { image: sliderImage3, url: "/produse/526?color=0" },
-  { image: sliderImage4, url: "" },
-  { image: sliderImage5, url: "" },
-  { image: sliderImage6, url: "" },
-  { image: sliderImage7, url: "" },
+  { image: sliderImage1, url: "/produse/527?color=0" },
+  { image: sliderImage2, url: "/produse/79?color=0" },
+  { image: sliderImage3, url: "/produse/334?color=0" },
+  { image: sliderImage4, url: "/produse/501?color=0" },
+  { image: sliderImage5, url: "/produse/508?color=0" },
+  { image: sliderImage6, url: "/produse/506?color=0" },
+  { image: sliderImage7, url: "/produse/526?color=0" },
   { image: sliderImage8, url: "" },
   { image: sliderImage9, url: "" },
   { image: sliderImage10, url: "" },
@@ -30,6 +34,10 @@ export const sliderImages = [
   { image: sliderImage13, url: "" },
   { image: sliderImage14, url: "" },
   { image: sliderImage15, url: "" },
+  { image: sliderImage16, url: "" },
+  { image: sliderImage17, url: "" },
+  { image: sliderImage18, url: "" },
+  { image: sliderImage19, url: "" },
 ];
 
 export { ReactComponent as EditIcon } from "./icons/edit.svg";
