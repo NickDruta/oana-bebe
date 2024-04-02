@@ -18,6 +18,9 @@ import { useDeviceType } from "shared/hooks";
 import { Filter } from "entities/Filter";
 import { FilterIcon } from "shared/assets";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
+import i18n from "i18next";
 
 interface FiltersState {
   categoryActive: string;
@@ -30,6 +33,7 @@ interface FiltersState {
 }
 
 const Products = () => {
+  const { t } = useTranslation();
   const isMobile = useDeviceType();
   const location = useLocation();
   const navigate = useNavigate();
@@ -57,6 +61,7 @@ const Products = () => {
   const [productLoading, setProductLoading] = useState(true);
   const [productsFinished, setProductsFinished] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const [filters, setFilters] = useState<FiltersState>({
     categoryActive: "",
@@ -196,6 +201,10 @@ const Products = () => {
     }
   };
 
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   useEffect(() => {
     if (isVisible && !productLoading && !productsFinished && !isInit) {
       loadNextProducts(filters);
@@ -288,35 +297,60 @@ const Products = () => {
                 />
               </div>
 
-              {products.length || productLoading ? (
-                <div className={cls.productsDataWrapper}>
-                  {products.map((product, index) => (
-                    <Product key={index} product={product} />
-                  ))}
-                  {!productsFinished ? (
+              <div style={{ width: "100%" }}>
+                {filters.subcategoryActive &&
+                i18n.exists(
+                  `content:${filters.subcategoryActive.replaceAll(" ", "_").toUpperCase()}_DESCRIPTION`,
+                ) ? (
+                  <div style={{ position: "relative" }}>
                     <div
-                      ref={lastProductElementRef}
-                      style={
-                        isMobile
-                          ? {
-                              display: "flex",
-                              justifyContent: "space-between",
-                              width: "100%",
-                              padding: "0 5px",
-                            }
-                          : {}
-                      }
-                    >
-                      <ProductLoading />
-                      {isMobile && <ProductLoading />}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              ) : (
-                <p className={cls.title}>Nu exista asa produse</p>
-              )}
+                      className={clsx(
+                        cls.infoWrapper,
+                        isExpanded && cls.isExpanded,
+                      )}
+                      dangerouslySetInnerHTML={{
+                        __html: `${t(
+                          `content:${filters.subcategoryActive.replaceAll(" ", "_").toUpperCase()}_DESCRIPTION`,
+                        )}`,
+                      }}
+                    />
+                    <button onClick={toggleExpanded} className={cls.infoButton}>
+                      {isExpanded ? "Vezi mai puțin" : "Vezi mai mult"}
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                {products.length || productLoading ? (
+                  <div className={cls.productsDataWrapper}>
+                    {products.map((product, index) => (
+                      <Product key={index} product={product} />
+                    ))}
+                    {!productsFinished ? (
+                      <div
+                        ref={lastProductElementRef}
+                        style={
+                          isMobile
+                            ? {
+                                display: "flex",
+                                justifyContent: "space-between",
+                                width: "100%",
+                                padding: "0 5px",
+                              }
+                            : {}
+                        }
+                      >
+                        <ProductLoading />
+                        {isMobile && <ProductLoading />}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                ) : (
+                  <p className={cls.title}>Nu exista asa produse</p>
+                )}
+              </div>
             </div>
           </>
         )}

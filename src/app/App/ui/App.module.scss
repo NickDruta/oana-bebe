@@ -4,3 +4,17 @@
   height: 100dvh;
   overflow-y: auto;
 }
+
+div,
+p {
+  font-family: "Inter-Regular";
+  font-size: 14px;
+  line-height: 150%;
+  text-align: left;
+}
+
+h1 {
+  font-family: "Inter-Medium";
+  font-size: 18px;
+  line-height: 175%;
+}

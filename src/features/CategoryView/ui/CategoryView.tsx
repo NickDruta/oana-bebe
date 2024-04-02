@@ -35,7 +35,6 @@ const CategoryView = ({
   const wrapperRef = useClickAwayListener({ handleClickAway });
 
   const handleClick = (subcategory: SubCategoryResponse) => {
-    console.log("subcategory --->", subcategory);
     if (subcategory.categoryName === subcategoryActive) {
       setIsOpen(false);
       setTimeout(() => {
