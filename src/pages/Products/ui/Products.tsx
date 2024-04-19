@@ -1,26 +1,31 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
+import i18n from "i18next";
+
 import { useGetCategoriesQuery } from "entities/CategoryData";
 import {
   ProductInterface,
   useGetProductsTriggerMutation,
 } from "entities/ProductsData";
+import { Filter } from "entities/Filter";
 import { Product } from "entities/Product";
 import { StickyInfo } from "entities/StickyInfo";
 import { ProductLoading } from "entities/ProductLoading";
+
 import { Header } from "features/Header";
 import { MobileHeader } from "features/MobileHeader";
 import { Footer } from "features/Footer";
 import { CategoryView } from "features/CategoryView";
+
 import { initPaginationData } from "shared/config";
 import { LoadingSpinner } from "shared/ui";
-import cls from "./Products.module.scss";
 import { useDeviceType } from "shared/hooks";
-import { Filter } from "entities/Filter";
 import { FilterIcon } from "shared/assets";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import clsx from "clsx";
-import i18n from "i18next";
+import { removeDiacritics } from "shared/lib";
+
+import cls from "./Products.module.scss";
 
 interface FiltersState {
   categoryActive: string;
@@ -37,7 +42,6 @@ const Products = () => {
   const isMobile = useDeviceType();
   const location = useLocation();
   const navigate = useNavigate();
-  const queryParameters = new URLSearchParams(location.search);
 
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -131,16 +135,11 @@ const Products = () => {
     ],
   );
 
-  function removeDiacritics(str: string) {
-    return str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[îâă]/g, "a")
-      .replace(/[șş]/g, "s")
-      .replace(/[țţ]/g, "t");
-  }
-
+  /**
+   * Updating filters on URL change
+   */
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
     const pathSegments = location.pathname.split("/").filter(Boolean);
     let categoryActive = "";
     let subcategoryActive = "";
@@ -173,23 +172,29 @@ const Products = () => {
       }
     }
 
+    const getQueryParamArray = (param: string): string[] => {
+      const value = queryParams.get(param);
+      return value ? value.split(",") : [];
+    };
+
     const initialFilters: Partial<FiltersState> = {
       categoryActive,
       subcategoryActive,
       categoryId,
-      searchValue: queryParameters.get("search") || "",
-      minPrice: queryParameters.get("minPrice") || "",
-      maxPrice: queryParameters.get("maxPrice") || "",
-      companiesSelected: queryParameters.get("companies")
-        ? queryParameters.get("companies")?.split(",")
-        : [],
+      searchValue: queryParams.get("search") || "",
+      companiesSelected: getQueryParamArray("companies"),
+      minPrice: queryParams.get("minPrice") || "",
+      maxPrice: queryParams.get("maxPrice") || "",
     };
 
     if (!window.location.pathname.includes("produse")) {
       handleFiltersChange(initialFilters);
     }
-  }, [location.pathname, location.search, categories]);
+  }, [categories]);
 
+  /**
+   * Changing the style on opening the filter
+   */
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
     if (isFilterOpen) {
@@ -201,10 +206,16 @@ const Products = () => {
     }
   };
 
+  /**
+   * Handling expansion of filters on mobile
+   */
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
+  /**
+   * Loading products
+   */
   useEffect(() => {
     if (isVisible && !productLoading && !productsFinished && !isInit) {
       loadNextProducts(filters);
@@ -212,11 +223,30 @@ const Products = () => {
     }
   }, [isVisible, productLoading, productsFinished, isInit]);
 
+  /**
+   * Loading products on init
+   */
   useEffect(() => {
     if (window.location.pathname.includes("produse")) {
       loadNextProducts(filters);
     }
   }, []);
+
+  /**
+   * Filters handling in URL
+   */
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (filters.searchValue) params.set("search", filters.searchValue);
+    if (filters.minPrice) params.set("minPrice", filters.minPrice);
+    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
+    if (filters.companiesSelected.length > 0)
+      params.set("companies", filters.companiesSelected.join(","));
+
+    // Push new search params to the history stack
+    navigate({ search: params.toString() }, { replace: true });
+  }, [filters, navigate]);
 
   return (
     <>
