@@ -23,8 +23,7 @@ const Switcher = <T extends string>({
           key={index}
           className={cls.item}
           onClick={() => {
-            window.location.reload();
-            changeLanguage(item);
+            onChange(item);
           }}
         >
           {item}

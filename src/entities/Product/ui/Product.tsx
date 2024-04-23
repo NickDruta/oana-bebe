@@ -36,7 +36,11 @@ const Product = ({
   return (
     <div
       className={clsx(cls.productWrapper, className)}
-      onClick={() => !isAdmin && navigate(`/produse/${product.productId}`)}
+      onClick={() => {
+        if (!isAdmin) {
+          window.open(`/produse/${product.productId}?color=0`, "_blank");
+        }
+      }}
     >
       {isAdmin && (
         <DeleteIcon

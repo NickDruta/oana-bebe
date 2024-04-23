@@ -1,9 +1,9 @@
 import { PaginationRecord } from "../types/types";
-import {ProductInterface} from "../../../entities/ProductsData";
+import { ProductInterface } from "../../../entities/ProductsData";
 
 export const initPaginationData: PaginationRecord = {
   pageNumber: 1,
-  pageSize: 6,
+  pageSize: 12,
   totalElements: 0,
   totalPages: 0,
 };
@@ -35,4 +35,4 @@ export const emptyProduct: ProductInterface = {
     categoryId: null,
   },
   image: [],
-}
+};

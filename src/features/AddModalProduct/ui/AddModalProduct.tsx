@@ -99,6 +99,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
             handleChange={handleChange}
             handleStepsNumber={(value) => setStepsNumber(value)}
             hasSteps
+            isRO
           />
         );
       case stepsNumber:

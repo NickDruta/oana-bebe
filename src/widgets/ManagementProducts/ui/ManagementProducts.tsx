@@ -4,121 +4,78 @@ import { toast } from "react-toastify";
 import {
   ProductInterface,
   useDeleteProductMutation,
+  useGetProductsQuery,
 } from "entities/ProductsData";
 import { Product } from "entities/Product";
-import { useGetProductsTriggerMutation } from "entities/ProductsData";
+// import { useGetProductsTriggerMutation } from "entities/ProductsData";
 import { AddModalProduct } from "features/AddModalProduct";
 import { EditProduct } from "features/EditProduct";
 import { DiscountModal } from "features/DiscountModal";
-import { companies, initPaginationData } from "shared/config";
-import { Input, Select } from "shared/ui";
+import {
+  companies,
+  initPaginationData,
+  defaultFilters,
+  FiltersState,
+} from "shared/config";
+import { Input, LoadingSpinner, Select } from "shared/ui";
 import { AddIcon } from "shared/assets";
 import { ProductLoading } from "entities/ProductLoading";
 import cls from "./ManagementProducts.module.scss";
-
-interface FiltersState {
-  categoryActive: string;
-  subcategoryActive: string;
-  categoryId: number | null;
-  searchValue: string;
-  companiesSelected: string[];
-  minPrice: string;
-  maxPrice: string;
-}
+import { ConfigProvider, Pagination } from "antd";
 
 const ManagementProducts = () => {
   const navigate = useNavigate();
   const [triggerDelete] = useDeleteProductMutation();
 
-  const [isVisible, setIsVisible] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const lastProductElementRef = useCallback((node: HTMLDivElement | null) => {
-    if (observerRef.current) observerRef.current.disconnect();
-    observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setIsVisible(true);
-      }
-    });
-    if (node) observerRef.current.observe(node);
-  }, []);
-
+  /**
+   * Pagination state
+   */
   const [pagination, setPagination] = useState(initPaginationData);
-  const [getProductsTrigger] = useGetProductsTriggerMutation();
 
-  const [products, setProducts] = useState<ProductInterface[]>([]);
-  const [productLoading, setProductLoading] = useState(true);
-  const [productsFinished, setProductsFinished] = useState(false);
+  /**
+   * Filters state
+   */
+  const [filters, setFilters] = useState(defaultFilters);
+
+  /**
+   * Query for products
+   */
+  const {
+    data: products,
+    isLoading: isProductsLoading,
+    isFetching: isProductsFetching,
+  } = useGetProductsQuery({
+    companyName: filters.companiesSelected?.length
+      ? filters.companiesSelected
+      : undefined,
+    productName: filters.searchValue,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    categoryId: filters.categoryId,
+    pageSize: pagination.pageSize,
+    pageNumber: pagination.pageNumber,
+  });
+  console.log(products);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
   const [productSelected, setProductSelected] =
     useState<ProductInterface | null>(null);
 
-  const [filters, setFilters] = useState<FiltersState>({
-    categoryActive: "",
-    subcategoryActive: "",
-    categoryId: null,
-    searchValue: "",
-    companiesSelected: [],
-    minPrice: "",
-    maxPrice: "",
-  });
-
+  /**
+   * Handling filter changing
+   * @param newFilters
+   */
   const handleFiltersChange = (newFilters: Partial<FiltersState>) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters, ...newFilters };
-      setProductLoading(true);
-      setProducts([]);
+
       setPagination(initPaginationData);
-      setProductsFinished(false);
-      loadNextProducts(updatedFilters, true);
+
       return updatedFilters;
     });
   };
-
-  const loadNextProducts = useCallback(
-    async (filters: FiltersState, reset: boolean = false) => {
-      setProductLoading(true);
-
-      try {
-        const response = await getProductsTrigger({
-          productName: filters.searchValue || undefined,
-          companyName: filters.companiesSelected.length
-            ? filters.companiesSelected
-            : undefined,
-          minPrice: filters.minPrice || undefined,
-          maxPrice: filters.maxPrice || undefined,
-          pageSize: pagination.pageSize,
-          pageNumber: reset ? 1 : pagination.pageNumber,
-          categoryId: filters.categoryId || undefined,
-        }).unwrap();
-
-        if (response && response.length) {
-          setProducts((prevProducts) =>
-            reset ? response : [...prevProducts, ...response],
-          );
-          setPagination((prev) => ({
-            ...prev,
-            pageNumber: prev.pageNumber + 1,
-          }));
-        } else {
-          setProductsFinished(true);
-        }
-      } catch (error) {
-        console.error("Error loading products:", error);
-      } finally {
-        setProductLoading(false);
-      }
-    },
-    [
-      productLoading,
-      productsFinished,
-      filters,
-      pagination.pageSize,
-      pagination.pageNumber,
-      getProductsTrigger,
-    ],
-  );
 
   const handleClose = () => {
     isDiscountModalOpen && setIsDiscountModalOpen(false);
@@ -128,15 +85,7 @@ const ManagementProducts = () => {
   };
 
   useEffect(() => {
-    if (isVisible && !productLoading && !productsFinished) {
-      loadNextProducts(filters);
-      setIsVisible(false);
-    }
-  }, [isVisible, productLoading, productsFinished]);
-
-  useEffect(() => {
     if (!sessionStorage.getItem("jwt")) navigate("/management");
-    loadNextProducts(filters);
   }, []);
 
   const handleDelete = async (productId: number | null) => {
@@ -170,19 +119,25 @@ const ManagementProducts = () => {
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Select
               options={companies}
-              value={filters.companiesSelected?.[0]}
+              value={filters.companiesSelected?.[0] ?? ""}
               placeholder={"Companie"}
               handleChange={(value) =>
-                handleFiltersChange({ ...filters, companiesSelected: [value] })
+                handleFiltersChange({
+                  ...filters,
+                  companiesSelected: value ? [value] : null,
+                })
               }
               optionsClassName={cls.optionsClassName}
             />
             <Input
               className={cls.maxWidth}
               placeholder={"Cauta produs"}
-              value={filters.searchValue}
+              value={filters.searchValue ?? ""}
               handleChange={(value) => {
-                handleFiltersChange({ ...filters, searchValue: value });
+                handleFiltersChange({
+                  ...filters,
+                  searchValue: value ? value : null,
+                });
               }}
             />
           </div>
@@ -198,9 +153,13 @@ const ManagementProducts = () => {
             >
               <AddIcon style={{ width: 36, height: 36, stroke: "#ffbbeb" }} />
             </div>
-            {products.length || productLoading ? (
+            {isProductsLoading || isProductsFetching ? (
+              <LoadingSpinner />
+            ) : !products?.data.length ? (
+              <p className={cls.title}>Nu exista asa produse</p>
+            ) : (
               <>
-                {products.map((product, index) => (
+                {products?.data.map((product, index) => (
                   <Product
                     key={index}
                     product={product}
@@ -216,16 +175,29 @@ const ManagementProducts = () => {
                     onClickDelete={() => handleDelete(product.productId)}
                   />
                 ))}
-                {!productsFinished ? (
-                  <div ref={lastProductElementRef}>
-                    <ProductLoading />
-                  </div>
-                ) : (
-                  <></>
-                )}
+                <div className={cls.paginationWrapper}>
+                  <ConfigProvider
+                    theme={{
+                      token: {
+                        colorPrimary: "#cc3292",
+                      },
+                    }}
+                  >
+                    <Pagination
+                      current={pagination.pageNumber}
+                      pageSize={pagination.pageSize}
+                      total={products.totalElements}
+                      showSizeChanger={false}
+                      onChange={(page) => {
+                        setPagination({
+                          ...pagination,
+                          pageNumber: page,
+                        });
+                      }}
+                    />
+                  </ConfigProvider>
+                </div>
               </>
-            ) : (
-              <p className={cls.title}>Nu exista asa produse</p>
             )}
           </div>
         </>
@@ -236,7 +208,6 @@ const ManagementProducts = () => {
           selectedProduct={productSelected}
           handleClose={() => {
             handleClose();
-            handleFiltersChange(filters);
           }}
         />
       ) : (

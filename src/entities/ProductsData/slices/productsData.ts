@@ -4,13 +4,27 @@ import {
   ProductsDataApi,
   ProductsPageable,
 } from "entities/ProductsData";
+import {
+  BaseQueryMeta,
+  BaseQueryResult,
+} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 export const productsDataApiSlice = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: `${process.env.REACT_APP_API_URL}`,
+    prepareHeaders: (headers) => {
+      headers.set("Cache-Control", "no-store");
+      return headers;
+    },
+  }),
   reducerPath: "productsApi",
   keepUnusedDataFor: 3600,
+
   endpoints: (builder) => ({
-    getProductsTrigger: builder.mutation<ProductInterface[], any>({
+    getProducts: builder.query<
+      { data: ProductInterface[]; totalElements: number },
+      any
+    >({
       query: (data) => ({
         url: ProductsDataApi.GET_PRODUCTS,
         method: "POST",
@@ -19,10 +33,9 @@ export const productsDataApiSlice = createApi({
           "Content-Type": "application/json",
         },
         params: { pageSize: data.pageSize, pageNumber: data.pageNumber },
+        keepUnusedDataFor: 0,
+        refetchOnMountOrArgChange: true,
       }),
-      transformResponse: (data: {data: any}) => {
-        return data.data;
-      }
     }),
     getProductDetails: builder.query<ProductInterface, any>({
       query: (data) => ({
@@ -31,9 +44,9 @@ export const productsDataApiSlice = createApi({
         refetchOnFocus: true,
         refetchOnReconnect: true,
       }),
-      transformResponse: (data: {data: any}) => {
+      transformResponse: (data: { data: any }) => {
         return data.data;
-      }
+      },
     }),
     createBasicInfoProduct: builder.mutation<any, any>({
       query: (data) => ({
@@ -48,9 +61,9 @@ export const productsDataApiSlice = createApi({
     addImages: builder.mutation<any, any>({
       query: ({ bucketName, color, files }) => {
         const formData = new FormData();
-        files.forEach((file: any) => formData.append('images', file));
-        formData.append('bucketName', bucketName)
-        formData.append('color', color)
+        files.forEach((file: any) => formData.append("images", file));
+        formData.append("bucketName", bucketName);
+        formData.append("color", color);
 
         const encodedColor = encodeURIComponent(color);
         const url = `${ProductsDataApi.ADD_IMAGES}/${bucketName}/${encodedColor}/`;
@@ -100,7 +113,7 @@ export const productsDataApiSlice = createApi({
 });
 
 export const {
-  useGetProductsTriggerMutation,
+  useGetProductsQuery,
   useGetProductDetailsQuery,
   useCreateBasicInfoProductMutation,
   useAddImagesMutation,

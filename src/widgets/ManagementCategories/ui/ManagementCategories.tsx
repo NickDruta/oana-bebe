@@ -8,7 +8,6 @@ import cls from "./ManagementCategories.module.scss";
 const ManagementCategories = () => {
   const navigate = useNavigate();
   const { data: categoriesData, isLoading } = useGetCategoriesQuery();
-  console.log(categoriesData)
 
   useEffect(() => {
     if (!sessionStorage.getItem("jwt")) navigate("/management");

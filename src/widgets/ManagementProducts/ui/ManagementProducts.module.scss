@@ -68,10 +68,10 @@
 }
 
 .paginationWrapper {
+  margin-top: auto;
+  width: 100%;
   display: flex;
-  gap: 24px;
   justify-content: center;
-  overflow-x: auto;
 }
 
 .maxWidth {

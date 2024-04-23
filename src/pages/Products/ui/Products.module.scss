@@ -49,9 +49,17 @@
   display: flex;
   gap: 36px;
   flex-wrap: wrap;
-  height: fit-content;
+  min-height: fit-content;
+  height: 100%;
 
   @media screen and (max-width: 800px) {
+    justify-content: center;
+  }
+
+  .paginationWrapper {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
     justify-content: center;
   }
 }
@@ -92,7 +100,7 @@
   overflow: hidden;
   position: relative;
   background: #e8e8e8;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   padding: 24px 24px 40px;
   border-radius: 15px;
   height: auto;

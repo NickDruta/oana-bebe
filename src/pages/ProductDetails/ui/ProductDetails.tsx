@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   ImageShortInferface,
@@ -26,7 +26,6 @@ const ProductDetails = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-
   const handleAddCart = () => {
     const cart = localStorage.getItem("cart");
     const cartParsed = cart && JSON.parse(cart);
@@ -35,7 +34,7 @@ const ProductDetails = () => {
     const existingProductIndex = newCart.findIndex(
       (item) =>
         item.productId === id &&
-        item.colors[0] === Object.keys(product?.image ?? {})[selectedIndex]
+        item.colors[0] === Object.keys(product?.image ?? {})[selectedIndex],
     );
 
     if (existingProductIndex !== -1) {
@@ -80,16 +79,14 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-    const color = queryParameters.get("color")
+    const color = queryParameters.get("color");
     if (color) {
-      setSelectedIndex(Number(color))
+      setSelectedIndex(Number(color));
     }
   }, []);
 
   useEffect(() => {
-    navigate({
-      search: `?color=${selectedIndex}`
-    });
+    navigate(`?color=${selectedIndex}`, { replace: true });
   }, [selectedIndex]);
 
   return (
@@ -135,7 +132,8 @@ const ProductDetails = () => {
                     <p
                       className={clsx(
                         cls.price,
-                        product?.image[selectedIndex].discountPrice && cls.oldPrice
+                        product?.image[selectedIndex].discountPrice &&
+                          cls.oldPrice,
                       )}
                     >
                       {product?.image[selectedIndex].price} MDL
@@ -153,7 +151,7 @@ const ProductDetails = () => {
                 <p className={cls.description}>
                   {product &&
                     parseSpecifications(
-                      isRu ? product.specifications : product.specifications
+                      isRu ? product.specifications : product.specifications,
                     )}
                 </p>
                 <div className={cls.colorsWrapper}>
@@ -162,7 +160,7 @@ const ProductDetails = () => {
                       key={index}
                       className={clsx(
                         cls.color,
-                        selectedIndex === index && cls.activeColor
+                        selectedIndex === index && cls.activeColor,
                       )}
                       style={{ background: item.color }}
                       onClick={() => setSelectedIndex(index)}
@@ -174,7 +172,7 @@ const ProductDetails = () => {
                     <p
                       className={clsx(
                         cls.numberItemWrapper,
-                        itemsNumber === 1 && cls.disabled
+                        itemsNumber === 1 && cls.disabled,
                       )}
                       onClick={() => setItemsNumber(itemsNumber - 1)}
                     >
@@ -183,7 +181,7 @@ const ProductDetails = () => {
                     <p
                       className={clsx(
                         cls.numberItemWrapper,
-                        cls.borderNumberItem
+                        cls.borderNumberItem,
                       )}
                     >
                       {itemsNumber}
@@ -208,7 +206,7 @@ const ProductDetails = () => {
         </>
       )}
     </>
-  )
+  );
 };
 
 export default ProductDetails;

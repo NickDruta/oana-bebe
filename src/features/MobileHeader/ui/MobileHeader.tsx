@@ -97,12 +97,12 @@ const MobileHeader = () => {
               <></>
             )}
           </Link>
-          <Switcher
-            className={cls.switcher}
-            selectedOption={i18n.language}
-            options={["ro", "ru"]}
-            onChange={changeLanguage}
-          />
+          {/*<Switcher*/}
+          {/*  className={cls.switcher}*/}
+          {/*  selectedOption={i18n.language}*/}
+          {/*  options={["ro", "ru"]}*/}
+          {/*  onChange={changeLanguage}*/}
+          {/*/>*/}
         </div>
       ) : (
         <></>

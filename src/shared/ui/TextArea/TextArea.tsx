@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import debounce from 'lodash/debounce';
-import clsx from 'clsx';
-import cls from './TextArea.module.scss';
+import React, { useState, useEffect, useCallback } from "react";
+import debounce from "lodash/debounce";
+import clsx from "clsx";
+import cls from "./TextArea.module.scss";
 
 interface TextAreaProps {
   placeholder: string;
@@ -11,41 +11,51 @@ interface TextAreaProps {
 }
 
 const TextArea = ({
-    value,
-    handleChange,
-    placeholder,
-    className,
-  }: TextAreaProps) => {
+  value,
+  handleChange,
+  placeholder,
+  className,
+}: TextAreaProps) => {
   const [textValue, setTextValue] = useState(value);
 
+  // Create a debounced function that only triggers after 500ms of inactivity
   const debouncedHandleChange = useCallback(
-      debounce((value: string) => {
-        handleChange(value);
-      }, 500),
-      []
+    debounce((nextValue: string) => {
+      handleChange(nextValue);
+    }, 500),
+    [handleChange],
   );
 
-  useEffect(() => {
-    if (textValue !== value) {
-      debouncedHandleChange(textValue);
-    }
-  }, [textValue, debouncedHandleChange]);
-
+  // Update local state when the parent component provides new 'value'
   useEffect(() => {
     setTextValue(value);
   }, [value]);
+
+  /**
+   * Call the debounced change handler function whenever textValue changes
+   */
+  useEffect(() => {
+    debouncedHandleChange(textValue);
+
+    /**
+     * Clean up the debounce to prevent stale closures if the component unmounts
+     */
+    return () => {
+      debouncedHandleChange.cancel();
+    };
+  }, [textValue, debouncedHandleChange]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(e.target.value);
   };
 
   return (
-      <textarea
-          className={clsx(cls.textArea, className)}
-          placeholder={placeholder}
-          value={textValue}
-          onChange={handleTextChange}
-      />
+    <textarea
+      className={clsx(cls.textArea, className)}
+      placeholder={placeholder}
+      value={textValue}
+      onChange={handleTextChange}
+    />
   );
 };
 

@@ -5,6 +5,10 @@
   font-family: "Inter-Regular";
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   position: relative;
 }
