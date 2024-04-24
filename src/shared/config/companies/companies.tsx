@@ -22,5 +22,6 @@ export const companies = [
   "Euro-Cart",
   "Miracolo",
   "Dubik",
-  "Maltex"
+  "Maltex",
+  "Future Design",
 ];

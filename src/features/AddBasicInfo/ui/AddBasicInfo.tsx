@@ -98,28 +98,20 @@ const AddBasicInfo = ({
    */
   const handleAddSpecification = async () => {
     if (specificationName && specificationValue) {
-      const specifications = product.specifications
+      const specifications = isRO
+        ? product.specifications
+        : product.specificationsRu;
+      const specificationsSelected = specifications
         .replace("}", "")
         .concat(
-          `${product.specifications !== "{}" ? ", " : ""}${specificationName}=${specificationValue}}`,
+          `${(isRO ? product.specifications : product.specificationsRu) !== "{}" ? ", " : ""}${specificationName}=${specificationValue}}`,
         );
-      handleChange("specifications", specifications);
+      handleChange(
+        isRO ? "specifications" : "specificationsRu",
+        specificationsSelected,
+      );
       setSpecificationName("");
       setSpecificationValue("");
-
-      const specificationNameRuData = await translateText(specificationName);
-      const specificationNameRu =
-        specificationNameRuData.data.translations[0].translatedText;
-
-      const specificationValueRuData = await translateText(specificationValue);
-      const specificationValueRu =
-        specificationValueRuData.data.translations[0].translatedText;
-      const specificationsRu = product.specificationsRu
-        .replace("}", "")
-        .concat(
-          `${product.specifications !== "{}" ? ", " : ""}${specificationNameRu}=${specificationValueRu}}`,
-        );
-      handleChange("specificationsRu", specificationsRu);
     }
   };
 
@@ -130,18 +122,21 @@ const AddBasicInfo = ({
     const specificationsArray = parseSpecifications(product.specifications);
     const specificationsRuArray = parseSpecifications(product.specificationsRu);
 
-    if (indexToRemove >= 0 && indexToRemove < specificationsArray.length) {
+    if (isRO) {
       specificationsArray.splice(indexToRemove, 1);
-    }
-    if (indexToRemove >= 0 && indexToRemove < specificationsRuArray.length) {
+      const updatedSpecificationsString = `{${specificationsArray.map((spec) => `${spec.name}=${spec.value}`).join(", ")}}`;
+
+      handleChange("specifications", updatedSpecificationsString);
+    } else if (
+      indexToRemove >= 0 &&
+      indexToRemove < specificationsRuArray.length
+    ) {
       specificationsRuArray.splice(indexToRemove, 1);
+
+      const updatedSpecificationsRuString = `{${specificationsRuArray.map((spec) => `${spec.name}=${spec.value}`).join(", ")}}`;
+
+      handleChange("specificationsRu", updatedSpecificationsRuString);
     }
-
-    const updatedSpecificationsString = `{${specificationsArray.map((spec) => `${spec.name}=${spec.value}`).join(", ")}}`;
-    const updatedSpecificationsRuString = `{${specificationsRuArray.map((spec) => `${spec.name}=${spec.value}`).join(", ")}}`;
-
-    handleChange("specifications", updatedSpecificationsString);
-    handleChange("specificationsRu", updatedSpecificationsRuString);
   };
 
   return (
@@ -205,7 +200,9 @@ const AddBasicInfo = ({
           Salvează specificația
         </button>
         <div className={cls.specificationsPreview}>
-          {parseSpecifications(product.specifications).map((spec, index) => (
+          {parseSpecifications(
+            isRO ? product.specifications : product.specificationsRu,
+          ).map((spec, index) => (
             <div key={index} className={cls.specificationItem}>
               <span>
                 {spec.name}: {spec.value}
