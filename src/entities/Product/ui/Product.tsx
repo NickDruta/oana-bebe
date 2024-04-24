@@ -81,6 +81,22 @@ const Product = ({
         src={product?.image.length ? product?.image[0].urls[0] : ""}
         alt=""
       />
+      <div className={cls.colorsWrapper}>
+        {product.image.map((item, index) => (
+          <div
+            key={index}
+            style={{ background: item.color }}
+            className={cls.color}
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(
+                `/produse/${product.productId}?color=${index}`,
+                "_blank",
+              );
+            }}
+          />
+        ))}
+      </div>
       <p className={cls.productName}>
         {isRu ? product?.productNameRu : product?.productName}
       </p>

@@ -35,15 +35,17 @@ const TextArea = ({
    * Call the debounced change handler function whenever textValue changes
    */
   useEffect(() => {
-    debouncedHandleChange(textValue);
+    if (textValue !== value) {
+      debouncedHandleChange(textValue);
+    }
 
     /**
-     * Clean up the debounce to prevent stale closures if the component unmounts
+     * Cleanup function to cancel the debounced call on unmount or when input changes rapidly
      */
     return () => {
       debouncedHandleChange.cancel();
     };
-  }, [textValue, debouncedHandleChange]);
+  }, [textValue, debouncedHandleChange, value]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(e.target.value);

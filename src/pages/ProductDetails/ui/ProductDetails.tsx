@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
-  ImageShortInferface,
   useGetProductDetailsQuery,
   useUpdateViewsQuery,
 } from "entities/ProductsData";
@@ -19,7 +18,7 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: product, isLoading } = useGetProductDetailsQuery(id);
-  // const {} = useUpdateViewsQuery(id);
+  const {} = useUpdateViewsQuery(id);
   const isRu = i18n.language === "ru";
 
   const [itemsNumber, setItemsNumber] = useState(1);

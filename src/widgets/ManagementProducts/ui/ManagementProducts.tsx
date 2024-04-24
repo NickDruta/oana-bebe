@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -7,7 +7,6 @@ import {
   useGetProductsQuery,
 } from "entities/ProductsData";
 import { Product } from "entities/Product";
-// import { useGetProductsTriggerMutation } from "entities/ProductsData";
 import { AddModalProduct } from "features/AddModalProduct";
 import { EditProduct } from "features/EditProduct";
 import { DiscountModal } from "features/DiscountModal";
@@ -19,7 +18,6 @@ import {
 } from "shared/config";
 import { Input, LoadingSpinner, Select } from "shared/ui";
 import { AddIcon } from "shared/assets";
-import { ProductLoading } from "entities/ProductLoading";
 import cls from "./ManagementProducts.module.scss";
 import { ConfigProvider, Pagination } from "antd";
 
@@ -55,7 +53,6 @@ const ManagementProducts = () => {
     pageSize: pagination.pageSize,
     pageNumber: pagination.pageNumber,
   });
-  console.log(products);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

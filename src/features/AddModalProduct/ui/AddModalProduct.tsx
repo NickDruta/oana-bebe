@@ -9,8 +9,7 @@ import {
   useCreateBasicInfoProductMutation,
 } from "entities/ProductsData";
 import { emptyProduct } from "shared/config";
-import { Modal, Button } from "shared/ui";
-import { translateText } from "shared/lib/translateText/translateText";
+import { Modal, Button, Switcher } from "shared/ui";
 import cls from "./AddModalProduct.module.scss";
 
 interface FileWithPreview extends File {
@@ -24,6 +23,11 @@ interface AddModalProductProps {
 const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   const [triggerCreateBasicInfo] = useCreateBasicInfoProductMutation();
   const [triggerAddImages] = useAddImagesMutation();
+
+  /**
+   * State for changing languages
+   */
+  const [language, setLanguage] = useState("ro");
 
   /**
    * Loading of API between steps
@@ -99,7 +103,7 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
             handleChange={handleChange}
             handleStepsNumber={(value) => setStepsNumber(value)}
             hasSteps
-            isRO
+            isRO={language === "ro"}
           />
         );
       case stepsNumber:
@@ -128,12 +132,10 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
    */
   const goNext = () => {
     if (step === 1) {
-      // setStep(step + 1)
       saveBasicInfo();
     } else if (step === stepsNumber) {
       setTriggerAction(true);
     } else {
-      // setStep(step + 1)
       saveColor();
     }
   };
@@ -149,17 +151,11 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
 
     setLoading(true);
 
-    const productNameRuData = await translateText(product.productName);
-    const productNameRu = productNameRuData.data.translations[0].translatedText;
-
-    const descriptionRuData = await translateText(product.description);
-    const descriptionRu = descriptionRuData.data.translations[0].translatedText;
-
     triggerCreateBasicInfo({
       productName: product.productName,
-      productNameRu: productNameRu,
+      productNameRu: product.productNameRu,
       description: product.description,
-      descriptionRu: descriptionRu,
+      descriptionRu: product.descriptionRu,
       companyName: product.companyName,
       categoryId: product.category.categoryId,
       specifications: product.specifications,
@@ -204,7 +200,21 @@ const AddModalProduct = ({ handleClose }: AddModalProductProps) => {
   return (
     <Modal handleClickAway={handleConfirmedClose}>
       <div className={cls.modalWrapper}>
-        <p className={cls.title}>Adaugă produs</p>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <p className={cls.title}>Adauga produs</p>
+          <Switcher
+            selectedOption={language}
+            options={["ro", "ru"]}
+            onChange={setLanguage}
+          />
+        </div>
         <p className={cls.description}>
           Adăugarea unui produs constă din mai mulți pași, adaugă până la
           sfârșit pentru a adăuga produsul!

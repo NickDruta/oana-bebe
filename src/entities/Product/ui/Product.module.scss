@@ -100,6 +100,19 @@
   }
 }
 
+.colorsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 0.5px solid #cc3292;
+  }
+}
+
 .productName {
   color: #000;
   font-family: "Inter-Bold";

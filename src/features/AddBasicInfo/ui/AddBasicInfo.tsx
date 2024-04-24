@@ -4,7 +4,6 @@ import { ProductInterface } from "entities/ProductsData";
 import { companies } from "shared/config";
 import { Input, Select, TextArea } from "shared/ui";
 import cls from "./AddBasicInfo.module.scss";
-import { translateText } from "../../../shared/lib/translateText/translateText";
 
 interface Props {
   product: ProductInterface;
