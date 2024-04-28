@@ -62,3 +62,4 @@ export { ReactComponent as MessengerIcon } from "./icons/messenger.svg";
 export { ReactComponent as FilterIcon } from "./icons/filter.svg";
 export { ReactComponent as Whatsapp } from "./icons/whatsapp.svg";
 export { ReactComponent as TikTokIcon } from "./icons/tiktok.svg";
+export { ReactComponent as DragIcon } from "./icons/drag.svg";

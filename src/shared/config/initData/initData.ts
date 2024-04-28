@@ -8,13 +8,6 @@ export const initPaginationData: PaginationRecord = {
   totalPages: 0,
 };
 
-export const singleSizePaginationData: PaginationRecord = {
-  pageNumber: 1,
-  pageSize: 1,
-  totalElements: 0,
-  totalPages: 0,
-};
-
 export const emptyProduct: ProductInterface = {
   productId: null,
   productName: "",
@@ -32,6 +25,7 @@ export const emptyProduct: ProductInterface = {
   category: {
     categoryName: "",
     categoryNameRu: "",
+    order: "",
     categoryId: null,
   },
   image: [],

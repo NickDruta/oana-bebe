@@ -19,16 +19,7 @@ const ManagementSideBar = () => {
         <p
           className={clsx(
             cls.link,
-            window.location.pathname === "/management/categories" && cls.active
-          )}
-          onClick={() => navigate("/management/categories")}
-        >
-          Categorii
-        </p>
-        <p
-          className={clsx(
-            cls.link,
-            window.location.pathname === "/management/products" && cls.active
+            window.location.pathname === "/management/products" && cls.active,
           )}
           onClick={() => navigate("/management/products")}
         >
@@ -37,11 +28,29 @@ const ManagementSideBar = () => {
         <p
           className={clsx(
             cls.link,
-            window.location.pathname === "/management/orders" && cls.active
+            window.location.pathname === "/management/orders" && cls.active,
           )}
           onClick={() => navigate("/management/orders")}
         >
           Comenzi
+        </p>
+        <p
+          className={clsx(
+            cls.link,
+            window.location.pathname === "/management/categories" && cls.active,
+          )}
+          onClick={() => navigate("/management/categories")}
+        >
+          Categorii
+        </p>
+        <p
+          className={clsx(
+            cls.link,
+            window.location.pathname === "/management/companies" && cls.active,
+          )}
+          onClick={() => navigate("/management/companies")}
+        >
+          Companii
         </p>
       </div>
     </div>

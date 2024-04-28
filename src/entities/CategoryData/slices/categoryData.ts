@@ -5,6 +5,7 @@ import { translateText } from "shared/lib/translateText/translateText";
 export const categoryDataApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_URL}` }),
   reducerPath: "categoryApi",
+  tagTypes: ["Category"],
   keepUnusedDataFor: 3600,
   endpoints: (builder) => ({
     getCategories: builder.query<CategoryAndSubcategory[], void>({
@@ -12,62 +13,86 @@ export const categoryDataApiSlice = createApi({
         url: CategoryDataApi.GET_CATEGORIES,
         method: "GET",
         params: { pageSize: 20 },
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-        refetchOnMountOrArgChange: true,
         headers: {
-          'Accept': '*/*',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Connection': 'keep-alive'
+          Accept: "*/*",
+          "Accept-Encoding": "gzip, deflate, br",
+          Connection: "keep-alive",
         },
-        providesTags: (result: any) =>
-          result
-            ? [
-                ...result.map(({ id }: { id: any }) => ({
-                  type: "Category" as const,
-                  id,
-                })),
-                "Category",
-              ]
-            : ["Category"],
       }),
-      transformResponse: (data: {data: any}) => {
+      providesTags: ["Category"],
+      transformResponse: (data: { data: any }) => {
         return data.data;
-      }
+      },
     }),
     createCategory: builder.mutation<void, any>({
-      query: ({roText, ruText}) => ({
-        url: `${CategoryDataApi.CREATE_CATEGORY}?name=${roText}&ruName=${ruText}`,
-        method: "POST",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-        headers: {
-          Authorization: sessionStorage.getItem("admin") || "",
-        },
-      }),
-    }),
-    createSubcategory: builder.mutation<void, any>({
       query: (data) => ({
-        url: CategoryDataApi.CREATE_SUBCATEGORY,
+        url: CategoryDataApi.CREATE_CATEGORY,
         method: "POST",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
         body: data,
         headers: {
           Authorization: sessionStorage.getItem("admin") || "",
         },
       }),
+      invalidatesTags: ["Category"],
     }),
-    deleteCategory: builder.mutation<void, number>({
+    updateCategory: builder.mutation<void, any>({
       query: (data) => ({
-        url: `${CategoryDataApi.DELETE_CATEGORY}?id=${data}`,
-        method: "DELETE",
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
+        url: CategoryDataApi.UPDATE_CATEGORY,
+        method: "PUT",
+        body: data,
         headers: {
           Authorization: sessionStorage.getItem("admin") || "",
         },
       }),
+      invalidatesTags: ["Category"],
+    }),
+    deleteCategory: builder.mutation<void, number>({
+      query: (categoryId) => ({
+        url: CategoryDataApi.DELETE_CATEGORY,
+        method: "DELETE",
+        headers: {
+          Authorization: sessionStorage.getItem("admin") || "",
+        },
+        params: { categoryId },
+      }),
+      invalidatesTags: ["Category"],
+    }),
+
+    createSubcategory: builder.mutation<void, any>({
+      query: (data) => ({
+        url: CategoryDataApi.CREATE_SUBCATEGORY,
+        method: "POST",
+        body: data,
+        headers: {
+          Authorization: sessionStorage.getItem("admin") || "",
+        },
+      }),
+      invalidatesTags: ["Category"],
+    }),
+    updateSubcategory: builder.mutation<void, any>({
+      query: (data) => ({
+        url: CategoryDataApi.UPDATE_SUBCATEGORY,
+        method: "PUT",
+        body: data,
+        headers: {
+          Authorization: sessionStorage.getItem("admin") || "",
+        },
+      }),
+      invalidatesTags: ["Category"],
+    }),
+    deleteSubcategory: builder.mutation<void, any>({
+      query: (data) => ({
+        url: CategoryDataApi.DELETE_SUBCATEGORY,
+        method: "DELETE",
+        params: {
+          subcategoryId: data.subcategoryId,
+          categoryTypeId: data.categoryTypeId,
+        },
+        headers: {
+          Authorization: sessionStorage.getItem("admin") || "",
+        },
+      }),
+      invalidatesTags: ["Category"],
     }),
   }),
 });
@@ -75,6 +100,9 @@ export const categoryDataApiSlice = createApi({
 export const {
   useGetCategoriesQuery,
   useCreateCategoryMutation,
-  useCreateSubcategoryMutation,
+  useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useCreateSubcategoryMutation,
+  useUpdateSubcategoryMutation,
+  useDeleteSubcategoryMutation,
 } = categoryDataApiSlice;

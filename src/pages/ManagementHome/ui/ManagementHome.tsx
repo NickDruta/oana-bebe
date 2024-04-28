@@ -14,9 +14,9 @@ const ManagementHome = () => {
 
   useEffect(() => {
     if (localLogin) {
-      navigate("/management/categories");
+      navigate("/management/products");
     }
-  }, [])
+  }, []);
 
   return (
     <div className={cls.managementHomeWrapper}>

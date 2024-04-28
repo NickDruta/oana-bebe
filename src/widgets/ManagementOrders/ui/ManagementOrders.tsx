@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDeleteOrderMutation, useGetOrdersQuery } from "entities/OrdersData";
 import { Button, LoadingSpinner } from "shared/ui";
 import cls from "./ManagementOrders.module.scss";
 import { SuccessIcon } from "shared/assets";
 import { initPaginationData } from "shared/config";
+import { format } from "date-fns";
 
 const ManagementOrders = () => {
   const navigate = useNavigate();
@@ -12,8 +13,13 @@ const ManagementOrders = () => {
   const { data: ordersData, isLoading } = useGetOrdersQuery(pagination);
   const [completeOrder] = useDeleteOrderMutation();
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return format(date, "yyyy-MM-dd, HH:mm");
+  };
+
   const handleComplete = (value: number) => {
-    completeOrder({id: value}).then(() => window.location.reload());
+    completeOrder({ id: value }).then(() => window.location.reload());
   };
 
   useEffect(() => {
@@ -52,10 +58,11 @@ const ManagementOrders = () => {
                     }}
                   />
                   <p className={cls.title}>{item.phoneNumber}</p>
-                  <p className={cls.name}>{item.productName}</p>
-                  <p className={cls.quantity}>
-                    Cantitate: {item.quantity}
+                  <p className={cls.createdTime}>
+                    {formatDate(item.createdTime)}
                   </p>
+                  <p className={cls.name}>{item.productName}</p>
+                  <p className={cls.quantity}>Cantitate: {item.quantity}</p>
                   <div
                     className={cls.color}
                     style={{
@@ -70,7 +77,7 @@ const ManagementOrders = () => {
           <div className={cls.paginationWrapper}>
             {Array.from(
               { length: pagination.totalPages },
-              (_, index) => index + 1
+              (_, index) => index + 1,
             ).map((item) => (
               <Button
                 key={item}

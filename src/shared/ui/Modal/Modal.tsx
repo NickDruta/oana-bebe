@@ -9,7 +9,10 @@ interface ModalProps {
 }
 
 const Modal = ({ children, handleClickAway }: ModalProps) => {
-  const wrapperRef = useClickAwayListener({ handleClickAway });
+  const wrapperRef = useClickAwayListener({
+    handleClickAway,
+    delayActivation: true,
+  });
   const rootElement = document.getElementById("root");
 
   if (!rootElement) {

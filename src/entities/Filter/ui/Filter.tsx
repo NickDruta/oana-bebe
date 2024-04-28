@@ -1,8 +1,8 @@
 import React from "react";
 import { Input } from "shared/ui";
-import { companies } from "shared/config";
 import { useTranslation } from "react-i18next";
 import cls from "./Filter.module.scss";
+import { Company, useGetCompaniesQuery } from "../../CompaniesData";
 
 interface Props {
   search: string;
@@ -26,6 +26,7 @@ const Filter: React.FC<Props> = ({
   handleMaxPrice,
 }) => {
   const { t } = useTranslation();
+  const { data: companies } = useGetCompaniesQuery();
 
   const toggleCompanySelection = (company: string) => {
     if (companiesSelected.includes(company)) {
@@ -44,21 +45,23 @@ const Filter: React.FC<Props> = ({
         handleChange={handleSearch}
       />
       <div className={cls.companiesWrapper}>
-        {companies.map((company, index) => (
-          <div
-            key={index}
-            className={cls.company}
-            onClick={() => toggleCompanySelection(company)}
-          >
-            <input
-              type="checkbox"
-              checked={companiesSelected.includes(company)}
-              onChange={() => toggleCompanySelection(company)} // This ensures the checkbox reflects the current state
-              readOnly
-            />
-            <p>{company}</p>
-          </div>
-        ))}
+        {companies &&
+          companies.data &&
+          companies.data.map((company: Company, index: number) => (
+            <div
+              key={index}
+              className={cls.company}
+              onClick={() => toggleCompanySelection(company.companyName)}
+            >
+              <input
+                type="checkbox"
+                checked={companiesSelected.includes(company.companyName)}
+                onChange={() => toggleCompanySelection(company.companyName)}
+                readOnly
+              />
+              <p>{company.companyName}</p>
+            </div>
+          ))}
       </div>
       <div className={cls.priceInputWrapper}>
         <p>{t("content:FROM")}</p>

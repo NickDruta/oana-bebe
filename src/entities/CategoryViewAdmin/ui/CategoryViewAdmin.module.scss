@@ -2,12 +2,10 @@
   padding: 24px;
   background: #fff2fb;
   border-radius: 15px;
-  width: fit-content;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-width: 300px;
-  max-width: 400px;
+  width: 100%;
   position: relative;
 
   input {
@@ -24,6 +22,16 @@
   width: 24px;
   height: 24px;
   cursor: pointer;
+}
+
+.edit {
+  position: absolute;
+  top: 12px;
+  right: 48px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  fill: #000;
 }
 
 .add {
@@ -61,6 +69,14 @@
   width: fit-content;
   font-size: 14px;
   background-color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actionSubcategoryWrapper {
+  display: flex;
+  gap: 8px;
 }
 
 .saveButton {

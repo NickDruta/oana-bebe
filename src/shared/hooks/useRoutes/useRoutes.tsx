@@ -59,6 +59,10 @@ export const useRoutes = () => {
       path: "/management/orders",
       element: <AdminWrapper />,
     },
+    {
+      path: "/management/companies",
+      element: <AdminWrapper />,
+    },
   ];
 
   return (

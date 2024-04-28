@@ -22,11 +22,14 @@ export interface CategoryInterface {
   categoryNameRu: string;
   categoryType?: CategoryTypeInterface;
   products?: ProductInterface[];
+  order: string;
 }
 
 export interface CategoryTypeInterface {
   categoryTypeId: number;
   categoryType: string;
+  categoryTypeRu: string;
+  order: string;
   categorySet: CategoryInterface[];
 }
 

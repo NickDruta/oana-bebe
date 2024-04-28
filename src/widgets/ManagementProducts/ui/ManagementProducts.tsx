@@ -11,7 +11,6 @@ import { AddModalProduct } from "features/AddModalProduct";
 import { EditProduct } from "features/EditProduct";
 import { DiscountModal } from "features/DiscountModal";
 import {
-  companies,
   initPaginationData,
   defaultFilters,
   FiltersState,
@@ -20,10 +19,12 @@ import { Input, LoadingSpinner, Select } from "shared/ui";
 import { AddIcon } from "shared/assets";
 import cls from "./ManagementProducts.module.scss";
 import { ConfigProvider, Pagination } from "antd";
+import { Company, useGetCompaniesQuery } from "../../../entities/CompaniesData";
 
 const ManagementProducts = () => {
   const navigate = useNavigate();
   const [triggerDelete] = useDeleteProductMutation();
+  const { data: companies } = useGetCompaniesQuery();
 
   /**
    * Pagination state
@@ -53,6 +54,10 @@ const ManagementProducts = () => {
     pageSize: pagination.pageSize,
     pageNumber: pagination.pageNumber,
   });
+  const companyNames =
+    companies && companies.data
+      ? companies.data.map((company: Company) => company.companyName)
+      : [];
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -115,7 +120,7 @@ const ManagementProducts = () => {
           <p className={cls.title}>Produse</p>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Select
-              options={companies}
+              options={companyNames}
               value={filters.companiesSelected?.[0] ?? ""}
               placeholder={"Companie"}
               handleChange={(value) =>

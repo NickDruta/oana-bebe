@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { ManagementCompanies } from "widgets/ManagementCompanies";
 import { ManagementCategories } from "widgets/ManagementCategories";
 import { ManagementProducts } from "widgets/ManagementProducts";
 import { ManagementOrders } from "widgets/ManagementOrders";
@@ -13,7 +14,9 @@ const AdminWrapper = () => {
   return (
     <div className={cls.adminWrapper}>
       <ManagementSideBar />
-      {typeData === "categories" ? (
+      {typeData === "companies" ? (
+        <ManagementCompanies />
+      ) : typeData === "categories" ? (
         <ManagementCategories />
       ) : typeData === "products" ? (
         <ManagementProducts />

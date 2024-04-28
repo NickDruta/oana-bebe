@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useGetCategoriesQuery } from "entities/CategoryData";
 import { ProductInterface } from "entities/ProductsData";
-import { companies } from "shared/config";
 import { Input, Select, TextArea } from "shared/ui";
 import cls from "./AddBasicInfo.module.scss";
+import { Company, useGetCompaniesQuery } from "../../../entities/CompaniesData";
 
 interface Props {
   product: ProductInterface;
@@ -27,6 +27,12 @@ const AddBasicInfo = ({
   isRO,
 }: Props) => {
   const { data: categories } = useGetCategoriesQuery();
+  const { data: companies } = useGetCompaniesQuery();
+  const companyNames =
+    companies && companies.data
+      ? companies.data.map((company: Company) => company.companyName)
+      : [];
+
   const productNameKey = isRO ? "productName" : "productNameRu";
   const descriptionKey = isRO ? "description" : "descriptionRu";
 
@@ -162,7 +168,7 @@ const AddBasicInfo = ({
         />
         <Select
           placeholder="Compania"
-          options={companies}
+          options={companyNames}
           value={product.companyName}
           handleChange={(value) => handleChange("companyName", value)}
         />
