@@ -1,0 +1,25 @@
+.modalWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .title {
+    font-family: "Inter-SemiBold";
+    letter-spacing: 1.8px;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: left;
+  }
+
+  .contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 500px;
+
+    input {
+      width: 100%;
+      max-width: unset;
+    }
+  }
+}

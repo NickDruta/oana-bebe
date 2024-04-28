@@ -37,6 +37,15 @@ const ManagementSideBar = () => {
         <p
           className={clsx(
             cls.link,
+            window.location.pathname === "/management/slider" && cls.active,
+          )}
+          onClick={() => navigate("/management/slider")}
+        >
+          Slider
+        </p>
+        <p
+          className={clsx(
+            cls.link,
             window.location.pathname === "/management/categories" && cls.active,
           )}
           onClick={() => navigate("/management/categories")}

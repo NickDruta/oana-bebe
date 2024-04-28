@@ -6,6 +6,7 @@ import { ManagementProducts } from "widgets/ManagementProducts";
 import { ManagementOrders } from "widgets/ManagementOrders";
 import { ManagementSideBar } from "features/ManagementSideBar";
 import cls from "./AdminWrapper.module.scss";
+import { ManagementSlider } from "../../../widgets/ManagementSlider";
 
 const AdminWrapper = () => {
   const location = useLocation();
@@ -14,7 +15,9 @@ const AdminWrapper = () => {
   return (
     <div className={cls.adminWrapper}>
       <ManagementSideBar />
-      {typeData === "companies" ? (
+      {typeData === "slider" ? (
+        <ManagementSlider />
+      ) : typeData === "companies" ? (
         <ManagementCompanies />
       ) : typeData === "categories" ? (
         <ManagementCategories />

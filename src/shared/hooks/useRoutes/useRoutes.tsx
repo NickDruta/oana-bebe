@@ -63,6 +63,10 @@ export const useRoutes = () => {
       path: "/management/companies",
       element: <AdminWrapper />,
     },
+    {
+      path: "/management/slider",
+      element: <AdminWrapper />,
+    },
   ];
 
   return (

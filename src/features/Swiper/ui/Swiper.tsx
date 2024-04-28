@@ -3,9 +3,10 @@ import clsx from "clsx";
 import { SliderItemIcon, SliderLeftIcon, SliderRightIcon } from "shared/assets";
 import cls from "./Swiper.module.scss";
 import { useNavigate } from "react-router-dom";
+import { Slider } from "../../../entities/SliderData/types/sliderTypes";
 
 interface SwiperProps {
-  images: { image: string; url: string }[];
+  images: Slider[];
 }
 
 const Swiper = ({ images }: SwiperProps) => {
@@ -57,10 +58,10 @@ const Swiper = ({ images }: SwiperProps) => {
         {images.map((item, index) => (
           <img
             key={index}
-            src={item.image}
+            src={item.sourceUrl}
             alt=""
             className={clsx(cls.img, index === activeImage && cls.activeImg)}
-            onClick={() => (item.url ? navigate(item.url) : {})}
+            onClick={() => (item.linkUrl ? navigate(item.linkUrl) : {})}
           />
         ))}
       </div>
