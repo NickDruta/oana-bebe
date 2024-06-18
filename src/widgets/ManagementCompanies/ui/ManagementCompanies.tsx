@@ -54,7 +54,6 @@ const ManagementCompanies = () => {
 
   const onDragEnd = (result: any) => {
     const { destination, source } = result;
-    console.log("!!!!");
 
     if (!destination || destination.index === source.index) {
       return;
@@ -96,8 +95,8 @@ const ManagementCompanies = () => {
                     companies.data &&
                     companies.data.map((item: Company, index: number) => (
                       <Draggable
-                        key={item.companyId}
-                        draggableId={item.companyId}
+                        key={item.companyName}
+                        draggableId={item.companyName}
                         index={index}
                       >
                         {(provided, snapshot) => (

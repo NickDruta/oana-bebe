@@ -56,8 +56,14 @@ const EditProduct = ({ selectedProduct, handleClose }: Props) => {
     });
   };
 
+  const questionHandleClose = () => {
+    if (window.confirm("Sigur vrei sa închizi?")) {
+      handleClose();
+    }
+  };
+
   return (
-    <Modal handleClickAway={handleClose}>
+    <Modal handleClickAway={questionHandleClose}>
       <div className={cls.modalWrapper}>
         <div
           style={{
