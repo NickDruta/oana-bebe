@@ -1,17 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { LocationIcon, PhoneIcon } from "shared/assets";
-// import { i18n } from "shared/providers";
-// import { Switcher } from "shared/ui";
+import { i18n } from "shared/providers";
+import { Switcher } from "shared/ui";
 import cls from "./StickyInfo.module.scss";
 
 const StickyInfo = () => {
   const { t } = useTranslation();
 
-  // const changeLanguage = (value: string) => {
-  //   localStorage.setItem("I18N_LANGUAGE", value);
-  //   i18n.changeLanguage(value);
-  // };
+  const changeLanguage = (value: string) => {
+    localStorage.setItem("I18N_LANGUAGE", value);
+    i18n.changeLanguage(value);
+  };
 
   return (
     <div className={cls.stikyInfoWrapper}>
@@ -34,14 +34,14 @@ const StickyInfo = () => {
             <a href="tel:+37360-223-422">060-223-422</a>
           </p>
         </div>
-        {/*<div>*/}
-        {/*  <Switcher*/}
-        {/*    selectedOption={i18n.language}*/}
-        {/*    options={["ro", "ru"]}*/}
-        {/*    onChange={changeLanguage}*/}
-        {/*    className={cls.switcher}*/}
-        {/*  />*/}
-        {/*</div>*/}
+        <div>
+          <Switcher
+            selectedOption={i18n.language}
+            options={["ro", "ru"]}
+            onChange={changeLanguage}
+            className={cls.switcher}
+          />
+        </div>
       </div>
     </div>
   );
