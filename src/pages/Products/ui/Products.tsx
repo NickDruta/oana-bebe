@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import clsx from "clsx";
-import i18n from "i18next";
 import { ConfigProvider, Pagination } from "antd";
 
 import { useGetCategoriesQuery } from "entities/CategoryData";
@@ -10,6 +8,7 @@ import { useGetProductsQuery } from "entities/ProductsData";
 import { Filter } from "entities/Filter";
 import { Product } from "entities/Product";
 import { StickyInfo } from "entities/StickyInfo";
+import { CategoryInfo } from "entities/CategoryInfo";
 
 import { Header } from "features/Header";
 import { MobileHeader } from "features/MobileHeader";
@@ -28,7 +27,6 @@ import { matchCategory, matchSubcategory, removeDiacritics } from "shared/lib";
 import cls from "./Products.module.scss";
 
 const Products = () => {
-  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const scrollableContainerRef = useRef<HTMLDivElement>(null);
@@ -69,7 +67,6 @@ const Products = () => {
   });
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   /**
    * Handling filter changing
@@ -97,13 +94,6 @@ const Products = () => {
       const filterBox = document.getElementById("filter");
       filterBox!.style.display = "none";
     }
-  };
-
-  /**
-   * Handling expansion of filters on mobile
-   */
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
   };
 
   /**
@@ -282,29 +272,7 @@ const Products = () => {
                   flexDirection: "column",
                 }}
               >
-                {filters.subcategoryActive &&
-                i18n.exists(
-                  `content:${filters.subcategoryActive.replaceAll(" ", "_").toUpperCase()}_DESCRIPTION`,
-                ) ? (
-                  <div style={{ position: "relative", marginBottom: 20 }}>
-                    <div
-                      className={clsx(
-                        cls.infoWrapper,
-                        isExpanded && cls.isExpanded,
-                      )}
-                      dangerouslySetInnerHTML={{
-                        __html: `${t(
-                          `content:${filters.subcategoryActive.replaceAll(" ", "_").toUpperCase()}_DESCRIPTION`,
-                        )}`,
-                      }}
-                    />
-                    <button onClick={toggleExpanded} className={cls.infoButton}>
-                      {isExpanded ? "Vezi mai puțin" : "Vezi mai mult"}
-                    </button>
-                  </div>
-                ) : (
-                  <></>
-                )}
+                <CategoryInfo subcategory={filters.subcategoryActive} />
 
                 <div
                   ref={scrollableContainerRef}

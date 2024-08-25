@@ -67,6 +67,10 @@ export const useRoutes = () => {
       path: "/management/slider",
       element: <AdminWrapper />,
     },
+    {
+      path: "/management/seo",
+      element: <AdminWrapper />,
+    },
   ];
 
   return (

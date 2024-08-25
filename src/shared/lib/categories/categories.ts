@@ -6,7 +6,6 @@ export const matchCategory = (
   urlSegment: string,
 ) => {
   const normalizedSegment = normalizeText(urlSegment);
-  console.log(normalizedSegment);
   return categories.find(
     (cat) => normalizeText(cat.categoryType) === normalizedSegment,
   );

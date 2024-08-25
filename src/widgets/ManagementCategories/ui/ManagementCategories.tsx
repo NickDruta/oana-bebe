@@ -10,11 +10,7 @@ import { LoadingSpinner } from "shared/ui";
 import cls from "./ManagementCategories.module.scss";
 import { AddIcon } from "../../../shared/assets";
 import { CategoryModal } from "../../../features/CategoryModal";
-import { FiltersState, initPaginationData } from "../../../shared/config";
-import {
-  CategoryInterface,
-  CategoryTypeInterface,
-} from "../../../entities/ProductsData";
+import { CategoryTypeInterface } from "../../../entities/ProductsData";
 import { toast } from "react-toastify";
 
 const ManagementCategories = () => {

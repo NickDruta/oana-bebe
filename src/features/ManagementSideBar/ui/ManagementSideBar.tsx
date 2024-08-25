@@ -61,6 +61,15 @@ const ManagementSideBar = () => {
         >
           Companii
         </p>
+        <p
+          className={clsx(
+            cls.link,
+            window.location.pathname === "/management/seo" && cls.active,
+          )}
+          onClick={() => navigate("/management/seo")}
+        >
+          SEO
+        </p>
       </div>
     </div>
   );

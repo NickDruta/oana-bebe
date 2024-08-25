@@ -1,0 +1,48 @@
+.managementSEOWrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff2fb71;
+  padding: 100px;
+
+  .contentWrapper {
+    border: 2px solid #ffbbeb;
+    border-radius: 15px;
+    background-color: #fff;
+    height: 100%;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: calc(100vw - 450px);
+
+    .headerWrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .title {
+        font-family: "Inter-Bold";
+        font-size: 18px;
+        letter-spacing: 1.8px;
+      }
+    }
+
+    .itemsWrapper {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      overflow-y: auto;
+
+      .itemWrapper {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 24px;
+        background: #fff2fb;
+        border-radius: 15px;
+        width: fit-content;
+      }
+    }
+  }
+}
