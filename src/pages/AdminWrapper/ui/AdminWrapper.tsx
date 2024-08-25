@@ -7,6 +7,7 @@ import { ManagementOrders } from "widgets/ManagementOrders";
 import { ManagementSideBar } from "features/ManagementSideBar";
 import cls from "./AdminWrapper.module.scss";
 import { ManagementSlider } from "../../../widgets/ManagementSlider";
+import { ManagementSEO } from "widgets/ManagementSEO";
 
 const AdminWrapper = () => {
   const location = useLocation();
@@ -23,6 +24,8 @@ const AdminWrapper = () => {
         <ManagementCategories />
       ) : typeData === "products" ? (
         <ManagementProducts />
+      ) : typeData === "seo" ? (
+        <ManagementSEO />
       ) : (
         <ManagementOrders />
       )}

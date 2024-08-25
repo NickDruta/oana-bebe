@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+import { fetchAboutData } from "entities/SeoData/utils/utils";
+import { AboutData, Language } from "entities/SeoData/types/types";
 import { Button } from "shared/ui";
 import aboutIllustration from "shared/assets/images/about.jpg";
 import cls from "./ShortInformation.module.scss";
@@ -16,6 +19,19 @@ const ShortInformation = ({
 }: ShortInformationProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const language = i18next.language;
+
+  const [aboutData, setAboutData] = useState<AboutData | null>(null);
+
+  const getData = async () => {
+    const response = await fetchAboutData();
+
+    setAboutData(response);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className={cls.shortInformationWrapper}>
@@ -24,13 +40,17 @@ const ShortInformation = ({
         <p
           className={cls.infoTitle}
           dangerouslySetInnerHTML={{
-            __html: t("content:SHORT_INFORMATION_TITLE"),
+            __html: aboutData
+              ? aboutData.title[language as keyof Language]
+              : t("content:SHORT_INFORMATION_TITLE"),
           }}
         />
         <p
           className={cls.infoDescription}
           dangerouslySetInnerHTML={{
-            __html: description,
+            __html: aboutData
+              ? aboutData.description[language as keyof Language]
+              : description,
           }}
         />
         {withButtons && (
