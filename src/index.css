@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter-Regular";
+  font-family: "Inter-Regular", sans-serif;
 }
 
 html {
@@ -11,6 +11,10 @@ html {
 
 body {
   position: relative;
+}
+
+strong, b {
+  font-family: "Inter-Medium", sans-serif;
 }
 
 @font-face {
