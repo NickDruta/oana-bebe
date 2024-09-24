@@ -18,8 +18,7 @@ i18n
   .use(LanguageDetector)
   .init({
     resources,
-    // lng: localStorage.getItem('I18N_LANGUAGE') || 'ro',
-    lng: "ro",
+    lng: localStorage.getItem("I18N_LANGUAGE") || "ro",
     interpolation: {
       escapeValue: false,
     },
