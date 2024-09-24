@@ -16,7 +16,6 @@ const StickyInfo = () => {
     [location.search],
   );
   const changeLanguage = (value: string) => {
-    console.log(value);
     localStorage.setItem("I18N_LANGUAGE", value);
     i18n.changeLanguage(value);
     searchParams.set("limba", value);
