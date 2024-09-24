@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { LocationIcon, PhoneIcon } from "shared/assets";
 import { i18n } from "shared/providers";
 import { Switcher } from "shared/ui";
 import cls from "./StickyInfo.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const StickyInfo = () => {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
+  const searchParams = useMemo(
+    // eslint-disable-next-line no-restricted-globals
+    () => new URLSearchParams(location.search),
+    // eslint-disable-next-line no-restricted-globals
+    [location.search],
+  );
   const changeLanguage = (value: string) => {
     localStorage.setItem("I18N_LANGUAGE", value);
     i18n.changeLanguage(value);
+    searchParams.set("limba", value);
+    navigate({
+      // eslint-disable-next-line no-restricted-globals
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
   };
 
   return (
