@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useGetCategoriesQuery } from "entities/CategoryData";
 import { ProductInterface } from "entities/ProductsData";
+import { Company, useGetCompaniesQuery } from "entities/CompaniesData";
 import { Input, Select, TextArea } from "shared/ui";
 import cls from "./AddBasicInfo.module.scss";
-import { Company, useGetCompaniesQuery } from "../../../entities/CompaniesData";
 
 interface Props {
   product: ProductInterface;
@@ -87,7 +87,7 @@ const AddBasicInfo = ({
    * Function to format all the specifications in an array
    */
   const parseSpecifications = (specificationsString: string) => {
-    if (specificationsString === "{}") return [];
+    if (specificationsString === "{}" || !specificationsString) return [];
 
     return specificationsString
       .slice(1, -1)
